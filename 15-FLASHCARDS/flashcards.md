@@ -99,3 +99,75 @@
 ### Flashcard D2
 * **Q:** How do you guarantee message ordering in Apache Kafka?
 * **A:** Kafka guarantees strict message ordering **only within a single partition**. By setting the message key to `account_id`, all events for that account are routed to the same partition and processed strictly in chronological order.
+
+---
+
+## 🐍 Python & Data Ecosystem Flashcards
+
+### Flashcard P1 (Python: Mutability)
+* **Q:** List vs Tuple?
+* **A:** List mutable hoti hai (can modify in-place via `append/pop`); Tuple immutable hota hai (fixed-size in memory, faster, hashable, can be dictionary keys).
+
+---
+
+### Flashcard P2 (Python: Copying)
+* **Q:** Shallow copy vs Deep copy?
+* **A:**
+  - `shallow = arr.copy()`: Outer container naya banta hai, par nested elements ke pointers share hote hain.
+  - `deep = copy.deepcopy(arr)`: Recursively saare nested objects ki completely independent duplicate copy banti hai.
+
+---
+
+### Flashcard P3 (Python: Generators)
+* **Q:** What is a Generator and why use `yield`?
+* **A:** Generator lazy evaluation use karke stream produce karta hai. Ek time par sirf 1 item memory mein rehta hai, reducing memory from $O(N)$ to $O(1)$.
+
+---
+
+### Flashcard NP1 (NumPy: Core Difference)
+* **Q:** Why use NumPy ndarray instead of Python list?
+* **A:** NumPy data ko C-contiguous raw memory block mein store karta hai aur CPU SIMD instructions use karke vectorized calculations karta hai bina Python loop overhead ke (40x–80x faster).
+
+---
+
+### Flashcard NP2 (NumPy: Broadcasting)
+* **Q:** What is Broadcasting in NumPy?
+* **A:** NumPy ka mechanism jisme compatible shapes ke arrays par arithmetic operations allow kiye jaate hain without manually duplicating data in memory. Rule: Trailing dimensions must be equal or one of them must be 1.
+
+---
+
+### Flashcard NP3 (NumPy: Views vs Copies)
+* **Q:** Does slicing a NumPy array create a copy?
+* **A:** NO! Slicing (`arr[1:4]`) returns a **View** (window to original memory). Modifying the slice mutates the original array! Use `arr[1:4].copy()` for a safe independent copy.
+
+---
+
+### Flashcard PD1 (pandas: Indexing)
+* **Q:** Difference between `loc` and `iloc`?
+* **A:**
+  - `df.loc[]`: **Label-based** selection (row/column names, end boundary is **inclusive**).
+  - `df.iloc[]`: **Integer-position based** selection (0-indexed integer offsets, end boundary is **exclusive**).
+
+---
+
+### Flashcard PD2 (pandas: GroupBy)
+* **Q:** What is Split-Apply-Combine?
+* **A:** `df.groupby()` ka 3-step engine:
+  1. **Split:** Data ko keys ke basis par groups mein baanta jata hai.
+  2. **Apply:** Har group par aggregation (`sum`, `mean`, `count`) compute hoti hai.
+  3. **Combine:** Results ko ek consolidated summary DataFrame mein merge kiya jata hai.
+
+---
+
+### Flashcard PD3 (pandas: Performance)
+* **Q:** Why should you avoid `for index, row in df.iterrows():`?
+* **A:** `iterrows()` har row par Python object overhead aur type conversions karta hai, rendering 100x slower. Hamesha vectorized operations ya `np.select` use karein.
+
+---
+
+### Flashcard MP1 (Matplotlib: Anatomy)
+* **Q:** Difference between Figure and Axes in Matplotlib?
+* **A:**
+  - **Figure:** Pura outer window/canvas.
+  - **Axes:** Actual graph ya plotting area (jisme x/y axis, title, ticks, bars, lines hote hain). Ek Figure mein multiple Axes (subplots) ho sakte hain!
+

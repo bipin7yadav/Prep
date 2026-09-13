@@ -40,8 +40,9 @@ A complete set of 10 printable, beautifully structured PDF interview preparation
 | **06** | **Banking Application Security & Compliance** (PCI-DSS, RBI Guidelines, AES-256) | [PDF/06-Security.pdf](file:///home/bipin/Desktop/BankInterview/PDF/06-Security.pdf) | ~186 KB |
 | **07** | **DevOps & Cloud Infrastructure for Banking** (Docker Multi-Stage, GKE, GCP VPC) | [PDF/07-DevOps-Cloud.pdf](file:///home/bipin/Desktop/BankInterview/PDF/07-DevOps-Cloud.pdf) | ~305 KB |
 | **08** | **Indian Digital Banking Rails & FinTech** (UPI 2.0, NPCI Switch, Double-Entry, Sagas) | [PDF/08-Banking-FinTech.pdf](file:///home/bipin/Desktop/BankInterview/PDF/08-Banking-FinTech.pdf) | ~300 KB |
-| **09** | **3+ YoE Interview Question Bank & Project Defense** (150+ Questions, STAR Behavioral) | [PDF/09-Interview-Question-Bank.pdf](file:///home/bipin/Desktop/BankInterview/PDF/09-Interview-Question-Bank.pdf) | ~346 KB |
+| **09** | **3+ YoE Interview Question Bank & Project Defense** (150+ Questions, STAR Behavioral) | [PDF/09-Interview-Question-Bank.pdf](file:///home/bipin/Desktop/BankInterview/PDF/09-Interview-Question-Bank.pdf) | ~448 KB |
 | **10** | **Final 24-Hour High-Yield Revision Pack** (Top Cheatsheets & Active Recall Flashcards) | [PDF/10-Final-Revision.pdf](file:///home/bipin/Desktop/BankInterview/PDF/10-Final-Revision.pdf) | ~407 KB |
+| **11** | **Python, NumPy, pandas & Matplotlib Data Ecosystem** (Analytics, Vectorization, Pipeline) | [PDF/11-Python-Data-Analytics.pdf](file:///home/bipin/Desktop/BankInterview/PDF/11-Python-Data-Analytics.pdf) | ~1.1 MB |
 
 ---
 
@@ -49,12 +50,12 @@ A complete set of 10 printable, beautifully structured PDF interview preparation
 
 You can switch between any track at any point. Simply tell me: *"Switch to Track A"* or *"My interview is in 10 days"*.
 
-* 🔴 **Track A — 7 Days (Emergency Track):** 3.5–4 hrs/day. Focus on top high-yield patterns (Arrays, Two Pointers, SQL Joins/Window Functions, Node Event Loop, Payment System, UPI, and Full Mock).
-* 🟠 **Track B — 14 Days (Fast Track):** 2.5–3.5 hrs/day. Week 1: Core Coding & DBMS; Week 2: System Design, Banking, Projects, and Mocks.
-* 🟡 **Track C — 1 Month (Balanced Track):** 2–3 hrs/day. Master 40–60 selected DSA problems, complete SQL banking queries, Node internals, Payment Gateway design.
-* 🟢 **Track D — 2 Months (Comprehensive Track):** 2–3 hrs/day. 60–80 quality DSA problems, Kafka, Redis, low-level design, and full project deconstruction.
-* 🔵 **Track E — 3 Months (Deep Architecture Track):** 2–3 hrs/day. 80–120 DSA problems, distributed consensus, microservice sagas, and multiple mock rounds.
-* 🟣 **Track F — 6 Months (Master Track):** 1.5–2.5 hrs/day. Systematic 6-phase master curriculum covering complete computer science foundations to principal-level architecture defense.
+* 🔴 **Track A — 7 Days (Emergency Track):** 3.5–4 hrs/day. Focus on top high-yield patterns (Arrays, Two Pointers, SQL Joins/Window Functions, Node Event Loop, Payment System, UPI, Python/pandas basics, and Full Mock).
+* 🟠 **Track B — 14 Days (Fast Track):** 2.5–3.5 hrs/day. Week 1: Core Coding + Python/NumPy + DBMS; Week 2: pandas/Matplotlib + System Design + Banking + Mocks.
+* 🟡 **Track C — 1 Month (Balanced Track):** 2–3 hrs/day. Master 40–60 selected DSA problems, complete SQL banking queries, Node internals, Python data analytics pipeline, Payment Gateway design.
+* 🟢 **Track D — 2 Months (Comprehensive Track):** 2–3 hrs/day. 60–80 quality DSA problems, Kafka, Redis, NumPy/pandas optimization, low-level design, and full project deconstruction.
+* 🔵 **Track E — 3 Months (Deep Architecture Track):** 2–3 hrs/day. 80–120 DSA problems, distributed consensus, microservice sagas, time-series data analysis, and multiple mock rounds.
+* 🟣 **Track F — 6 Months (Master Track):** 1.5–2.5 hrs/day. Systematic 6-phase master curriculum covering complete computer science foundations, Python data ecosystem, to principal architect defense.
 
 ---
 
@@ -72,7 +73,15 @@ IDFC-FIRST-DEVELOPER-PREP/
 │   └── complexity-analysis.md     ← Big-O, Big-Ω, Big-Θ & Amortized Analysis (Hinglish)
 │
 ├── 01-PYTHON/
-│   └── python-fundamentals.md     ← Python for DSA, built-in data structures & idioms
+│   ├── python-fundamentals.md     ← Python Core, OOP, Dunder methods, GC, Generators, Decorators
+│   ├── python-dsa.md              ← Python for Coding Interviews (deque, heapq, Counter, bisect)
+│   ├── numpy.md                   ← NumPy from Zero to Interview: ndarray, axis, broadcasting (40+ Qs)
+│   ├── pandas.md                  ← pandas: Series, DataFrame, loc vs iloc, groupby, merge (40+ Qs)
+│   ├── matplotlib.md              ← Matplotlib: Figure vs Axes, OO API, 5 chart types (20+ Qs)
+│   ├── sql-vs-pandas.md           ← SQL ↔ pandas Rosetta Stone: Mapping every SQL clause
+│   ├── pipeline.md                ← End-to-End Data Analysis Pipeline on transactions.csv
+│   ├── banking-analytics-project.py ← Runnable banking analytics script with visual output
+│   └── transactions.csv           ← Realistic 1,000-row banking transaction dataset
 │
 ├── 02-DSA/
 │   ├── arrays.md                  ← Prefix sum, in-place manipulation & Kadane's
