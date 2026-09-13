@@ -139,13 +139,13 @@ export default function Navbar({
               <button
                 key={item.id}
                 onClick={() => handleSelectTab(item.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1.5 px-2 py-1.5 xl:px-2.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                   isActive 
-                    ? 'bg-rose-50 dark:bg-rose-950/50 text-[#9B1B33] dark:text-rose-300 shadow-xs' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-rose-50 text-[#9B1B33] shadow-xs font-bold' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
-                <Icon size={14} className={isActive ? 'text-[#9B1B33] dark:text-rose-300' : 'text-slate-500'} />
+                <Icon size={14} className={isActive ? 'text-[#9B1B33]' : 'text-slate-500'} />
                 <span>{item.label}</span>
                 {item.badge && (
                   <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
@@ -153,7 +153,7 @@ export default function Navbar({
                       ? item.badgeColor 
                       : isActive 
                         ? 'bg-[#9B1B33] text-white' 
-                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        : 'bg-slate-200 text-slate-700'
                   }`}>
                     {item.badge}
                   </span>
@@ -184,7 +184,7 @@ export default function Navbar({
       </div>
 
       {/* Mobile Horizontal Scrollable Quick-Bar (Always visible on mobile for swift switching) */}
-      <div className="lg:hidden border-t border-slate-100 dark:border-slate-800 px-3 py-1.5 overflow-x-auto flex items-center gap-1 scrollbar-none bg-slate-50 dark:bg-slate-900/50">
+      <div className="lg:hidden border-t border-slate-100 px-3 py-1.5 overflow-x-auto flex items-center gap-1.5 scrollbar-none bg-slate-50">
         {navItems.map(item => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -192,10 +192,10 @@ export default function Navbar({
             <button
               key={item.id}
               onClick={() => handleSelectTab(item.id)}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold whitespace-nowrap shrink-0 transition-all ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap shrink-0 transition-all ${
                 isActive 
-                  ? 'bg-[#9B1B33] text-white shadow-xs' 
-                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                  ? 'bg-[#9B1B33] text-white shadow-xs font-bold' 
+                  : 'bg-white text-slate-600 border border-slate-200'
               }`}
             >
               <Icon size={12} />
@@ -212,43 +212,58 @@ export default function Navbar({
         })}
       </div>
 
-      {/* Mobile Dropdown Drawer Menu */}
+      {/* Mobile Dropdown Drawer Menu & Backdrop */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 shadow-xl max-h-[80vh] overflow-y-auto animate-in slide-in-from-top-2 duration-150">
-          <div className="grid grid-cols-2 gap-2 pb-2">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleSelectTab(item.id)}
-                  className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
-                    isActive
-                      ? 'border-[#9B1B33] bg-rose-50/70 dark:bg-rose-950/40 text-[#9B1B33] dark:text-rose-300'
-                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between w-full mb-1">
-                    <Icon size={18} className={isActive ? 'text-[#9B1B33]' : 'text-slate-500'} />
-                    {item.badge && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
-                        item.badgeColor 
-                          ? item.badgeColor 
-                          : isActive 
-                            ? 'bg-[#9B1B33] text-white' 
-                            : 'bg-slate-100 text-slate-600'
-                      }`}>
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-bold leading-tight">{item.label}</span>
-                </button>
-              );
-            })}
+        <>
+          <div 
+            className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <div className="relative z-40 lg:hidden border-t border-slate-200 bg-white px-4 py-3 shadow-2xl max-h-[75vh] overflow-y-auto animate-in slide-in-from-top-2 duration-150">
+            <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-100">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">All Learning Modules (11)</span>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-xs font-semibold text-slate-400 hover:text-slate-600 flex items-center gap-1"
+              >
+                Close <X size={14} />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 pb-2">
+              {navItems.map(item => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSelectTab(item.id)}
+                    className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+                      isActive
+                        ? 'border-[#9B1B33] bg-rose-50/80 text-[#9B1B33] shadow-xs'
+                        : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <Icon size={18} className={isActive ? 'text-[#9B1B33]' : 'text-slate-500'} />
+                      {item.badge && (
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${
+                          item.badgeColor 
+                            ? item.badgeColor 
+                            : isActive 
+                              ? 'bg-[#9B1B33] text-white' 
+                              : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-bold leading-tight">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

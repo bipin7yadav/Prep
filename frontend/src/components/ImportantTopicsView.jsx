@@ -1,4 +1,17 @@
 import React, { useState, useMemo } from 'react';
+import { 
+  ChevronDown, 
+  CheckCircle2, 
+  Clock, 
+  Sparkles, 
+  Star, 
+  Search, 
+  X, 
+  Building2, 
+  BookOpen, 
+  Target, 
+  Layers 
+} from 'lucide-react';
 import { IMPORTANT_TOPICS } from '../data/importantTopicsData';
 
 export default function ImportantTopicsView({ 
@@ -72,7 +85,8 @@ export default function ImportantTopicsView({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold uppercase tracking-wider border border-rose-500/30">
-              <span>⭐ High-Yield Focus Matrix</span>
+              <Star size={13} className="text-amber-300 fill-amber-300" />
+              <span>High-Yield Focus Matrix</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Important Topics Matrix
@@ -112,11 +126,11 @@ export default function ImportantTopicsView({
         {/* Tier Filter Tabs */}
         <div className="mt-6 pt-5 border-t border-slate-800 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
           {[
-            { id: 'All', label: 'All Tiers', count: totalTopics },
-            { id: 'Must Know', label: '🔴 Must Know (Tier 1)', count: mustKnowTotal },
-            { id: 'High', label: '🟠 High Probability (Tier 2)', count: IMPORTANT_TOPICS.filter(t => t.tier === 'High').length },
-            { id: 'Good', label: '🟡 Good to Know (Tier 3)', count: IMPORTANT_TOPICS.filter(t => t.tier === 'Good').length },
-            { id: 'Nice', label: '🟢 Nice to Have (Tier 4)', count: IMPORTANT_TOPICS.filter(t => t.tier === 'Nice').length },
+            { id: 'All', label: 'All Tiers', dot: 'bg-slate-400', count: totalTopics },
+            { id: 'Must Know', label: 'Must Know (Tier 1)', dot: 'bg-rose-500', count: mustKnowTotal },
+            { id: 'High', label: 'High Probability (Tier 2)', dot: 'bg-amber-500', count: IMPORTANT_TOPICS.filter(t => t.tier === 'High').length },
+            { id: 'Good', label: 'Good to Know (Tier 3)', dot: 'bg-emerald-500', count: IMPORTANT_TOPICS.filter(t => t.tier === 'Good').length },
+            { id: 'Nice', label: 'Nice to Have (Tier 4)', dot: 'bg-sky-500', count: IMPORTANT_TOPICS.filter(t => t.tier === 'Nice').length },
           ].map(tier => {
             const isSelected = selectedTier === tier.id;
             return (
@@ -125,10 +139,11 @@ export default function ImportantTopicsView({
                 onClick={() => setSelectedTier(tier.id)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
                   isSelected 
-                    ? 'bg-white text-slate-900 shadow-md scale-102' 
+                    ? 'bg-white text-slate-900 shadow-md scale-102 font-bold' 
                     : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60'
                 }`}
               >
+                <span className={`w-2 h-2 rounded-full ${tier.dot}`} />
                 <span>{tier.label}</span>
                 <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
                   isSelected ? 'bg-slate-200 text-slate-800' : 'bg-slate-700 text-slate-400'
@@ -150,15 +165,15 @@ export default function ImportantTopicsView({
             placeholder="Search topics, questions, banking terms..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
           />
-          <span className="absolute left-3 top-2.5 text-slate-400">🔍</span>
+          <Search size={15} className="absolute left-3 top-2.5 text-slate-400 pointer-events-none" />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded"
             >
-              ✕
+              <X size={14} />
             </button>
           )}
         </div>
@@ -171,7 +186,7 @@ export default function ImportantTopicsView({
               onClick={() => setSelectedCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                 selectedCategory === cat 
-                  ? 'bg-rose-600 text-white shadow-sm' 
+                  ? 'bg-rose-600 text-white shadow-sm font-semibold' 
                   : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -259,8 +274,8 @@ export default function ImportantTopicsView({
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs text-slate-500 transition-transform">
-                      {isExpanded ? '▲' : '▼'}
+                    <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                      <ChevronDown size={16} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-rose-600 dark:text-rose-400' : ''}`} />
                     </div>
                   </div>
                 </div>
@@ -281,7 +296,7 @@ export default function ImportantTopicsView({
                     {/* Banking Relevance */}
                     {topic.bankingRelevance && (
                       <div className="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-sm text-rose-950 dark:text-rose-200 flex items-start gap-3">
-                        <span className="text-xl">🏦</span>
+                        <Building2 size={18} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                         <div className="space-y-1">
                           <strong className="block text-xs uppercase tracking-wider text-rose-700 dark:text-rose-300 font-bold">
                             Why IDFC FIRST Bank Cares
@@ -296,7 +311,8 @@ export default function ImportantTopicsView({
                     {/* Key Interview Questions */}
                     <div className="space-y-2">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                        <span>🎯 High-Frequency IDFC Interview Questions to Prepare</span>
+                        <Target size={14} />
+                        <span>High-Frequency IDFC Interview Questions to Prepare</span>
                       </h4>
                       <div className="space-y-2">
                         {topic.keyQuestions.map((q, qIdx) => (
@@ -317,19 +333,26 @@ export default function ImportantTopicsView({
                         onClick={() => onSelectLesson(topic.lessonDocId)}
                         className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-2 shadow-sm transition-colors"
                       >
-                        <span>📖 Open Full Chapter in Reader</span>
-                        <span>→</span>
+                        <BookOpen size={14} />
+                        <span>Open Full Chapter in Reader</span>
                       </button>
 
                       <button
                         onClick={() => onToggleCompleted(topic.id)}
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg transition-colors ${
+                        className={`text-xs font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 ${
                           isCompleted 
                             ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
                             : 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-300'
                         }`}
                       >
-                        {isCompleted ? '✓ Completed' : 'Mark as Completed'}
+                        {isCompleted ? (
+                          <>
+                            <CheckCircle2 size={13} />
+                            <span>Completed</span>
+                          </>
+                        ) : (
+                          <span>Mark as Completed</span>
+                        )}
                       </button>
                     </div>
                   </div>

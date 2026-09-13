@@ -1,4 +1,17 @@
 import React, { useState, useMemo } from 'react';
+import { 
+  AlertCircle, 
+  HelpCircle, 
+  Layers, 
+  Code2, 
+  CheckCircle2, 
+  Check, 
+  RotateCw, 
+  Sparkles, 
+  X, 
+  BookOpen, 
+  ShieldCheck 
+} from 'lucide-react';
 import { DIAGNOSTIC_QUESTIONS } from '../data/quizData';
 import { FLASHCARDS } from '../data/flashcardsData';
 import { DSA_PROBLEMS } from '../data/dsaPracticeData';
@@ -60,7 +73,8 @@ export default function MistakeBookView({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-xs font-semibold uppercase tracking-wider border border-red-500/30">
-              <span>📕 Target Weakness Elimination</span>
+              <AlertCircle size={13} />
+              <span>Target Weakness Elimination</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Mistake Book & Learning Loop
@@ -87,10 +101,10 @@ export default function MistakeBookView({
         {/* Tab Filters */}
         <div className="mt-6 pt-5 border-t border-slate-800 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
           {[
-            { id: 'All', label: 'All Mistakes', count: totalMistakes },
-            { id: 'Quiz', label: '❓ Failed Quizzes', count: failedQuizzes.length },
-            { id: 'Flashcards', label: '🗂️ Needs-Review Cards', count: reviewCards.length },
-            { id: 'DSA', label: '💻 Flagged DSA', count: flaggedDsa.length },
+            { id: 'All', label: 'All Mistakes', icon: <Layers size={13} />, count: totalMistakes },
+            { id: 'Quiz', label: 'Failed Quizzes', icon: <HelpCircle size={13} />, count: failedQuizzes.length },
+            { id: 'Flashcards', label: 'Needs-Review Cards', icon: <Sparkles size={13} />, count: reviewCards.length },
+            { id: 'DSA', label: 'Flagged DSA', icon: <Code2 size={13} />, count: flaggedDsa.length },
           ].map(tab => {
             const isSelected = activeTab === tab.id;
             return (
@@ -99,10 +113,11 @@ export default function MistakeBookView({
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
                   isSelected 
-                    ? 'bg-red-600 text-white shadow-md' 
+                    ? 'bg-red-600 text-white shadow-md font-bold' 
                     : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60'
                 }`}
               >
+                {tab.icon}
                 <span>{tab.label}</span>
                 <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
                   isSelected ? 'bg-red-800 text-red-200' : 'bg-slate-700 text-slate-400'
@@ -118,8 +133,8 @@ export default function MistakeBookView({
       {/* Zero State Celebration */}
       {totalMistakes === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-12 text-center border border-emerald-500/30 dark:border-emerald-500/20 shadow-sm space-y-4">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-3xl mx-auto">
-            ✓
+          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto">
+            <CheckCircle2 size={36} />
           </div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">
             Your Mistake Book is Completely Clean!
@@ -135,7 +150,8 @@ export default function MistakeBookView({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-2">
-                  <span>❓ Failed Diagnostic Quiz Questions ({failedQuizzes.length})</span>
+                  <HelpCircle size={16} />
+                  <span>Failed Diagnostic Quiz Questions ({failedQuizzes.length})</span>
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   Select the correct answer to resolve
@@ -195,10 +211,16 @@ export default function MistakeBookView({
                             >
                               <span>{opt}</span>
                               {selectedOpt !== undefined && isCorrect && (
-                                <span className="text-emerald-600 text-xs font-bold shrink-0">✓ Correct</span>
+                                <span className="text-emerald-600 text-xs font-bold shrink-0 flex items-center gap-1">
+                                  <Check size={13} />
+                                  <span>Correct</span>
+                                </span>
                               )}
                               {selectedOpt !== undefined && isSelected && !isCorrect && (
-                                <span className="text-red-600 text-xs font-bold shrink-0">✕ Try Again</span>
+                                <span className="text-red-600 text-xs font-bold shrink-0 flex items-center gap-1">
+                                  <X size={13} />
+                                  <span>Try Again</span>
+                                </span>
                               )}
                             </button>
                           );
@@ -207,10 +229,11 @@ export default function MistakeBookView({
 
                       {/* Explanation & Hint */}
                       <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 space-y-1">
-                        <strong className="block text-slate-800 dark:text-slate-200 font-semibold">
-                          💡 Explanation:
+                        <strong className="text-slate-800 dark:text-slate-200 font-semibold flex items-center gap-1.5">
+                          <Sparkles size={13} className="text-amber-500" />
+                          <span>Explanation:</span>
                         </strong>
-                        <p>{q.explanation}</p>
+                        <p className="font-sans">{q.explanation}</p>
                       </div>
                     </div>
                   );
@@ -224,7 +247,8 @@ export default function MistakeBookView({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                  <span>🗂️ Needs-Review Flashcards ({reviewCards.length})</span>
+                  <Sparkles size={16} />
+                  <span>Needs-Review Flashcards ({reviewCards.length})</span>
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   Review and mark Mastered to remove
@@ -269,16 +293,18 @@ export default function MistakeBookView({
                       <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-2">
                         <button
                           onClick={() => toggleRevealCard(card.id)}
-                          className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
+                          className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold flex items-center gap-1"
                         >
-                          {isRevealed ? 'Hide Answer' : 'Reveal Answer'}
+                          <RotateCw size={12} />
+                          <span>{isRevealed ? 'Hide Answer' : 'Reveal Answer'}</span>
                         </button>
 
                         <button
                           onClick={() => onUpdateFlashcardStatus(card.id, 'mastered')}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition-colors"
+                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition-colors flex items-center gap-1.5"
                         >
-                          ✓ Mark Mastered
+                          <Check size={12} />
+                          <span>Mark Mastered</span>
                         </button>
                       </div>
                     </div>
@@ -293,7 +319,8 @@ export default function MistakeBookView({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
-                  <span>💻 Flagged DSA Coding Problems ({flaggedDsa.length})</span>
+                  <Code2 size={16} />
+                  <span>Flagged DSA Coding Problems ({flaggedDsa.length})</span>
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400">
                   Solve or review to clear flag
@@ -321,9 +348,10 @@ export default function MistakeBookView({
 
                       <button
                         onClick={() => onResolveDsaMistake(prob.id)}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition-colors shrink-0"
+                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition-colors shrink-0 flex items-center gap-1.5"
                       >
-                        ✓ Mark Resolved
+                        <Check size={13} />
+                        <span>Mark Resolved</span>
                       </button>
                     </div>
 

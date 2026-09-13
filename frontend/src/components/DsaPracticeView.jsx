@@ -1,4 +1,23 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { 
+  ChevronDown, 
+  Flag, 
+  Copy, 
+  Check, 
+  BookOpen, 
+  Search, 
+  X, 
+  Building2, 
+  Lightbulb, 
+  AlertTriangle, 
+  Clock, 
+  Cpu, 
+  Target, 
+  CheckCircle2, 
+  Circle,
+  Code2,
+  Filter
+} from 'lucide-react';
 import { 
   DSA_PROBLEMS, 
   DSA_CATEGORIES, 
@@ -51,6 +70,19 @@ export default function DsaPracticeView({
     });
   }, [selectedCategory, selectedDifficulty, statusFilter, searchQuery, solvedProblemIds, flaggedProblemIds]);
 
+  // Close cheatsheet on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowCheatSheet(false);
+      }
+    };
+    if (showCheatSheet) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showCheatSheet]);
+
   const solvedCount = solvedProblemIds.length;
   const totalCount = DSA_PROBLEMS.length;
   const solvedPercent = Math.round((solvedCount / totalCount) * 100);
@@ -68,7 +100,8 @@ export default function DsaPracticeView({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wider border border-indigo-500/30">
-              <span>🐍 Python-First Coding Engine</span>
+              <Code2 size={13} />
+              <span>Python-First Coding Engine</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               High-Yield DSA Code Practice
@@ -84,7 +117,8 @@ export default function DsaPracticeView({
               onClick={() => setShowCheatSheet(true)}
               className="w-full sm:w-auto px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
             >
-              <span>📜 Python DSA Cheatsheet</span>
+              <BookOpen size={16} />
+              <span>Python DSA Cheatsheet</span>
             </button>
             <div className="bg-slate-800/80 border border-slate-700/60 rounded-xl px-4 py-2.5 w-full text-center">
               <div className="text-xs text-slate-400">Mastery Progress</div>
@@ -140,15 +174,15 @@ export default function DsaPracticeView({
             placeholder="Search problems, patterns, banking scenarios..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <span className="absolute left-3 top-2.5 text-slate-400">🔍</span>
+          <Search size={15} className="absolute left-3 top-2.5 text-slate-400 pointer-events-none" />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded"
             >
-              ✕
+              <X size={14} />
             </button>
           )}
         </div>
@@ -175,21 +209,22 @@ export default function DsaPracticeView({
           {/* Status Filter */}
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700">
             {[
-              { id: 'All', label: 'All' },
-              { id: 'Solved', label: '✓ Solved' },
-              { id: 'Unsolved', label: '⭕ Unsolved' },
-              { id: 'Flagged', label: '🚩 Review' },
+              { id: 'All', label: 'All', icon: null },
+              { id: 'Solved', label: 'Solved', icon: <CheckCircle2 size={12} className="text-emerald-500" /> },
+              { id: 'Unsolved', label: 'Unsolved', icon: <Circle size={12} className="text-slate-400" /> },
+              { id: 'Flagged', label: 'Review', icon: <Flag size={12} className="text-amber-500 fill-amber-500" /> },
             ].map(st => (
               <button
                 key={st.id}
                 onClick={() => setStatusFilter(st.id)}
-                className={`px-2.5 py-1 rounded-md transition-all ${
+                className={`px-2.5 py-1 rounded-md transition-all flex items-center gap-1.5 ${
                   statusFilter === st.id 
                     ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold' 
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                {st.label}
+                {st.icon}
+                <span>{st.label}</span>
               </button>
             ))}
           </div>
@@ -303,17 +338,17 @@ export default function DsaPracticeView({
                       }}
                       className={`p-1.5 rounded-lg border transition-all ${
                         isFlagged 
-                          ? 'bg-amber-500/10 border-amber-500/40 text-amber-500' 
-                          : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+                          ? 'bg-amber-500/15 border-amber-500/40 text-amber-500' 
+                          : 'border-slate-200 dark:border-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:border-slate-300'
                       }`}
                       title={isFlagged ? "Remove from Mistake Book" : "Add to Mistake Book / Need Review"}
                     >
-                      {isFlagged ? '🚩' : '🏳️'}
+                      <Flag size={15} className={isFlagged ? "fill-amber-500 text-amber-500" : ""} />
                     </button>
 
                     {/* Expand Arrow */}
-                    <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs text-slate-500 transition-transform">
-                      {isExpanded ? '▲' : '▼'}
+                    <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                      <ChevronDown size={16} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-indigo-600 dark:text-indigo-400' : ''}`} />
                     </div>
                   </div>
                 </div>
@@ -339,7 +374,7 @@ export default function DsaPracticeView({
                     {/* Banking Real-World Application Scenario Callout */}
                     {prob.bankingScenario && (
                       <div className="p-4 rounded-xl bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 text-sm text-blue-900 dark:text-blue-200 flex items-start gap-3">
-                        <span className="text-xl">🏦</span>
+                        <Building2 size={18} className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                         <div className="space-y-1">
                           <strong className="block text-xs uppercase tracking-wider text-blue-700 dark:text-blue-300 font-bold">
                             IDFC FIRST Bank Production Scenario
@@ -353,7 +388,7 @@ export default function DsaPracticeView({
 
                     {/* Intuition & Hinglish Mental Model */}
                     <div className="p-4 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-sm text-amber-900 dark:text-amber-200 flex items-start gap-3">
-                      <span className="text-xl">💡</span>
+                      <Lightbulb size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                       <div className="space-y-1">
                         <strong className="block text-xs uppercase tracking-wider text-amber-700 dark:text-amber-300 font-bold">
                           Hinglish Intuition & Mental Model
@@ -378,13 +413,24 @@ export default function DsaPracticeView({
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                          <span>🐍 Python 3 Verified Solution</span>
+                          <Code2 size={14} className="text-indigo-600 dark:text-indigo-400" />
+                          <span>Python 3 Verified Solution</span>
                         </h4>
                         <button
                           onClick={() => handleCopyCode(prob.id, prob.pythonSolution)}
-                          className="px-2.5 py-1 text-xs rounded-md bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors flex items-center gap-1"
+                          className="px-2.5 py-1 text-xs rounded-md bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors flex items-center gap-1.5"
                         >
-                          {copiedCodeId === prob.id ? '✓ Copied!' : '📋 Copy Code'}
+                          {copiedCodeId === prob.id ? (
+                            <>
+                              <Check size={13} className="text-emerald-500" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={13} />
+                              <span>Copy Code</span>
+                            </>
+                          )}
                         </button>
                       </div>
 
@@ -398,13 +444,19 @@ export default function DsaPracticeView({
                     {/* Complexity Metrics */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">⏱️ Time Complexity</div>
+                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <Clock size={13} className="text-slate-500" />
+                          <span>Time Complexity</span>
+                        </div>
                         <div className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                           {prob.timeComplexity}
                         </div>
                       </div>
                       <div className="p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">💾 Space Complexity</div>
+                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <Cpu size={13} className="text-slate-500" />
+                          <span>Space Complexity</span>
+                        </div>
                         <div className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                           {prob.spaceComplexity}
                         </div>
@@ -414,7 +466,7 @@ export default function DsaPracticeView({
                     {/* Common Mistakes & Edge Cases */}
                     {prob.commonMistakes && (
                       <div className="p-4 rounded-xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-sm text-rose-900 dark:text-rose-200 flex items-start gap-3">
-                        <span className="text-xl">⚠️</span>
+                        <AlertTriangle size={18} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                         <div className="space-y-1">
                           <strong className="block text-xs uppercase tracking-wider text-rose-700 dark:text-rose-300 font-bold">
                             Common Pitfalls & Edge Cases
@@ -430,7 +482,8 @@ export default function DsaPracticeView({
                     {prob.interviewerFollowUps && prob.interviewerFollowUps.length > 0 && (
                       <div className="space-y-2">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                          <span>🎯 High-Frequency Interviewer Follow-Ups</span>
+                          <Target size={14} />
+                          <span>High-Frequency Interviewer Follow-Ups</span>
                         </h4>
                         <ul className="space-y-2">
                           {prob.interviewerFollowUps.map((fu, fIdx) => (
@@ -450,24 +503,32 @@ export default function DsaPracticeView({
                     <div className="pt-3 border-t border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
                       <button
                         onClick={() => onToggleFlagged(prob.id)}
-                        className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
+                        className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 ${
                           isFlagged 
                             ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400' 
                             : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
                         }`}
                       >
-                        {isFlagged ? '🚩 Flagged in Mistake Book' : '🏳️ Flag for Revision'}
+                        <Flag size={13} className={isFlagged ? "fill-amber-500 text-amber-500" : ""} />
+                        <span>{isFlagged ? 'Flagged in Mistake Book' : 'Flag for Revision'}</span>
                       </button>
 
                       <button
                         onClick={() => onToggleSolved(prob.id)}
-                        className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors ${
+                        className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
                           isSolved 
                             ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
                             : 'bg-indigo-600 text-white hover:bg-indigo-700'
                         }`}
                       >
-                        {isSolved ? '✓ Marked as Solved' : 'Mark as Solved'}
+                        {isSolved ? (
+                          <>
+                            <Check size={14} />
+                            <span>Marked as Solved</span>
+                          </>
+                        ) : (
+                          <span>Mark as Solved</span>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -480,12 +541,18 @@ export default function DsaPracticeView({
 
       {/* Python DSA Cheatsheet Modal */}
       {showCheatSheet && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div 
+          onClick={() => setShowCheatSheet(false)}
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden"
+          >
             {/* Modal Header */}
             <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950">
               <div className="flex items-center gap-2.5">
-                <span className="text-xl">📜</span>
+                <BookOpen size={20} className="text-indigo-400" />
                 <div>
                   <h3 className="text-base font-bold text-white">Python DSA Cheat Sheet for Coding Rounds</h3>
                   <p className="text-xs text-slate-400">High-frequency boilerplate templates, collections, and heap patterns</p>
@@ -493,9 +560,9 @@ export default function DsaPracticeView({
               </div>
               <button 
                 onClick={() => setShowCheatSheet(false)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm"
+                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm transition-colors"
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
 
@@ -509,9 +576,19 @@ export default function DsaPracticeView({
                     </span>
                     <button
                       onClick={() => handleCopyCode(`sheet-${sIdx}`, sheet.code)}
-                      className="text-xs px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                      className="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors flex items-center gap-1"
                     >
-                      {copiedCodeId === `sheet-${sIdx}` ? '✓ Copied' : '📋 Copy'}
+                      {copiedCodeId === `sheet-${sIdx}` ? (
+                        <>
+                          <Check size={12} className="text-emerald-400" />
+                          <span>Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={12} />
+                          <span>Copy</span>
+                        </>
+                      )}
                     </button>
                   </div>
                   <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-300 overflow-x-auto">

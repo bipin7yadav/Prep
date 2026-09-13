@@ -246,23 +246,33 @@ export default function FlashcardsView({
         </div>
 
         {/* Counter & Status */}
-        <div className="flex items-center justify-between text-xs text-slate-500 mb-3 px-1">
-          <span className="font-bold">
-            Card {totalInFilter > 0 ? currentIndex + 1 : 0} of {totalInFilter}
-          </span>
-          <span className="text-slate-400">
-            <span className="inline sm:hidden">👆 Tap card to flip</span>
-            <span className="hidden sm:inline">
-              Tip: <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">Space</kbd> to flip, <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">←</kbd> <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">→</kbd> to navigate
+        <div className="space-y-1.5 mb-3 px-1">
+          <div className="flex items-center justify-between text-xs text-slate-500">
+            <span className="font-bold">
+              Card {totalInFilter > 0 ? currentIndex + 1 : 0} of {totalInFilter}
             </span>
-          </span>
+            <span className="text-slate-400">
+              <span className="inline sm:hidden">👆 Tap card to flip</span>
+              <span className="hidden sm:inline">
+                Tip: <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">Space</kbd> to flip, <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">←</kbd> <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">→</kbd> to navigate
+              </span>
+            </span>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#9B1B33] h-full rounded-full transition-all duration-300"
+              style={{ width: `${totalInFilter > 0 ? ((currentIndex + 1) / totalInFilter) * 100 : 0}%` }}
+            />
+          </div>
         </div>
 
         {/* 3D Flashcard */}
         {currentCard ? (
           <div 
             onClick={() => setIsFlipped(!isFlipped)}
-            className={`min-h-[300px] sm:min-h-[340px] bg-white rounded-2xl p-5 sm:p-7 md:p-8 cursor-pointer shadow-md flex flex-col justify-between relative transition-all border-2 mb-6 ${
+            className={`min-h-[300px] sm:min-h-[340px] bg-white rounded-2xl p-5 sm:p-7 md:p-8 cursor-pointer shadow-md flex flex-col justify-between relative transition-all border-2 mb-6 select-none ${
               isFlipped ? 'border-[#C29B38] shadow-amber-500/5' : 'border-slate-200 hover:border-slate-300'
             }`}
           >
@@ -273,10 +283,17 @@ export default function FlashcardsView({
                 <span className="badge badge-gold text-[11px]">{currentCard.dimension}</span>
                 <span className="badge badge-gray text-[11px]">{currentCard.tag}</span>
               </div>
-              <div className="flex items-center gap-1 text-slate-400 text-xs shrink-0">
-                <RotateCw size={13} />
-                <span className="hidden sm:inline">Click to flip</span>
-              </div>
+              <button 
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsFlipped(!isFlipped);
+                }}
+                className="flex items-center gap-1.5 text-xs text-slate-500 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg transition-colors shrink-0 font-medium"
+              >
+                <RotateCw size={13} className={`transition-transform duration-300 ${isFlipped ? 'rotate-180 text-amber-600' : ''}`} />
+                <span>{isFlipped ? 'Show Prompt' : 'Flip Card'}</span>
+              </button>
             </div>
 
             {/* Content Front vs Back */}
@@ -295,7 +312,7 @@ export default function FlashcardsView({
                   <div className="flex items-center gap-1.5 text-[11px] text-[#8D6B19] font-bold uppercase tracking-wider mb-2">
                     <Sparkles size={14} /> HINGLISH INTERVIEW EXPLANATION & MENTAL MODEL
                   </div>
-                  <p className="text-xs sm:text-base text-slate-800 leading-relaxed mb-3">
+                  <p className="text-xs sm:text-base text-slate-800 leading-relaxed mb-3 font-sans">
                     {currentCard.answerHinglish}
                   </p>
 
