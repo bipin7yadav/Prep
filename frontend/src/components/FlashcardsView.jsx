@@ -90,7 +90,8 @@ export default function FlashcardsView({
     }
   };
 
-  const toggleMastered = () => {
+  const toggleMastered = (e) => {
+    if (e) e.stopPropagation();
     if (!currentCard) return;
     if (onUpdateCardStatus) {
       onUpdateCardStatus(currentCard.id, isMastered ? 'learning' : 'mastered');
@@ -110,7 +111,8 @@ export default function FlashcardsView({
     }
   };
 
-  const toggleMistake = () => {
+  const toggleMistake = (e) => {
+    if (e) e.stopPropagation();
     if (!currentCard) return;
     if (onUpdateCardStatus) {
       onUpdateCardStatus(currentCard.id, isMistake ? 'learning' : 'review');
@@ -147,33 +149,28 @@ export default function FlashcardsView({
   }, [totalInFilter]);
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <div className="container" style={{ maxWidth: '860px' }}>
+    <div className="py-4 sm:py-8">
+      <div className="container max-w-4xl px-4 sm:px-6">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#9B1B33', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-            <Layers size={16} /> ACTIVE RECALL SYSTEM • 224 MASTER FLASHCARDS
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 text-[#9B1B33] font-bold text-xs uppercase tracking-wider mb-2">
+            <Layers size={15} /> ACTIVE RECALL SYSTEM • {FLASHCARDS_DATA.length} MASTER FLASHCARDS
           </div>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             IDFC First Bank Flashcards Trainer
           </h1>
-          <p style={{ color: '#64748B', fontSize: '0.95rem' }}>
-            Multi-dimensional active recall (Concept, Why, How, Code, Debugging, Production, Banking).
+          <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
+            Multi-dimensional active recall across Concept, Why, How, Code, Debugging, Production & Banking.
           </p>
         </div>
 
         {/* Spaced Repetition Buckets */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '0.75rem',
-          marginBottom: '1.5rem'
-        }}>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-6">
           {[
-            { id: 'All', label: 'All Cards', count: FLASHCARDS_DATA.length, color: '#0F172A' },
-            { id: 'Learning', label: 'Learning', count: FLASHCARDS_DATA.length - masteredCards.length - mistakeCards.length, color: '#0284C7' },
-            { id: 'NeedsReview', label: 'Needs Review', count: mistakeCards.length, color: '#DC2626' },
-            { id: 'Mastered', label: 'Mastered', count: masteredCards.length, color: '#10B981' },
+            { id: 'All', label: 'All Cards', count: FLASHCARDS_DATA.length, color: 'text-slate-900', border: 'border-slate-300' },
+            { id: 'Learning', label: 'Learning', count: FLASHCARDS_DATA.length - masteredCards.length - mistakeCards.length, color: 'text-sky-600', border: 'border-sky-500' },
+            { id: 'NeedsReview', label: 'Needs Review', count: mistakeCards.length, color: 'text-rose-600', border: 'border-rose-500' },
+            { id: 'Mastered', label: 'Mastered', count: masteredCards.length, color: 'text-emerald-600', border: 'border-emerald-500' },
           ].map(b => (
             <button
               key={b.id}
@@ -182,35 +179,22 @@ export default function FlashcardsView({
                 setCurrentIndex(0);
                 setIsFlipped(false);
               }}
-              style={{
-                backgroundColor: activeBucket === b.id ? '#FFFFFF' : '#F8FAFC',
-                border: `2px solid ${activeBucket === b.id ? b.color : '#E2E8F0'}`,
-                borderRadius: '10px',
-                padding: '0.75rem',
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
+              className={`p-3 rounded-xl text-center cursor-pointer transition-all border-2 ${
+                activeBucket === b.id 
+                  ? `bg-white shadow-sm ${b.border}` 
+                  : 'bg-slate-50 border-slate-200 hover:bg-white'
+              }`}
             >
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: b.color }}>{b.count}</div>
-              <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>{b.label}</div>
+              <div className={`text-xl sm:text-2xl font-extrabold ${b.color}`}>{b.count}</div>
+              <div className="text-[11px] sm:text-xs text-slate-500 font-semibold mt-0.5">{b.label}</div>
             </button>
           ))}
         </div>
 
         {/* Filter Controls Bar */}
-        <div style={{
-          backgroundColor: '#FFFFFF',
-          border: '1px solid #E2E8F0',
-          borderRadius: '12px',
-          padding: '1rem',
-          marginBottom: '1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem'
-        }}>
+        <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 space-y-3 shadow-sm">
           {/* Domains Scroll */}
-          <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '2px' }}>
+          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
             {domains.map(d => (
               <button
                 key={d}
@@ -219,17 +203,11 @@ export default function FlashcardsView({
                   setCurrentIndex(0);
                   setIsFlipped(false);
                 }}
-                style={{
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '20px',
-                  border: `1px solid ${selectedDomain === d ? '#9B1B33' : '#E2E8F0'}`,
-                  backgroundColor: selectedDomain === d ? '#9B1B33' : '#FFFFFF',
-                  color: selectedDomain === d ? '#FFFFFF' : '#475569',
-                  fontSize: '0.75rem',
-                  fontWeight: selectedDomain === d ? 700 : 500,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                  selectedDomain === d 
+                    ? 'bg-[#9B1B33] text-white shadow-sm' 
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
               >
                 {d}
               </button>
@@ -237,8 +215,8 @@ export default function FlashcardsView({
           </div>
 
           {/* Dimension Pills & Shuffle */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto' }}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1 border-t border-slate-100">
+            <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
               {dimensions.map(dim => (
                 <button
                   key={dim}
@@ -247,17 +225,11 @@ export default function FlashcardsView({
                     setCurrentIndex(0);
                     setIsFlipped(false);
                   }}
-                  style={{
-                    padding: '0.25rem 0.6rem',
-                    borderRadius: '6px',
-                    border: `1px solid ${selectedDimension === dim ? '#C29B38' : '#CBD5E1'}`,
-                    backgroundColor: selectedDimension === dim ? '#FEF9EE' : '#FFFFFF',
-                    color: selectedDimension === dim ? '#8D6B19' : '#64748B',
-                    fontSize: '0.72rem',
-                    fontWeight: selectedDimension === dim ? 700 : 500,
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap'
-                  }}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap transition-all shrink-0 ${
+                    selectedDimension === dim 
+                      ? 'bg-[#FEF9EE] text-[#8D6B19] border border-[#C29B38] font-bold' 
+                      : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
+                  }`}
                 >
                   {dim}
                 </button>
@@ -266,32 +238,23 @@ export default function FlashcardsView({
 
             <button
               onClick={handleShuffle}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem',
-                backgroundColor: '#F1F5F9',
-                border: '1px solid #CBD5E1',
-                padding: '0.3rem 0.65rem',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#334155',
-                cursor: 'pointer'
-              }}
+              className="self-end sm:self-auto flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold shrink-0 transition-colors"
             >
-              <Shuffle size={13} /> Shuffle
+              <Shuffle size={13} /> Shuffle Cards
             </button>
           </div>
         </div>
 
         {/* Counter & Status */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#64748B' }}>
+        <div className="flex items-center justify-between text-xs text-slate-500 mb-3 px-1">
+          <span className="font-bold">
             Card {totalInFilter > 0 ? currentIndex + 1 : 0} of {totalInFilter}
           </span>
-          <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
-            Tip: Press <kbd style={{ backgroundColor: '#F1F5F9', padding: '1px 5px', borderRadius: '4px', border: '1px solid #CBD5E1' }}>Space</kbd> to flip, <kbd style={{ backgroundColor: '#F1F5F9', padding: '1px 5px', borderRadius: '4px', border: '1px solid #CBD5E1' }}>←</kbd> <kbd style={{ backgroundColor: '#F1F5F9', padding: '1px 5px', borderRadius: '4px', border: '1px solid #CBD5E1' }}>→</kbd> to navigate
+          <span className="text-slate-400">
+            <span className="inline sm:hidden">👆 Tap card to flip</span>
+            <span className="hidden sm:inline">
+              Tip: <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">Space</kbd> to flip, <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">←</kbd> <kbd className="bg-slate-100 px-1.5 py-0.5 rounded border text-[10px]">→</kbd> to navigate
+            </span>
           </span>
         </div>
 
@@ -299,57 +262,46 @@ export default function FlashcardsView({
         {currentCard ? (
           <div 
             onClick={() => setIsFlipped(!isFlipped)}
-            style={{
-              minHeight: '340px',
-              backgroundColor: '#FFFFFF',
-              border: isFlipped ? '2px solid #C29B38' : '2px solid #E2E8F0',
-              borderRadius: '16px',
-              padding: '2.5rem',
-              cursor: 'pointer',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              transition: 'all 0.2s ease',
-              marginBottom: '1.5rem'
-            }}
+            className={`min-h-[300px] sm:min-h-[340px] bg-white rounded-2xl p-5 sm:p-7 md:p-8 cursor-pointer shadow-md flex flex-col justify-between relative transition-all border-2 mb-6 ${
+              isFlipped ? 'border-[#C29B38] shadow-amber-500/5' : 'border-slate-200 hover:border-slate-300'
+            }`}
           >
             {/* Top Bar on Card */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <span className="badge badge-red">{currentCard.domain.split(' ')[0]}</span>
-                <span className="badge badge-gold">{currentCard.dimension}</span>
-                <span className="badge badge-gray">{currentCard.tag}</span>
+            <div className="flex items-start sm:items-center justify-between gap-2">
+              <div className="flex flex-wrap gap-1.5 items-center">
+                <span className="badge badge-red text-[11px]">{currentCard.domain.split(' ')[0]}</span>
+                <span className="badge badge-gold text-[11px]">{currentCard.dimension}</span>
+                <span className="badge badge-gray text-[11px]">{currentCard.tag}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#94A3B8', fontSize: '0.78rem' }}>
-                <RotateCw size={14} /> Click or Space to flip
+              <div className="flex items-center gap-1 text-slate-400 text-xs shrink-0">
+                <RotateCw size={13} />
+                <span className="hidden sm:inline">Click to flip</span>
               </div>
             </div>
 
             {/* Content Front vs Back */}
-            <div style={{ margin: '1.75rem 0' }}>
+            <div className="my-5 sm:my-6">
               {!isFlipped ? (
                 <div>
-                  <div style={{ fontSize: '0.8rem', color: '#9B1B33', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+                  <div className="text-[11px] text-[#9B1B33] font-bold uppercase tracking-wider mb-2">
                     INTERVIEW PROMPT / QUESTION
                   </div>
-                  <h2 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.4 }}>
+                  <h2 className="text-base sm:text-xl md:text-2xl font-extrabold text-slate-900 leading-snug">
                     {currentCard.question}
                   </h2>
                 </div>
               ) : (
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#8D6B19', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                  <div className="flex items-center gap-1.5 text-[11px] text-[#8D6B19] font-bold uppercase tracking-wider mb-2">
                     <Sparkles size={14} /> HINGLISH INTERVIEW EXPLANATION & MENTAL MODEL
                   </div>
-                  <p style={{ fontSize: '1.02rem', color: '#1E293B', lineHeight: 1.65, marginBottom: '1rem' }}>
+                  <p className="text-xs sm:text-base text-slate-800 leading-relaxed mb-3">
                     {currentCard.answerHinglish}
                   </p>
 
                   {currentCard.codeSnippet && (
-                    <div style={{ backgroundColor: '#0F172A', color: '#38BDF8', padding: '0.85rem 1rem', borderRadius: '8px', fontSize: '0.82rem', overflowX: 'auto', border: '1px solid #334155' }}>
-                      <pre style={{ margin: 0, fontFamily: 'monospace' }}><code>{currentCard.codeSnippet}</code></pre>
+                    <div className="bg-slate-900 text-sky-300 p-3 sm:p-4 rounded-xl text-xs overflow-x-auto border border-slate-700 font-mono">
+                      <pre className="m-0"><code>{currentCard.codeSnippet}</code></pre>
                     </div>
                   )}
                 </div>
@@ -357,106 +309,66 @@ export default function FlashcardsView({
             </div>
 
             {/* Bottom Indicator */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: '#94A3B8' }}>
-              <span>Side: <strong>{isFlipped ? 'Answer & Mental Model' : 'Question'}</strong></span>
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-100">
+              <span>Side: <strong className="text-slate-700">{isFlipped ? 'Answer & Mental Model' : 'Question'}</strong></span>
+              <div className="flex items-center gap-2 font-bold">
                 {isMastered && (
-                  <span style={{ color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <span className="text-emerald-600 flex items-center gap-1">
                     <CheckCircle size={14} /> Mastered
                   </span>
                 )}
                 {isMistake && (
-                  <span style={{ color: '#DC2626', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <AlertTriangle size={14} /> In Mistake Book
+                  <span className="text-rose-600 flex items-center gap-1">
+                    <AlertTriangle size={14} /> Needs Review
                   </span>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="card" style={{ padding: '3rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-            <p style={{ color: '#64748B', fontSize: '1rem' }}>No flashcards found matching the selected filters.</p>
+          <div className="bg-white rounded-2xl p-10 text-center border border-slate-200 mb-6 shadow-sm">
+            <p className="text-sm text-slate-500">No flashcards found matching the selected filters.</p>
           </div>
         )}
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-2.5 sm:gap-4">
           <button
             onClick={handlePrev}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #CBD5E1',
-              padding: '0.65rem 1.25rem',
-              borderRadius: '8px',
-              fontWeight: 600,
-              fontSize: '0.85rem',
-              color: '#334155',
-              cursor: 'pointer'
-            }}
+            className="order-1 flex items-center justify-center gap-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-colors shadow-sm"
           >
             <ArrowLeft size={16} /> Previous
           </button>
 
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div className="col-span-2 order-3 sm:order-2 flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={toggleMistake}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                backgroundColor: isMistake ? '#FEF2F2' : '#FFFFFF',
-                border: `1.5px solid ${isMistake ? '#DC2626' : '#CBD5E1'}`,
-                color: isMistake ? '#991B1B' : '#475569',
-                padding: '0.65rem 1.1rem',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '0.82rem',
-                cursor: 'pointer'
-              }}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all border shadow-sm ${
+                isMistake 
+                  ? 'bg-rose-50 text-rose-800 border-rose-300' 
+                  : 'bg-white text-slate-700 border-slate-300 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700'
+              }`}
             >
-              <AlertTriangle size={15} color={isMistake ? '#DC2626' : '#64748B'} />
+              <AlertTriangle size={15} className={isMistake ? 'text-rose-600' : 'text-slate-400'} />
               <span>{isMistake ? 'In Mistakes' : 'Needs Review'}</span>
             </button>
 
             <button
               onClick={toggleMastered}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                backgroundColor: isMastered ? '#ECFDF5' : '#FFFFFF',
-                border: `1.5px solid ${isMastered ? '#10B981' : '#CBD5E1'}`,
-                color: isMastered ? '#059669' : '#475569',
-                padding: '0.65rem 1.1rem',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '0.82rem',
-                cursor: 'pointer'
-              }}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all border shadow-sm ${
+                isMastered 
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300' 
+                  : 'bg-white text-slate-700 border-slate-300 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700'
+              }`}
             >
-              <CheckCircle size={15} color={isMastered ? '#10B981' : '#64748B'} />
+              <CheckCircle size={15} className={isMastered ? 'text-emerald-600' : 'text-slate-400'} />
               <span>{isMastered ? 'Mastered!' : 'Mark Mastered'}</span>
             </button>
           </div>
 
           <button
             onClick={handleNext}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              backgroundColor: '#9B1B33',
-              border: 'none',
-              padding: '0.65rem 1.25rem',
-              borderRadius: '8px',
-              fontWeight: 600,
-              fontSize: '0.85rem',
-              color: '#FFFFFF',
-              cursor: 'pointer'
-            }}
+            className="order-2 sm:order-3 flex items-center justify-center gap-1.5 bg-[#9B1B33] hover:bg-[#801428] text-white px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-md"
           >
             Next <ArrowRight size={16} />
           </button>

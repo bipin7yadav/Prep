@@ -19,51 +19,44 @@ export default function DatabasePlaygroundView() {
   const currentQuery = SAMPLE_INTERVIEW_QUERIES[activeQueryIndex];
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <div className="container">
+    <div className="py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#9B1B33', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
-            <Database size={16} /> IDFC FIRST BANK LIVE RELATIONAL DATABASE
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 text-[#9B1B33] font-bold text-xs uppercase tracking-wider mb-2">
+            <Database size={15} /> IDFC FIRST BANK LIVE RELATIONAL DATABASE
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             Banking Schema Explorer & SQL Interview Queries
           </h1>
-          <p style={{ color: '#64748B', maxWidth: '750px', lineHeight: 1.6 }}>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
             Explore the pre-seeded SQLite banking schema (`banking.db`) with accounts, customers, transactions, loans, and cards. Practice high-frequency interview window functions and row-locking concurrency.
           </p>
         </div>
 
         {/* Top Split: Schema Viewer */}
-        <div className="card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Table size={18} color="#9B1B33" />
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0F172A' }}>
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 mb-6 sm:mb-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <Table size={18} className="text-[#9B1B33]" />
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">
                 Table Data Inspector
               </h2>
             </div>
 
             {/* Table switcher tabs */}
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
               {Object.keys(BANKING_DB_TABLES).map(tbl => {
                 const isActive = activeTable === tbl;
                 return (
                   <button
                     key={tbl}
                     onClick={() => setActiveTable(tbl)}
-                    style={{
-                      padding: '0.4rem 0.85rem',
-                      borderRadius: '6px',
-                      border: `1px solid ${isActive ? '#9B1B33' : '#CBD5E1'}`,
-                      backgroundColor: isActive ? '#9B1B33' : '#FFFFFF',
-                      color: isActive ? '#FFFFFF' : '#475569',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      textTransform: 'uppercase',
-                      transition: 'all 0.15s ease'
-                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all shrink-0 ${
+                      isActive 
+                        ? 'bg-[#9B1B33] text-white shadow-sm' 
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                   >
                     {tbl}
                   </button>
@@ -73,23 +66,23 @@ export default function DatabasePlaygroundView() {
           </div>
 
           {/* Table Container */}
-          <div style={{ overflowX: 'auto', border: '1px solid #E2E8F0', borderRadius: '8px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+          <div className="overflow-x-auto border border-slate-200 rounded-xl">
+            <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
+                <tr className="bg-slate-50 border-b border-slate-200">
                   {currentTableData.columns.map(col => (
-                    <th key={col} style={{ padding: '0.75rem 1rem', fontWeight: 700, color: '#334155', whiteSpace: 'nowrap' }}>
+                    <th key={col} className="p-2.5 sm:p-3 font-bold text-slate-700 whitespace-nowrap">
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-100">
                 {currentTableData.rows.map((row, rIdx) => (
-                  <tr key={rIdx} style={{ borderBottom: '1px solid #F1F5F9', backgroundColor: rIdx % 2 === 0 ? '#FFFFFF' : '#FAFAFA' }}>
+                  <tr key={rIdx} className={rIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx} style={{ padding: '0.65rem 1rem', color: '#1E293B', whiteSpace: 'nowrap' }}>
-                        {typeof cell === 'number' && currentTableData.columns[cIdx].includes('amount') || currentTableData.columns[cIdx].includes('balance')
+                      <td key={cIdx} className="p-2.5 sm:p-3 text-slate-700 whitespace-nowrap">
+                        {typeof cell === 'number' && (currentTableData.columns[cIdx].includes('amount') || currentTableData.columns[cIdx].includes('balance'))
                           ? `₹${cell.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`
                           : cell}
                       </td>
@@ -102,33 +95,27 @@ export default function DatabasePlaygroundView() {
         </div>
 
         {/* Bottom Split: High-Yield Interview SQL Queries */}
-        <div className="card" style={{ padding: '1.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
-            <Sparkles size={20} color="#C29B38" />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F172A' }}>
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles size={18} className="text-[#C29B38]" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
               High-Yield Banking SQL Interview Scenarios
             </h2>
           </div>
 
           {/* Query Tabs */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', overflowX: 'auto' }}>
+          <div className="flex gap-1.5 overflow-x-auto pb-1 mb-5 scrollbar-thin">
             {SAMPLE_INTERVIEW_QUERIES.map((q, idx) => {
               const isActive = activeQueryIndex === idx;
               return (
                 <button
                   key={q.id}
                   onClick={() => setActiveQueryIndex(idx)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    borderRadius: '8px',
-                    border: `1.5px solid ${isActive ? '#9B1B33' : '#E2E8F0'}`,
-                    backgroundColor: isActive ? '#FDF2F4' : '#FFFFFF',
-                    color: isActive ? '#9B1B33' : '#475569',
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap'
-                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all shrink-0 border ${
+                    isActive 
+                      ? 'bg-rose-50 border-[#9B1B33] text-[#9B1B33] font-bold' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
                 >
                   {q.title}
                 </button>
@@ -137,34 +124,34 @@ export default function DatabasePlaygroundView() {
           </div>
 
           {/* Query Code & Explanation */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                   SQL Implementation
                 </span>
-                <span className={currentQuery.difficulty === 'Critical' ? 'badge badge-red' : 'badge badge-gold'}>
+                <span className={currentQuery.difficulty === 'Critical' ? 'badge badge-red text-[10px]' : 'badge badge-gold text-[10px]'}>
                   {currentQuery.difficulty}
                 </span>
               </div>
-              <div style={{ backgroundColor: '#0F172A', color: '#38BDF8', padding: '1.25rem', borderRadius: '10px', fontSize: '0.8rem', overflowX: 'auto', border: '1px solid #334155' }}>
-                <pre style={{ margin: 0, fontFamily: 'monospace' }}><code>{currentQuery.sql}</code></pre>
+              <div className="bg-slate-900 text-sky-300 p-3.5 sm:p-4 rounded-xl text-xs overflow-x-auto border border-slate-700 font-mono">
+                <pre className="m-0"><code>{currentQuery.sql}</code></pre>
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ backgroundColor: '#FEF9EE', borderLeft: '4px solid #C29B38', padding: '1.25rem', borderRadius: '0 8px 8px 0', marginBottom: '1rem' }}>
-                <div style={{ fontSize: '0.82rem', color: '#8D6B19', fontWeight: 700, marginBottom: '0.35rem' }}>
+            <div className="space-y-3">
+              <div className="bg-[#FEF9EE] border-l-4 border-[#C29B38] p-3.5 sm:p-4 rounded-r-xl">
+                <div className="text-[11px] text-[#8D6B19] font-bold uppercase tracking-wider mb-1">
                   WHY INTERVIEWERS ASK THIS
                 </div>
-                <p style={{ fontSize: '0.9rem', color: '#451A03', lineHeight: 1.6 }}>
+                <p className="text-xs sm:text-sm text-[#451A03] leading-relaxed m-0">
                   {currentQuery.explanation}
                 </p>
               </div>
 
-              <div style={{ backgroundColor: '#F8FAFC', padding: '1rem', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '0.82rem', color: '#475569' }}>
-                <strong>Database Schema File:</strong> <code style={{ color: '#9B1B33' }}>05-SQL-DBMS/schema.sql</code><br/>
-                <strong>Verified DB Engine:</strong> SQLite 3 file: <code style={{ color: '#0F172A' }}>banking.db</code>
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-1">
+                <div><strong>Database Schema File:</strong> <code className="text-[#9B1B33]">05-SQL-DBMS/schema.sql</code></div>
+                <div><strong>Verified DB Engine:</strong> SQLite 3 file: <code className="text-slate-900">banking.db</code></div>
               </div>
             </div>
           </div>

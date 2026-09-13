@@ -7,11 +7,11 @@ import {
   Clock, 
   FileCode, 
   CheckCircle, 
-  ExternalLink,
-  ChevronRight,
-  ChevronDown,
-  Layers,
-  Sparkles
+  ExternalLink, 
+  ChevronRight, 
+  ChevronDown, 
+  Layers, 
+  Sparkles 
 } from 'lucide-react';
 
 export default function CurriculumView() {
@@ -30,53 +30,34 @@ export default function CurriculumView() {
   });
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <div className="container">
+    <div className="py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#9B1B33', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
-            <BookOpen size={16} /> 16 TARGETED MODULES • COMPREHENSIVE CURRICULUM
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 text-[#9B1B33] font-bold text-xs uppercase tracking-wider mb-2">
+            <BookOpen size={15} /> 16 TARGETED MODULES • COMPREHENSIVE CURRICULUM
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             IDFC First Bank Technical Curriculum
           </h1>
-          <p style={{ color: '#64748B', maxWidth: '750px', lineHeight: 1.6 }}>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
             Every module includes technical concepts in English, intuitive Hinglish mental models, production banking scenarios, and high-frequency interview questions.
           </p>
         </div>
 
         {/* Filter Bar & Search */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          marginBottom: '1.5rem',
-          backgroundColor: '#FFFFFF',
-          padding: '1rem',
-          borderRadius: '12px',
-          border: '1px solid #E2E8F0'
-        }}>
+        <div className="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shadow-sm">
           {/* Categories */}
-          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '2px', maxWidth: '100%' }}>
+          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: '0.4rem 0.85rem',
-                  borderRadius: '20px',
-                  border: '1px solid',
-                  borderColor: selectedCategory === cat ? '#9B1B33' : '#E2E8F0',
-                  backgroundColor: selectedCategory === cat ? '#9B1B33' : '#FFFFFF',
-                  color: selectedCategory === cat ? '#FFFFFF' : '#475569',
-                  fontSize: '0.8rem',
-                  fontWeight: selectedCategory === cat ? 700 : 500,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
-                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                  selectedCategory === cat 
+                    ? 'bg-[#9B1B33] text-white shadow-sm' 
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
               >
                 {cat}
               </button>
@@ -84,128 +65,92 @@ export default function CurriculumView() {
           </div>
 
           {/* Search Input */}
-          <div style={{ position: 'relative', minWidth: '260px' }}>
-            <Search size={16} color="#94A3B8" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          <div className="relative w-full md:w-72 shrink-0">
+            <Search size={15} className="absolute left-3 top-2.5 text-slate-400" />
             <input 
               type="text"
               placeholder="Search topics, ACID, UPI, pandas..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.5rem 0.75rem 0.5rem 2.2rem',
-                borderRadius: '8px',
-                border: '1px solid #CBD5E1',
-                fontSize: '0.85rem',
-                outline: 'none'
-              }}
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9B1B33]"
             />
           </div>
         </div>
 
         {/* Modules List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="space-y-3 sm:space-y-4">
           {filteredModules.map(mod => {
             const isExpanded = expandedModuleId === mod.id;
             return (
               <div 
                 key={mod.id}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  border: isExpanded ? '1px solid #9B1B33' : '1px solid #E2E8F0',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: isExpanded ? '0 4px 12px rgba(155, 27, 51, 0.08)' : '0 1px 3px rgba(0,0,0,0.02)',
-                  transition: 'all 0.2s ease'
-                }}
+                className={`bg-white rounded-xl border transition-all overflow-hidden ${
+                  isExpanded 
+                    ? 'border-[#9B1B33] shadow-md shadow-rose-900/5' 
+                    : 'border-slate-200 hover:border-slate-300 shadow-sm'
+                }`}
               >
                 {/* Module Bar */}
                 <div 
                   onClick={() => setExpandedModuleId(isExpanded ? null : mod.id)}
-                  style={{
-                    padding: '1.25rem 1.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                    userSelect: 'none'
-                  }}
+                  className="p-4 sm:p-5 flex items-start sm:items-center justify-between gap-3 cursor-pointer select-none"
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '10px',
-                      backgroundColor: isExpanded ? '#FDF2F4' : '#F1F5F9',
-                      color: isExpanded ? '#9B1B33' : '#475569',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 800,
-                      fontSize: '0.95rem'
-                    }}>
+                  <div className="flex items-start sm:items-center gap-3 min-w-0">
+                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-extrabold text-xs sm:text-sm shrink-0 mt-0.5 sm:mt-0 ${
+                      isExpanded ? 'bg-rose-50 text-[#9B1B33]' : 'bg-slate-100 text-slate-600'
+                    }`}>
                       {mod.num}
                     </div>
 
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0F172A' }}>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                        <h3 className="text-sm sm:text-base font-bold text-slate-900">
                           {mod.title}
                         </h3>
                         {mod.badge && (
-                          <span className={mod.badge.includes('Special') ? 'badge badge-green' : 'badge badge-red'}>
+                          <span className={`text-[10px] ${mod.badge.includes('Special') ? 'badge badge-green' : 'badge badge-red'}`}>
                             {mod.badge}
                           </span>
                         )}
-                        <span className="badge badge-gray">{mod.category}</span>
+                        <span className="badge badge-gray text-[10px] hidden sm:inline-block">{mod.category}</span>
                       </div>
-                      <p style={{ fontSize: '0.85rem', color: '#64748B', maxWidth: '780px' }}>
+                      <p className="text-xs text-slate-500 line-clamp-2 sm:line-clamp-1 max-w-2xl leading-relaxed">
                         {mod.desc}
                       </p>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#64748B', fontSize: '0.8rem', fontWeight: 600 }}>
-                      <Clock size={14} />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="hidden sm:flex items-center gap-1 text-slate-500 text-xs font-semibold">
+                      <Clock size={13} />
                       <span>{mod.hours}</span>
                     </div>
-                    {isExpanded ? <ChevronDown size={20} color="#9B1B33" /> : <ChevronRight size={20} color="#94A3B8" />}
+                    {isExpanded ? <ChevronDown size={18} className="text-[#9B1B33]" /> : <ChevronRight size={18} className="text-slate-400" />}
                   </div>
                 </div>
 
                 {/* Expanded Details Drawer */}
                 {isExpanded && (
-                  <div style={{
-                    borderTop: '1px solid #F1F5F9',
-                    backgroundColor: '#FAFAFA',
-                    padding: '1.5rem'
-                  }}>
+                  <div className="border-t border-slate-100 bg-slate-50/50 p-4 sm:p-6 space-y-4 animate-in fade-in duration-150">
                     {/* Hinglish Interview Mental Model */}
-                    <div style={{
-                      backgroundColor: '#FEF9EE',
-                      borderLeft: '4px solid #C29B38',
-                      padding: '1rem 1.25rem',
-                      borderRadius: '0 8px 8px 0',
-                      marginBottom: '1.25rem'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#8D6B19', fontWeight: 700, fontSize: '0.82rem', marginBottom: '0.35rem' }}>
-                        <Sparkles size={15} /> HINGLISH INTERVIEW MENTAL MODEL (HOW TO PITCH)
+                    <div className="bg-[#FEF9EE] border-l-4 border-[#C29B38] p-3.5 sm:p-4 rounded-r-xl">
+                      <div className="flex items-center gap-1.5 text-[#8D6B19] font-bold text-xs uppercase tracking-wider mb-1">
+                        <Sparkles size={14} /> HINGLISH INTERVIEW MENTAL MODEL (HOW TO PITCH)
                       </div>
-                      <p style={{ fontSize: '0.9rem', color: '#451A03', lineHeight: 1.6, fontStyle: 'italic' }}>
+                      <p className="text-xs sm:text-sm text-[#451A03] leading-relaxed italic m-0">
                         "{mod.hinglishSummary}"
                       </p>
                     </div>
 
                     {/* Key Core Topics */}
-                    <div style={{ marginBottom: '1.25rem' }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                    <div>
+                      <div className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
                         Core Topics & Architecture Concepts
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0.5rem' }}>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {mod.topics.map((t, idx) => (
-                          <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', backgroundColor: '#FFFFFF', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #E2E8F0', fontSize: '0.85rem', color: '#1E293B' }}>
-                            <CheckCircle size={15} color="#10B981" style={{ marginTop: '2px', flexShrink: 0 }} />
+                          <div key={idx} className="flex items-start gap-2 bg-white p-2.5 sm:p-3 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-800">
+                            <CheckCircle size={15} className="text-emerald-500 shrink-0 mt-0.5" />
                             <span>{t}</span>
                           </div>
                         ))}
@@ -213,12 +158,12 @@ export default function CurriculumView() {
                     </div>
 
                     {/* Quick File Reference */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingTop: '0.5rem', borderTop: '1px solid #E2E8F0' }}>
-                      <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
-                        Markdown: <code style={{ backgroundColor: '#E2E8F0', padding: '2px 6px', borderRadius: '4px', color: '#0F172A' }}>{mod.markdownPath}</code>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-slate-200 text-xs text-slate-500">
+                      <div className="truncate">
+                        Markdown: <code className="bg-slate-200 px-1.5 py-0.5 rounded text-slate-900 text-[11px]">{mod.markdownPath}</code>
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
-                        Printable Book: <strong style={{ color: '#9B1B33' }}>{mod.pdfBook}</strong>
+                      <div className="shrink-0">
+                        Printable Book: <strong className="text-[#9B1B33]">{mod.pdfBook}</strong>
                       </div>
                     </div>
                   </div>

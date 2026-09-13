@@ -18,46 +18,36 @@ export default function ResumeDefenseView() {
   const activeProject = RESUME_PROJECTS.find(p => p.id === activeProjectId) || RESUME_PROJECTS[0];
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <div className="container">
+    <div className="py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#9B1B33', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
-            <ShieldCheck size={16} /> BIPIN YADAV'S PRODUCTION EXPERIENCE DEFENSE
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 text-[#9B1B33] font-bold text-xs uppercase tracking-wider mb-2">
+            <ShieldCheck size={15} /> BIPIN YADAV'S PRODUCTION EXPERIENCE DEFENSE
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             Resume Project Deep-Dive & STAR Answers
           </h1>
-          <p style={{ color: '#64748B', maxWidth: '750px', lineHeight: 1.6 }}>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
             Defend every single bullet point from your Invizio Solutions tenure (SDE II, 4+ YoE) with rock-solid architectural explanations and high-confidence Hinglish pitches.
           </p>
         </div>
 
         {/* Project Selector Tabs */}
-        <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-thin">
           {RESUME_PROJECTS.map(proj => {
             const isActive = activeProjectId === proj.id;
             return (
               <button
                 key={proj.id}
                 onClick={() => setActiveProjectId(proj.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.75rem 1.25rem',
-                  borderRadius: '10px',
-                  border: `1.5px solid ${isActive ? '#9B1B33' : '#E2E8F0'}`,
-                  backgroundColor: isActive ? '#FDF2F4' : '#FFFFFF',
-                  color: isActive ? '#9B1B33' : '#475569',
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
-                }}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                  isActive 
+                    ? 'bg-rose-50 border-[#9B1B33] text-[#9B1B33] font-bold shadow-sm' 
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
               >
-                <Briefcase size={16} />
+                <Briefcase size={15} />
                 <span>{proj.title}</span>
               </button>
             );
@@ -65,23 +55,23 @@ export default function ResumeDefenseView() {
         </div>
 
         {/* Active Project Card */}
-        <div className="card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 md:p-8 shadow-sm mb-6">
           {/* Top Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem' }}>
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-5 mb-6 border-b border-slate-100">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                <span className="badge badge-red">{activeProject.company}</span>
-                <span className="badge badge-gold">{activeProject.role}</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="badge badge-red text-xs">{activeProject.company}</span>
+                <span className="badge badge-gold text-xs">{activeProject.role}</span>
               </div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A' }}>
+              <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 leading-snug">
                 {activeProject.title}
               </h2>
             </div>
 
             {/* Tech Stack Pills */}
-            <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', maxWidth: '400px', justifyContent: 'flex-end' }}>
+            <div className="flex flex-wrap gap-1.5 sm:justify-end max-w-md">
               {activeProject.techStack.map((tech, idx) => (
-                <span key={idx} style={{ backgroundColor: '#F1F5F9', color: '#334155', padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
+                <span key={idx} className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-semibold">
                   {tech}
                 </span>
               ))}
@@ -89,14 +79,14 @@ export default function ResumeDefenseView() {
           </div>
 
           {/* Key Metrics / Impact */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <TrendingUp size={15} color="#10B981" /> Quantified STAR Impact & Achievements
+          <div className="mb-6">
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <TrendingUp size={14} className="text-emerald-600" /> Quantified STAR Impact & Achievements
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.75rem' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {activeProject.metrics.map((metric, mIdx) => (
-                <div key={mIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', backgroundColor: '#ECFDF5', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.85rem', color: '#065F46', fontWeight: 600 }}>
-                  <CheckCircle2 size={16} color="#10B981" style={{ marginTop: '2px', flexShrink: 0 }} />
+                <div key={mIdx} className="flex items-start gap-2 bg-emerald-50/70 border border-emerald-200 p-3 sm:p-3.5 rounded-xl text-xs sm:text-sm text-emerald-900 font-medium">
+                  <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
                   <span>{metric}</span>
                 </div>
               ))}
@@ -104,39 +94,39 @@ export default function ResumeDefenseView() {
           </div>
 
           {/* 60-Second Hinglish Pitch */}
-          <div style={{ backgroundColor: '#FEF9EE', borderLeft: '4px solid #C29B38', padding: '1.25rem', borderRadius: '0 8px 8px 0', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#8D6B19', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.4rem' }}>
-              <Sparkles size={16} /> 60-SECOND HINGLISH INTERVIEW PITCH
+          <div className="bg-[#FEF9EE] border-l-4 border-[#C29B38] p-4 sm:p-5 rounded-r-xl mb-6 shadow-sm">
+            <div className="flex items-center gap-1.5 text-[#8D6B19] font-bold text-xs uppercase tracking-wider mb-1.5">
+              <Sparkles size={14} /> 60-SECOND HINGLISH INTERVIEW PITCH
             </div>
-            <p style={{ fontSize: '0.95rem', color: '#451A03', lineHeight: 1.6, fontStyle: 'italic' }}>
+            <p className="text-xs sm:text-sm text-[#451A03] leading-relaxed italic m-0">
               "{activeProject.pitchHinglish}"
             </p>
           </div>
 
           {/* Architecture Diagram */}
-          <div style={{ marginBottom: '2rem' }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Cpu size={15} color="#4F46E5" /> Architecture & Data Flow
+          <div className="mb-6">
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Cpu size={14} className="text-indigo-600" /> Architecture & Data Flow
             </div>
-            <div style={{ backgroundColor: '#0F172A', color: '#A5B4FC', padding: '1.25rem', borderRadius: '10px', fontSize: '0.78rem', overflowX: 'auto', border: '1px solid #334155' }}>
-              <pre style={{ margin: 0, fontFamily: 'monospace' }}><code>{activeProject.architecture}</code></pre>
+            <div className="bg-slate-900 text-indigo-300 p-3.5 sm:p-4 rounded-xl text-xs overflow-x-auto border border-slate-700 font-mono">
+              <pre className="m-0"><code>{activeProject.architecture}</code></pre>
             </div>
           </div>
 
           {/* Tough Interview Follow-ups */}
           <div>
-            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <HelpCircle size={15} color="#9B1B33" /> Hard Interviewer Follow-Up Questions & How To Answer
+            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <HelpCircle size={14} className="text-[#9B1B33]" /> Hard Interviewer Follow-Up Questions & How To Answer
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="space-y-3">
               {activeProject.hardQuestions.map((hq, qIdx) => (
-                <div key={qIdx} style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '1.25rem' }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.5rem', display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                    <span style={{ color: '#9B1B33' }}>Q:</span>
+                <div key={qIdx} className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 space-y-2">
+                  <div className="text-xs sm:text-sm font-bold text-slate-900 flex items-start gap-2">
+                    <span className="text-[#9B1B33] font-black">Q:</span>
                     <span>{hq.q}</span>
                   </div>
-                  <div style={{ fontSize: '0.88rem', color: '#334155', lineHeight: 1.6, paddingLeft: '1.25rem', borderLeft: '2px solid #CBD5E1' }}>
-                    <strong>Ans:</strong> {hq.answer}
+                  <div className="text-xs sm:text-sm text-slate-700 leading-relaxed pl-4 border-l-2 border-slate-300">
+                    <strong className="text-slate-900">Ans:</strong> {hq.answer}
                   </div>
                 </div>
               ))}

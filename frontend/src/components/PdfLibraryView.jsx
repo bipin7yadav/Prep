@@ -27,179 +27,116 @@ export default function PdfLibraryView() {
   );
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <div className="container">
+    <div className="py-4 sm:py-8">
+      <div className="container px-4 sm:px-6">
         {/* Header */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#9B1B33', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem' }}>
-            <BookOpen size={16} /> PROFESSIONAL TEXTBOOK SERIES • 9 SPECIALIZED EDITIONS
+        <div className="mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-1.5 text-[#9B1B33] font-bold text-xs uppercase tracking-wider mb-2">
+            <BookOpen size={15} /> PROFESSIONAL TEXTBOOK SERIES • 9 SPECIALIZED EDITIONS
           </div>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
             IDFC First Bank Technical Study Books
           </h1>
-          <p style={{ color: '#64748B', maxWidth: '820px', lineHeight: 1.6, fontSize: '0.98rem' }}>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed">
             Typeset in an O'Reilly-style technical textbook standard with running headers, footers, page numbering, chapter title openers, Hinglish mental models, callout boxes, and Pygments syntax highlighting. Served as web-ready downloadable assets.
           </p>
         </div>
 
         {/* Categories & Filter Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '4px' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                style={{
-                  padding: '0.5rem 1rem',
-                  borderRadius: '20px',
-                  border: `1.5px solid ${activeCategory === cat ? '#9B1B33' : '#E2E8F0'}`,
-                  backgroundColor: activeCategory === cat ? '#9B1B33' : '#FFFFFF',
-                  color: activeCategory === cat ? '#FFFFFF' : '#475569',
-                  fontSize: '0.82rem',
-                  fontWeight: activeCategory === cat ? 700 : 500,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
-                }}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                  activeCategory === cat 
+                    ? 'bg-[#9B1B33] text-white shadow-sm' 
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
               >
                 {cat}
               </button>
             ))}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#059669', fontSize: '0.85rem', fontWeight: 700, backgroundColor: '#ECFDF5', padding: '0.4rem 0.85rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-            <CheckCircle2 size={16} /> All 9 Editions Ready for Preview & Download
+          <div className="flex items-center gap-2 text-emerald-700 text-xs font-bold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 shrink-0 self-start sm:self-auto">
+            <CheckCircle2 size={15} className="text-emerald-600" />
+            <span>All 9 Editions Ready for Preview & Download</span>
           </div>
         </div>
 
-        {/* Editions Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-          gap: '1.5rem',
-          marginBottom: '3rem'
-        }}>
+        {/* Editions Grid - Fully Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10">
           {filteredBooks.map((book) => {
             const pdfUrl = `/pdfs/${book.filename}`;
             return (
               <div 
                 key={book.id}
-                className="card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  borderTop: `5px solid ${book.color}`,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
-                  position: 'relative'
-                }}
+                className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                style={{ borderTop: `4px solid ${book.color}` }}
               >
                 <div>
                   {/* Top Bar on Card */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ 
-                        backgroundColor: '#0F172A', 
-                        color: '#FFFFFF', 
-                        fontSize: '0.7rem', 
-                        fontWeight: 800, 
-                        padding: '2px 7px', 
-                        borderRadius: '4px',
-                        letterSpacing: '0.05em'
-                      }}>
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded tracking-wider">
                         EDITION {book.editionNum}
                       </span>
-                      <span className="badge badge-gray">{book.category}</span>
+                      <span className="badge badge-gray text-[10px]">{book.category}</span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.35rem' }}>
-                      <span className="badge badge-gray">{book.pages}</span>
-                      <span className="badge badge-gray">{book.size}</span>
+                    <div className="flex gap-1 shrink-0">
+                      <span className="badge badge-gray text-[10px]">{book.pages}</span>
+                      <span className="badge badge-gray text-[10px]">{book.size}</span>
                     </div>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.35rem', lineHeight: 1.3 }}>
+                  <h2 className="text-base sm:text-lg font-extrabold text-slate-900 leading-snug mb-1">
                     {book.title}
                   </h2>
-                  <p style={{ fontSize: '0.85rem', color: '#64748B', fontWeight: 600, marginBottom: '0.85rem', lineHeight: 1.4 }}>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-3">
                     {book.subtitle}
                   </p>
 
                   {/* Topics Pills */}
-                  <div style={{ backgroundColor: '#F8FAFC', padding: '0.75rem', borderRadius: '8px', border: '1px solid #E2E8F0', marginBottom: '1.25rem' }}>
-                    <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#94A3B8', fontWeight: 700, marginBottom: '0.25rem' }}>
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-4">
+                    <div className="text-[10px] uppercase text-slate-400 font-bold tracking-wider mb-1">
                       Coverage Highlights
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#334155', lineHeight: 1.5 }}>
+                    <div className="text-xs text-slate-700 leading-relaxed">
                       {book.topics}
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom Actions */}
-                <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                   <button
                     onClick={() => setPreviewBook(book)}
-                    style={{
-                      flex: '1 1 auto',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem',
-                      backgroundColor: '#9B1B33',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.55rem 0.9rem',
-                      fontWeight: 700,
-                      fontSize: '0.82rem',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease'
-                    }}
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#9B1B33] hover:bg-[#801428] text-white rounded-xl py-2 px-3 font-bold text-xs shadow-sm transition-colors"
                   >
-                    <Eye size={15} /> Preview Book
+                    <Eye size={14} /> Preview Book
                   </button>
 
                   <a
                     href={pdfUrl}
                     download={book.filename}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      backgroundColor: '#FFFFFF',
-                      color: '#0F172A',
-                      border: '1.5px solid #CBD5E1',
-                      borderRadius: '8px',
-                      padding: '0.55rem 0.9rem',
-                      fontWeight: 600,
-                      fontSize: '0.82rem',
-                      textDecoration: 'none',
-                      cursor: 'pointer'
-                    }}
+                    className="flex items-center justify-center gap-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl py-2 px-3 font-semibold text-xs transition-colors"
+                    title="Download PDF"
                   >
-                    <Download size={15} color="#64748B" /> Download
+                    <Download size={14} /> <span className="hidden sm:inline">Download</span>
                   </a>
 
                   <a
                     href={pdfUrl}
                     target="_blank"
                     rel="noreferrer"
-                    title="Open in new window / full browser viewer"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#F8FAFC',
-                      color: '#64748B',
-                      border: '1px solid #E2E8F0',
-                      borderRadius: '8px',
-                      padding: '0.55rem 0.75rem',
-                      cursor: 'pointer'
-                    }}
+                    className="flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-xl p-2 transition-colors"
+                    title="Open in new window"
                   >
-                    <ExternalLink size={15} />
+                    <ExternalLink size={14} />
                   </a>
                 </div>
               </div>
@@ -209,91 +146,43 @@ export default function PdfLibraryView() {
 
         {/* Interactive In-App PDF Reader Modal */}
         {previewBook && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(15, 23, 42, 0.85)',
-            backdropFilter: 'blur(8px)',
-            zIndex: 1000,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: isFullscreen ? '0' : '1.5rem'
-          }}>
-            <div style={{
-              width: isFullscreen ? '100vw' : '92vw',
-              maxWidth: isFullscreen ? '100vw' : '1200px',
-              height: isFullscreen ? '100vh' : '90vh',
-              backgroundColor: '#FFFFFF',
-              borderRadius: isFullscreen ? '0' : '12px',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)'
-            }}>
+          <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-0 sm:p-4">
+            <div className={`w-full h-full ${isFullscreen ? 'sm:w-screen sm:h-screen sm:rounded-none' : 'sm:w-[94vw] sm:max-w-6xl sm:h-[90vh] sm:rounded-2xl'} bg-white overflow-hidden flex flex-col shadow-2xl transition-all`}>
               {/* Modal Bar */}
-              <div style={{
-                backgroundColor: '#0F172A',
-                color: '#FFFFFF',
-                padding: '0.75rem 1.25rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: '1px solid #334155'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <span style={{ 
-                    backgroundColor: '#9B1B33', 
-                    padding: '3px 8px', 
-                    borderRadius: '4px', 
-                    fontSize: '0.75rem', 
-                    fontWeight: 800 
-                  }}>
+              <div className="bg-slate-900 text-white p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="bg-[#9B1B33] px-2 py-0.5 rounded text-[11px] font-extrabold shrink-0">
                     EDITION {previewBook.editionNum}
                   </span>
-                  <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+                  <span className="font-bold text-xs sm:text-sm truncate">
                     {previewBook.title}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div className="flex items-center justify-end gap-2 shrink-0">
+                  <a
+                    href={`/pdfs/${previewBook.filename}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 bg-white/10 px-2.5 py-1.5 rounded-lg transition-colors"
+                  >
+                    <ExternalLink size={13} /> Open in Tab
+                  </a>
+
                   <a
                     href={`/pdfs/${previewBook.filename}`}
                     download={previewBook.filename}
-                    style={{
-                      color: '#FCD34D',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      textDecoration: 'none',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      padding: '4px 10px',
-                      borderRadius: '6px'
-                    }}
+                    className="text-amber-300 hover:text-amber-200 text-xs font-bold flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg transition-colors"
                   >
-                    <Download size={14} /> Download PDF
+                    <Download size={13} /> Download
                   </a>
 
                   <button
                     onClick={() => setIsFullscreen(!isFullscreen)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#94A3B8',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '4px'
-                    }}
+                    className="hidden sm:flex text-slate-400 hover:text-white p-1.5 transition-colors"
                     title="Toggle Fullscreen"
                   >
-                    <Maximize2 size={18} />
+                    <Maximize2 size={16} />
                   </button>
 
                   <button
@@ -301,32 +190,20 @@ export default function PdfLibraryView() {
                       setPreviewBook(null);
                       setIsFullscreen(false);
                     }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#EF4444',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '4px'
-                    }}
+                    className="text-rose-400 hover:text-rose-300 p-1.5 transition-colors"
                     title="Close Viewer"
                   >
-                    <X size={22} />
+                    <X size={20} />
                   </button>
                 </div>
               </div>
 
               {/* Embedded PDF Viewer */}
-              <div style={{ flex: 1, backgroundColor: '#525659', position: 'relative' }}>
+              <div className="flex-1 bg-slate-700 relative">
                 <iframe
                   src={`/pdfs/${previewBook.filename}#toolbar=1&navpanes=1`}
                   title={previewBook.title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none'
-                  }}
+                  className="w-full h-full border-none"
                 />
               </div>
             </div>
