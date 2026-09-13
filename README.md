@@ -48,23 +48,21 @@ npm run dev
 
 ---
 
-## 📚 Printable PDF Books Collection (`PDF/` Folder)
+## 📚 Professional Textbook Series (9 Specialized Editions)
 
-A complete set of 10 printable, beautifully structured PDF interview preparation textbooks has been compiled and ready for offline study:
+Every PDF has been compiled using our **Textbook PDF Engine** with running headers, footers with page numbers, clickable Table of Contents, chapter title openers, and Pygments syntax highlighting:
 
-| Book # | Title & Topic | Direct Link | File Size |
-| :---: | :--- | :--- | :---: |
-| **01** | **Python & Data Structures & Algorithms** (Arrays, Hashing, Two Pointers, Sliding Window) | [PDF/01-Python-DSA.pdf](file:///home/bipin/Desktop/BankInterview/PDF/01-Python-DSA.pdf) | ~740 KB |
-| **02** | **SQL & Database Management Systems** (Joins, CTEs, Window Functions, ACID, Locks) | [PDF/02-SQL-DBMS.pdf](file:///home/bipin/Desktop/BankInterview/PDF/02-SQL-DBMS.pdf) | ~1.0 MB |
-| **03** | **JavaScript & Node.js Runtime Internals** (V8, libuv Event Loop, Microtasks) | [PDF/03-JavaScript-Node.pdf](file:///home/bipin/Desktop/BankInterview/PDF/03-JavaScript-Node.pdf) | ~412 KB |
-| **04** | **Backend Engineering & Low-Level Design** (SOLID, React Architecture, Enterprise Java) | [PDF/04-Backend-Engineering.pdf](file:///home/bipin/Desktop/BankInterview/PDF/04-Backend-Engineering.pdf) | ~412 KB |
-| **05** | **Scalable Financial System Design** (Payment Switch, Idempotency, Scale Math) | [PDF/05-System-Design.pdf](file:///home/bipin/Desktop/BankInterview/PDF/05-System-Design.pdf) | ~323 KB |
-| **06** | **Banking Application Security & Compliance** (PCI-DSS, RBI Guidelines, AES-256) | [PDF/06-Security.pdf](file:///home/bipin/Desktop/BankInterview/PDF/06-Security.pdf) | ~186 KB |
-| **07** | **DevOps & Cloud Infrastructure for Banking** (Docker Multi-Stage, GKE, GCP VPC) | [PDF/07-DevOps-Cloud.pdf](file:///home/bipin/Desktop/BankInterview/PDF/07-DevOps-Cloud.pdf) | ~305 KB |
-| **08** | **Indian Digital Banking Rails & FinTech** (UPI 2.0, NPCI Switch, Double-Entry, Sagas) | [PDF/08-Banking-FinTech.pdf](file:///home/bipin/Desktop/BankInterview/PDF/08-Banking-FinTech.pdf) | ~300 KB |
-| **09** | **3+ YoE Interview Question Bank & Project Defense** (150+ Questions, STAR Behavioral) | [PDF/09-Interview-Question-Bank.pdf](file:///home/bipin/Desktop/BankInterview/PDF/09-Interview-Question-Bank.pdf) | ~448 KB |
-| **10** | **Final 24-Hour High-Yield Revision Pack** (Top Cheatsheets & Active Recall Flashcards) | [PDF/10-Final-Revision.pdf](file:///home/bipin/Desktop/BankInterview/PDF/10-Final-Revision.pdf) | ~407 KB |
-| **11** | **Python, NumPy, pandas & Matplotlib Data Ecosystem** (Analytics, Vectorization, Pipeline) | [PDF/11-Python-Data-Analytics.pdf](file:///home/bipin/Desktop/BankInterview/PDF/11-Python-Data-Analytics.pdf) | ~1.1 MB |
+| Edition # | Category | Title & Focus | Pages | Local Path | Web Asset |
+| :---: | :--- | :--- | :---: | :--- | :---: |
+| **01** | **Full Textbook** | **Python Data Ecosystem & Analytics** (NumPy, pandas, Matplotlib, Pipeline) | 49 pgs | [PDF/01-Python-Data-Analytics.pdf](file:///home/bipin/Desktop/BankInterview/PDF/01-Python-Data-Analytics.pdf) | `/pdfs/01-Python-Data-Analytics.pdf` |
+| **02** | **Full Textbook** | **SQL Mastery, Concurrency & Advanced DBMS** (ACID, MVCC, Locks, Window Functions) | 54 pgs | [PDF/02-SQL-Mastery-DBMS.pdf](file:///home/bipin/Desktop/BankInterview/PDF/02-SQL-Mastery-DBMS.pdf) | `/pdfs/02-SQL-Mastery-DBMS.pdf` |
+| **03** | **Full Textbook** | **JavaScript & Node.js Runtime Internals** (V8, Libuv 6 phases, Streams, Workers) | 18 pgs | [PDF/03-JavaScript-NodeJS-Internals.pdf](file:///home/bipin/Desktop/BankInterview/PDF/03-JavaScript-NodeJS-Internals.pdf) | `/pdfs/03-JavaScript-NodeJS-Internals.pdf` |
+| **04** | **Full Textbook** | **Scalable Financial System Design & UPI 2.0** (50k TPS Switch, Sagas, Idempotency) | 32 pgs | [PDF/04-Distributed-System-Design.pdf](file:///home/bipin/Desktop/BankInterview/PDF/04-Distributed-System-Design.pdf) | `/pdfs/04-Distributed-System-Design.pdf` |
+| **05** | **Full Textbook** | **Data Structures & Algorithms (FinTech Patterns)** (Two Pointers, Sliding Window, Hashing) | 41 pgs | [PDF/05-DSA-FinTech-Patterns.pdf](file:///home/bipin/Desktop/BankInterview/PDF/05-DSA-FinTech-Patterns.pdf) | `/pdfs/05-DSA-FinTech-Patterns.pdf` |
+| **06** | **Full Textbook** | **React Architecture, Frontend Engineering & LLD** (Fiber, Hooks, SOLID, Java) | 25 pgs | [PDF/06-React-Frontend-LLD.pdf](file:///home/bipin/Desktop/BankInterview/PDF/06-React-Frontend-LLD.pdf) | `/pdfs/06-React-Frontend-LLD.pdf` |
+| **07** | **Full Textbook** | **FinTech Security, RBI Compliance & Cloud DevOps** (PCI-DSS, Tokenization, Docker, GCP) | 21 pgs | [PDF/07-Security-Cloud-DevOps.pdf](file:///home/bipin/Desktop/BankInterview/PDF/07-Security-Cloud-DevOps.pdf) | `/pdfs/07-Security-Cloud-DevOps.pdf` |
+| **08** | **Interview Handbook** | **3+ YoE Question Bank & Resume Project Defense** (150+ Qs, Invizio Solutions, STAR) | 25 pgs | [PDF/08-Interview-Question-Bank-Resume.pdf](file:///home/bipin/Desktop/BankInterview/PDF/08-Interview-Question-Bank-Resume.pdf) | `/pdfs/08-Interview-Question-Bank-Resume.pdf` |
+| **09** | **Quick Revision** | **Final 24-Hour High-Yield Revision & Flashcards Pack** (Cheat Sheets, 35+ Recall Cards) | 20 pgs | [PDF/09-Quick-Revision-Last-Minute.pdf](file:///home/bipin/Desktop/BankInterview/PDF/09-Quick-Revision-Last-Minute.pdf) | `/pdfs/09-Quick-Revision-Last-Minute.pdf` |
 
 ---
 
