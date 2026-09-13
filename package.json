@@ -1,0 +1,9 @@
+{
+  "name": "idfc-interview-portal-root",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "if [ -d \"frontend\" ]; then cd frontend && npm install && npm run build; else npm run build; fi",
+    "dev": "cd frontend && npm run dev"
+  }
+}
