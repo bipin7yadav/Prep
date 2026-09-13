@@ -26,6 +26,28 @@
 
 ---
 
+## ⚡ Interactive React Web Application (`frontend/`)
+
+A production-grade, interactive **React Web Application** is built and running for your interview preparation:
+
+* **Local Web URL:** [http://localhost:3000/](http://localhost:3000/)
+* **Features Included:**
+  1. **Executive Dashboard:** Real-time interview readiness score, track selector (7D to 6M), daily high-yield checklist.
+  2. **Curriculum Browser:** 16 targeted modules with searchable topics, time estimations, and expandable Hinglish interview mental model drawers.
+  3. **Interactive Diagnostic Assessment (24 Qs):** Complete baseline test with real-time scoring, Hinglish explanations, and celebration confetti.
+  4. **Active Recall Flashcards:** 35+ high-yield flashcards with 3D flip animation, category filtering, and "Mastered" progress tracking.
+  5. **Resume Defense Studio:** Complete breakdown of Bipin Yadav's Invizio Solutions & Booknook projects with STAR metrics, ASCII architecture diagrams, and hard interview Q&As.
+  6. **Banking Database Playground:** Interactive viewer for pre-seeded SQLite tables (`customers`, `accounts`, `transactions`, `cards`, `loans`) and live interview SQL scenarios (Window functions, CTE, row locking).
+  7. **Offline PDF Library:** Direct viewer and catalog for all 11 printable PDF textbooks.
+
+To start or restart the web application anytime:
+```bash
+cd frontend
+npm run dev
+```
+
+---
+
 ## 📚 Printable PDF Books Collection (`PDF/` Folder)
 
 A complete set of 10 printable, beautifully structured PDF interview preparation textbooks has been compiled and ready for offline study:
