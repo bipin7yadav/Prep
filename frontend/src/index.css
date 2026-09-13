@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --idfc-red: #9B1B33;
   --idfc-red-hover: #7E1529;
