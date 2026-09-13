@@ -28,7 +28,7 @@ export default function Dashboard({
   completedLessonsCount = 0,
   totalLessonsCount = 45,
   solvedDsaCount = 0,
-  totalDsaCount = 21,
+  totalDsaCount = 47,
   completedTopicsCount = 0,
   totalTopicsCount = 14,
   mistakeCount = 0,

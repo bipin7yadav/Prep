@@ -37,7 +37,7 @@ export default function Navbar({
     { id: "dashboard", label: "Dashboard", icon: Compass },
     { id: "curriculum", label: "Curriculum", icon: BookOpen, badge: "45 Ch" },
     { id: "important", label: "Important Topics", icon: Star, badge: "Must-Know" },
-    { id: "dsa", label: "DSA Practice", icon: Code2, badge: "21 Probs" },
+    { id: "dsa", label: "DSA Practice", icon: Code2, badge: "47 Probs" },
     { id: "flashcards", label: "Flashcards", icon: Layers, badge: "224" },
     { id: "quiz", label: "Quizzes", icon: CheckCircle2, badge: "24 Qs" },
     { 
