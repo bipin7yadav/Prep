@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function QuizView({ onSaveScore }) {
+export default function QuizView({ onSaveScore, onRecordMistake }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showExplanation, setShowExplanation] = useState({});
@@ -29,6 +29,11 @@ export default function QuizView({ onSaveScore }) {
     const newShow = { ...showExplanation, [currentQ.id]: true };
     setSelectedAnswers(newAnswers);
     setShowExplanation(newShow);
+
+    // If answer is wrong, log to Mistake Book
+    if (index !== currentQ.correct && onRecordMistake) {
+      onRecordMistake(currentQ.id);
+    }
 
     // If this was the last question, check if all answered
     if (Object.keys(newAnswers).length === totalQs) {

@@ -8,10 +8,22 @@ import {
   Database, 
   FileText, 
   User, 
-  Clock 
+  Clock,
+  Star,
+  Code2,
+  AlertCircle,
+  Zap,
+  Search
 } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, selectedTrack, setSelectedTrack }) {
+export default function Navbar({ 
+  activeTab, 
+  setActiveTab, 
+  selectedTrack, 
+  setSelectedTrack,
+  mistakeCount = 0,
+  onOpenSearch = () => {}
+}) {
   const tracks = [
     { id: "7D", label: "7-Day Sprint", hours: "56h" },
     { id: "14D", label: "14-Day Fast-Track", hours: "70h" },
@@ -23,124 +35,92 @@ export default function Navbar({ activeTab, setActiveTab, selectedTrack, setSele
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: Compass },
-    { id: "curriculum", label: "Curriculum", icon: BookOpen },
-    { id: "quiz", label: "Diagnostic Quiz", icon: CheckCircle2, badge: "24 Qs" },
-    { id: "flashcards", label: "Flashcards", icon: Layers },
+    { id: "curriculum", label: "Curriculum", icon: BookOpen, badge: "45 Ch" },
+    { id: "important", label: "Important Topics", icon: Star, badge: "Must-Know" },
+    { id: "dsa", label: "DSA Practice", icon: Code2, badge: "21 Probs" },
+    { id: "flashcards", label: "Flashcards", icon: Layers, badge: "224" },
+    { id: "quiz", label: "Quizzes", icon: CheckCircle2, badge: "24 Qs" },
+    { 
+      id: "mistakes", 
+      label: "Mistake Book", 
+      icon: AlertCircle, 
+      badge: mistakeCount > 0 ? `${mistakeCount}` : null,
+      badgeColor: 'bg-red-600 text-white animate-pulse'
+    },
     { id: "resume", label: "Resume Defense", icon: User },
     { id: "database", label: "Banking DB", icon: Database },
-    { id: "pdfs", label: "11 PDF Books", icon: FileText, badge: "Printable" },
+    { id: "lastminute", label: "Last-Minute", icon: Zap, badge: "⚡ Cram" },
+    { id: "pdfs", label: "PDF Books", icon: FileText, badge: "11" },
   ];
 
   return (
-    <header style={{
-      backgroundColor: '#FFFFFF',
-      borderBottom: '1px solid #E2E8F0',
-      position: 'sticky',
-      top: 0,
-      zIndex: 50,
-      boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
-    }}>
+    <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
       {/* Top Banner with Candidate Info & Track Picker */}
-      <div style={{
-        backgroundColor: '#9B1B33',
-        color: '#FFFFFF',
-        padding: '0.4rem 1.5rem',
-        fontSize: '0.8rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '0.5rem'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={{ 
-            backgroundColor: 'rgba(255,255,255,0.2)', 
-            padding: '2px 8px', 
-            borderRadius: '4px', 
-            fontWeight: 700, 
-            letterSpacing: '0.05em' 
-          }}>
+      <div className="bg-[#9B1B33] text-white px-4 sm:px-6 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="bg-white/20 px-2 py-0.5 rounded font-bold tracking-wider text-[11px]">
             IDFC FIRST BANK
           </span>
-          <span style={{ color: '#FCD34D', fontWeight: 600 }}>
+          <span className="text-amber-300 font-semibold hidden sm:inline">
             Strategic Projects & New Age Engineering
           </span>
-          <span style={{ color: '#CBD5E1' }}>•</span>
+          <span className="text-slate-400 hidden sm:inline">•</span>
           <span>Target Candidate: <strong>Bipin Yadav (SDE II, 4+ YoE)</strong></span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Clock size={14} style={{ color: '#FCD34D' }} />
-          <span>Prep Track:</span>
-          <select 
-            value={selectedTrack} 
-            onChange={(e) => setSelectedTrack(e.target.value)}
-            style={{
-              backgroundColor: 'rgba(255,255,255,0.15)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: '4px',
-              padding: '2px 6px',
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              outline: 'none'
-            }}
+        <div className="flex items-center gap-3">
+          {/* Quick Search Shortcut */}
+          <button
+            onClick={onOpenSearch}
+            className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 px-2.5 py-0.5 rounded text-white text-[11px] font-medium transition-colors"
+            title="Global Search (Ctrl+K)"
           >
-            {tracks.map(t => (
-              <option key={t.id} value={t.id} style={{ color: '#0F172A', backgroundColor: '#FFFFFF' }}>
-                {t.label} ({t.hours})
-              </option>
-            ))}
-          </select>
+            <Search size={12} />
+            <span>Search</span>
+            <kbd className="bg-black/20 px-1 rounded text-[10px]">Ctrl+K</kbd>
+          </button>
+
+          {/* Prep Track Selector */}
+          <div className="flex items-center gap-1.5">
+            <Clock size={12} className="text-amber-300" />
+            <span className="hidden md:inline">Prep Track:</span>
+            <select 
+              value={selectedTrack} 
+              onChange={(e) => setSelectedTrack(e.target.value)}
+              className="bg-white/15 text-white border border-white/30 rounded px-2 py-0.5 text-[11px] font-semibold cursor-pointer outline-none focus:ring-1 focus:ring-amber-400"
+            >
+              {tracks.map(t => (
+                <option key={t.id} value={t.id} className="text-slate-900 bg-white">
+                  {t.label} ({t.hours})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="container" style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: '64px'
-      }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16 gap-4">
         {/* Logo */}
         <div 
           onClick={() => setActiveTab('dashboard')} 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.75rem', 
-            cursor: 'pointer' 
-          }}
+          className="flex items-center gap-2.5 cursor-pointer shrink-0"
         >
-          <div style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '8px',
-            backgroundColor: '#9B1B33',
-            color: '#FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 800,
-            fontSize: '1rem',
-            letterSpacing: '-0.02em',
-            boxShadow: '0 2px 8px rgba(155, 27, 51, 0.3)'
-          }}>
+          <div className="w-9 h-9 rounded-lg bg-[#9B1B33] text-white flex items-center justify-center font-extrabold text-sm tracking-tight shadow-md">
             IDFC
           </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0F172A', lineHeight: 1.1 }}>
+            <div className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-none">
               Interview OS
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600 }}>
+            <div className="text-[10px] text-slate-500 font-semibold mt-0.5">
               Developer Preparation Portal
             </div>
           </div>
         </div>
 
         {/* Tab Links */}
-        <nav style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', padding: '0.25rem 0' }}>
+        <nav className="flex items-center gap-1 overflow-x-auto py-2 scrollbar-none">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -148,33 +128,22 @@ export default function Navbar({ activeTab, setActiveTab, selectedTrack, setSele
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.5rem 0.85rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  backgroundColor: isActive ? '#FDF2F4' : 'transparent',
-                  color: isActive ? '#9B1B33' : '#475569',
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  whiteSpace: 'nowrap'
-                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                  isActive 
+                    ? 'bg-rose-50 dark:bg-rose-950/50 text-[#9B1B33] dark:text-rose-300 shadow-xs' 
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
               >
-                <Icon size={16} color={isActive ? '#9B1B33' : '#64748B'} />
+                <Icon size={14} className={isActive ? 'text-[#9B1B33] dark:text-rose-300' : 'text-slate-500'} />
                 <span>{item.label}</span>
                 {item.badge && (
-                  <span style={{
-                    fontSize: '0.65rem',
-                    padding: '1px 5px',
-                    borderRadius: '4px',
-                    backgroundColor: isActive ? '#9B1B33' : '#E2E8F0',
-                    color: isActive ? '#FFFFFF' : '#475569',
-                    fontWeight: 700
-                  }}>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                    item.badgeColor 
+                      ? item.badgeColor 
+                      : isActive 
+                        ? 'bg-[#9B1B33] text-white' 
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                  }`}>
                     {item.badge}
                   </span>
                 )}
