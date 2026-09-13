@@ -15,7 +15,7 @@ At IDFC FIRST Bank's Strategic Projects, all microservices run containerized ins
 
 ### Multi-Stage Docker Builds
 A naive Dockerfile packages the entire source tree, compiler toolchains (`gcc`, `python`, `make`), development dependencies (`devDependencies`), and package managers into the final image. This results in:
-- Bloated images ($> 1\text{ GB}$).
+- Bloated images (> 1 GB).
 - Severe security vulnerabilities (attackers have access to compilers and package managers inside the container).
 
 ```mermaid
@@ -202,13 +202,13 @@ In Linux, **Process ID 1 (PID 1)** is the init process (`systemd`).
 
 | Image Strategy | Image Size | Build Time | Security Posture |
 | :--- | :---: | :---: | :--- |
-| **`node:latest` (Single Stage)** | $\approx 1.1\text{ GB}$ | Fast | Dangerous (Includes compilers, root user) |
-| **`node:alpine` (Single Stage)** | $\approx 350\text{ MB}$ | Moderate | Moderate |
-| **Multi-Stage with `node:alpine` + `USER node`** | $\approx 120\text{ MB}$ | Optimized | **Production & Banking Grade** |
+| **`node:latest` (Single Stage)** | ≈ 1.1 GB | Fast | Dangerous (Includes compilers, root user) |
+| **`node:alpine` (Single Stage)** | ≈ 350 MB | Moderate | Moderate |
+| **Multi-Stage with `node:alpine` + `USER node`** | ≈ 120 MB | Optimized | **Production & Banking Grade** |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** Why should you avoid using `node:latest` in production Dockerfiles?

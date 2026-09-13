@@ -32,13 +32,13 @@ Never start drawing architecture without locking down scope:
 - **Functional Requirements:** What must the system do? (e.g., User initiates transfer, funds are debited from A and credited to B, audit trail recorded, notifications dispatched).
 - **Non-Functional Requirements:**
   - **Availability vs Consistency (CAP):** Banking systems are **CP systems** (Consistency & Partition Tolerance over Availability). Money cannot be double-spent.
-  - **Latency SLA:** $< 500\text{ms}$ for p99 API response.
-  - **Durability:** Zero data loss; $100\%$ auditability.
+  - **Latency SLA:** < 500ms for p99 API response.
+  - **Durability:** Zero data loss; 100% auditability.
 
 ### Step 2: Scale & Capacity Estimation
 - **Traffic:** Peak Transactions Per Second (TPS). Example: 10,000 TPS peak during Diwali sales.
-- **Storage:** $10,000 \text{ txns/sec} \times 86,400 \text{ sec/day} \approx 864\text{ million txns/day}$.
-  At 500 bytes per ledger record: $\approx 432\text{ GB/day} \implies \approx 150\text{ TB/year}$.
+- **Storage:** 10,000  txns/sec * 86,400  sec/day ≈ 864 million txns/day.
+  At 500 bytes per ledger record: ≈ 432 GB/day ⟹ ≈ 150 TB/year.
   *Architectural Conclusion:* Single database node will fail; requires horizontal sharding by `account_id` and cold-data archival to object storage (Cloud Storage / S3).
 
 ---
@@ -124,8 +124,8 @@ end
 ---
 
 ## 7. How It Works Internally: CAP & PACELC Theorems in Banking
-- **CAP Theorem:** In the presence of a network partition ($P$), a distributed system must choose between Consistency ($C$) and Availability ($A$). Banking systems choose **Consistency**: if the primary database partition cannot communicate with the secondary node, writes must reject rather than accept divergent balances.
-- **PACELC Theorem:** Extends CAP: If there is a Partition ($P$), trade off Availability ($A$) and Consistency ($C$); **Else ($E$)**, trade off Latency ($L$) and Consistency ($C$). In normal operations, banking switches accept higher write latency (synchronous replica replication) to guarantee strict serializable consistency.
+- **CAP Theorem:** In the presence of a network partition (P), a distributed system must choose between Consistency (C) and Availability (A). Banking systems choose **Consistency**: if the primary database partition cannot communicate with the secondary node, writes must reject rather than accept divergent balances.
+- **PACELC Theorem:** Extends CAP: If there is a Partition (P), trade off Availability (A) and Consistency (C); **Else (E)**, trade off Latency (L) and Consistency (C). In normal operations, banking switches accept higher write latency (synchronous replica replication) to guarantee strict serializable consistency.
 
 ---
 
@@ -140,15 +140,15 @@ end
 
 | Component | Technology Choice | Latency SLA | Availability Target |
 | :--- | :--- | :---: | :---: |
-| **API Gateway** | Kong / Envoy / Express Gateway | $< 10\text{ms}$ | $99.99\%$ |
-| **Distributed Cache** | Redis Cluster (In-Memory) | $< 2\text{ms}$ | $99.95\%$ |
-| **Event Stream** | Apache Kafka | $< 15\text{ms}$ | $99.99\%$ |
-| **Core Relational DB** | PostgreSQL Multi-AZ with WAL | $< 25\text{ms}$ | $99.999\%$ (Five Nines) |
-| **Audit Log Store** | OpenSearch / GCP Cloud Storage | Async | $99.999999999\%$ (11 Nines) |
+| **API Gateway** | Kong / Envoy / Express Gateway | < 10ms | 99.99% |
+| **Distributed Cache** | Redis Cluster (In-Memory) | < 2ms | 99.95% |
+| **Event Stream** | Apache Kafka | < 15ms | 99.99% |
+| **Core Relational DB** | PostgreSQL Multi-AZ with WAL | < 25ms | 99.999% (Five Nines) |
+| **Audit Log Store** | OpenSearch / GCP Cloud Storage | Async | 99.999999999% (11 Nines) |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between horizontal scaling and vertical scaling?
@@ -189,7 +189,7 @@ Review the 10-step template and practice driving a 5-minute verbal walkthrough o
 ---
 
 ## 14. Quick Revision
-- Follow the 10-step framework: Requirements $\to$ Scale $\to$ API $\to$ Data $\to$ Architecture $\to$ Deep Dive $\to$ Consistency $\to$ Failure $\to$ Security $\to$ Observability.
+- Follow the 10-step framework: Requirements → Scale → API → Data → Architecture → Deep Dive → Consistency → Failure → Security → Observability.
 - Banking systems are CP systems (Consistency > Availability).
 - Shard databases by `account_id` or `customer_id` to distribute load evenly.
 - Mitigate hot merchant accounts using distributed sub-account balance sharding.

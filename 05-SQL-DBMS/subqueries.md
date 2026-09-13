@@ -1,7 +1,7 @@
 # SQL Subqueries, Correlated Execution & EXISTS vs IN
 
 ## 1. Why This Matters
-Subqueries appear frequently in technical screenings and production query tuning at IDFC FIRST Bank. A poorly constructed subquery can transform an $O(N)$ linear query into an $O(N^2)$ correlated loop executed for every row in a multi-million-row financial ledger. Understanding the difference between scalar subqueries, correlated subqueries, and why `EXISTS` is safer and faster than `IN` when dealing with `NULL` values is a crucial differentiator for a 3+ YoE developer.
+Subqueries appear frequently in technical screenings and production query tuning at IDFC FIRST Bank. A poorly constructed subquery can transform an O(N) linear query into an O(N²) correlated loop executed for every row in a multi-million-row financial ledger. Understanding the difference between scalar subqueries, correlated subqueries, and why `EXISTS` is safer and faster than `IN` when dealing with `NULL` values is a crucial differentiator for a 3+ YoE developer.
 
 ---
 
@@ -109,7 +109,7 @@ SELECT * FROM customers
 WHERE customer_id NOT IN (SELECT customer_id FROM accounts);
 ```
 If the subquery returns even a single row with `NULL`, the condition evaluates to:
-$$\text{customer\_id} \ne 1 \text{ AND } \text{customer\_id} \ne 2 \text{ AND } \text{customer\_id} \ne \text{NULL}$$
+customer_id ≠ 1  AND  customer_id ≠ 2  AND  customer_id ≠ NULL
 Because `x != NULL` is `UNKNOWN`, the entire `AND` conjunction evaluates to `UNKNOWN`, and the query returns **zero rows**, silently masking all valid results!
 
 ### Why `EXISTS` is Superior
@@ -119,7 +119,7 @@ Because `x != NULL` is `UNKNOWN`, the entire `AND` conjunction evaluates to `UNK
 
 ## 8. Common Mistakes
 1. **Writing `SELECT *` inside `EXISTS`:** While modern optimizers rewrite `EXISTS (SELECT * ...)` to `EXISTS (SELECT 1 ...)`, always write `SELECT 1` as standard senior engineering practice to signal that no column data projection is needed.
-2. **Accidental $O(N^2)$ Correlated Subqueries in `SELECT` Lists:**
+2. **Accidental O(N²) Correlated Subqueries in `SELECT` Lists:**
    ```sql
    -- BAD: Runs an index scan or table scan on transactions for every row in customers
    SELECT 
@@ -143,15 +143,15 @@ Because `x != NULL` is `UNKNOWN`, the entire `AND` conjunction evaluates to `UNK
 
 | Technique | Execution Complexity | Optimizer Capability |
 | :--- | :---: | :--- |
-| **Non-Correlated Subquery** | $O(N + M)$ | Easily cached or transformed into a Hash/Merge Join |
-| **Correlated Subquery (Indexed)** | $O(N \log M)$ | Evaluated via indexed nested loop |
-| **Correlated Subquery (Unindexed)** | $O(N \times M)$ | Devastating full table scan per outer row |
-| **`EXISTS` with Index** | $O(\log M)$ per row | Short-circuits on first row match |
-| **Subquery Rewritten to `JOIN`** | $O(N + M)$ | Fully parallelizable, enables Hash Joins |
+| **Non-Correlated Subquery** | O(N + M) | Easily cached or transformed into a Hash/Merge Join |
+| **Correlated Subquery (Indexed)** | O(N log M) | Evaluated via indexed nested loop |
+| **Correlated Subquery (Unindexed)** | O(N * M) | Devastating full table scan per outer row |
+| **`EXISTS` with Index** | O(log M) per row | Short-circuits on first row match |
+| **Subquery Rewritten to `JOIN`** | O(N + M) | Fully parallelizable, enables Hash Joins |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between a correlated subquery and a non-correlated subquery?
@@ -180,7 +180,7 @@ Because `x != NULL` is `UNKNOWN`, the entire `AND` conjunction evaluates to `UNK
 > 
 > Unlike a standard `INNER JOIN` which multiplies rows when the right table has multiple matches, a Semi-Join returns each row from the outer table at most once, immediately stopping the probe on the inner table as soon as the first match is encountered.
 > 
-> Through a process called **Subquery Unnesting**, the query optimizer lifts the subquery into the main query plan and executes it as a Hash Semi-Join or Merge Semi-Join. This avoids the theoretical $O(N \times M)$ row-by-row execution and achieves optimal $O(N + M)$ performance without application developers needing to manually rewrite the query."
+> Through a process called **Subquery Unnesting**, the query optimizer lifts the subquery into the main query plan and executes it as a Hash Semi-Join or Merge Semi-Join. This avoids the theoretical O(N * M) row-by-row execution and achieves optimal O(N + M) performance without application developers needing to manually rewrite the query."
 
 ---
 

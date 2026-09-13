@@ -2,7 +2,7 @@
 
 ## 1. Why This Matters
 Coding interviews mein speed aur clean code sabse zyada count hota hai. Python ki standard library mein aisi built-in data structures hain (`deque`, `heapq`, `Counter`, `defaultdict`, `bisect`) jo aapko 50 lines ka boilerplate likhne ke bajaye 2 lines mein optimal logic implement karne deti hain. 
-Lekin agar aapko inka internal time complexity aur edge cases nahi pata (jaise `list.pop(0)` ka $O(N)$ hona), toh interviewer aapko complexity round mein disqualify kar dega.
+Lekin agar aapko inka internal time complexity aur edge cases nahi pata (jaise `list.pop(0)` ka O(N) hona), toh interviewer aapko complexity round mein disqualify kar dega.
 
 ---
 
@@ -33,12 +33,12 @@ flowchart TD
 
 | Method | Time Complexity | Notes & Gotchas |
 | :--- | :---: | :--- |
-| `arr[i]` | $O(1)$ | Direct pointer arithmetic in memory |
-| `arr.append(x)` | $O(1)$ amortized | Geometric resizing |
-| `arr.pop()` | $O(1)$ | Pops from end (Stack LIFO) |
-| `arr.pop(0)` | **$O(N)$ (DANGEROUS)** | Shifts all $N-1$ pointers left in RAM! |
-| `arr.insert(0, x)`| **$O(N)$** | Shifts all elements right |
-| `x in arr` | $O(N)$ | Linear scan |
+| `arr[i]` | O(1) | Direct pointer arithmetic in memory |
+| `arr.append(x)` | O(1) amortized | Geometric resizing |
+| `arr.pop()` | O(1) | Pops from end (Stack LIFO) |
+| `arr.pop(0)` | **O(N) (DANGEROUS)** | Shifts all N-1 pointers left in RAM! |
+| `arr.insert(0, x)`| **O(N)** | Shifts all elements right |
+| `x in arr` | O(N) | Linear scan |
 
 ### 2. `collections.deque` — Double-Ended Queue
 * **When to use:** BFS (Breadth-First Search), Sliding Window Maximum, FIFO queues.
@@ -101,7 +101,7 @@ for u, v in edges:
 ```
 
 ### 5. `bisect` — Binary Search Module
-* **When to use:** Finding insertion point in sorted arrays, range query boundaries in $O(\log N)$.
+* **When to use:** Finding insertion point in sorted arrays, range query boundaries in O(log N).
 
 ```python
 import bisect
@@ -185,7 +185,7 @@ def dfs_traversal(graph, node, visited=None):
 ---
 
 ## 6. Top 5 Python DSA Interview Traps
-1. **Using `list.pop(0)` in BFS:** Turns $O(V + E)$ into quadratic $O(V^2)$ because each pop shifts entire list memory. Always use `collections.deque.popleft()`.
+1. **Using `list.pop(0)` in BFS:** Turns O(V + E) into quadratic O(V²) because each pop shifts entire list memory. Always use `collections.deque.popleft()`.
 2. **Mutating list while iterating:** `for x in arr: if condition: arr.remove(x)` skips elements because indices shift dynamically. Create a new list via comprehension or iterate backwards.
 3. **Using 2D lists with multiplication:** `matrix = [[0] * 3] * 3` creates 3 references to the **same single row**! Modifying `matrix[0][0] = 1` mutates all 3 rows. Always use: `matrix = [[0] * cols for _ in range(rows)]`.
 4. **Neglecting recursion depth limit:** Python default recursion depth is 1,000. In deep graph/tree problems, `sys.setrecursionlimit(200000)` is required or convert recursion to iterative stack.

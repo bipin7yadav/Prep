@@ -1,8 +1,729 @@
 /* Master Curated Multi-Dimensional Flashcards for IDFC FIRST Bank (200+ Cards) */
 
-export const FLASHCARDS_COUNT = 224;
+export const FLASHCARDS_COUNT = 296;
 
 export const FLASHCARDS_DATA = [
+  
+  {
+    "id": "tricky-js-01",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Event Loop & Microtasks",
+    "dimension": "Code Output Puzzle",
+    "question": "What is the exact execution order of process.nextTick vs Promise.then vs setTimeout(0)?",
+    "answerHinglish": "Synchronous call stack pehle empty hota hai. Uske baad Node.js me process.nextTick queue execute hoti hai, fir Promise microtask queue drain hoti hai, aur sabse aakhri me Macrotasks (jaise setTimeout 0) run hote hain.",
+    "codeSnippet": "setTimeout(() => console.log('Timeout'), 0);\nPromise.resolve().then(() => console.log('Promise'));\nprocess.nextTick(() => console.log('NextTick'));\n// Output: NextTick -> Promise -> Timeout",
+    "tag": "Event Loop Trap"
+  },
+  {
+    "id": "tricky-js-02",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Scoping & Closures",
+    "dimension": "Classic Trap",
+    "question": "Why does for (var i=0; i<3; i++) setTimeout(()=>console.log(i), 0) print 3 three times, and how do you fix it?",
+    "answerHinglish": "var function-scoped hota hai, isliye poore loop me ek single i variable share hota hai. Timer callback run hone tak loop complete ho chuka hota hai aur i ki value 3 ho jati hai. Fix: 'let' use karein jo har iteration ke liye ek alag block scope aur fresh binding banata hai.",
+    "codeSnippet": "// Fix:\nfor (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0); // 0, 1, 2\n}",
+    "tag": "Closure Scoping"
+  },
+  {
+    "id": "tricky-js-03",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "FinTech Floating Point",
+    "dimension": "FinTech Trap",
+    "question": "Why does 0.1 + 0.2 === 0.3 evaluate to false, and how MUST currency amounts be handled in banking?",
+    "answerHinglish": "JavaScript IEEE 754 64-bit binary floating-point use karta hai jisme 0.1 aur 0.2 base-2 binary fractions me exactly represent nahi ho sakte (0.30000000000000004). Banking me kabhi raw floats use na karein: hamesha paise/cents (integers) me compute karein ya BigInt/Decimal library use karein.",
+    "codeSnippet": "// Banking Rule: 100.50 INR -> 10050 paise\nconst amountPaise = 10050n;\nconst taxPaise = 1809n;\nconst total = amountPaise + taxPaise;",
+    "tag": "Currency IEEE 754"
+  },
+  {
+    "id": "tricky-js-04",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "this Binding",
+    "dimension": "Trap",
+    "question": "Why does an arrow function defined as an object method fail to access this.property?",
+    "answerHinglish": "Arrow functions ke paas apna 'this' nahi hota; wo surrounding lexical scope se 'this' inherit karte hain. Object literal `{ ... }` koi lexical scope create nahi karta! Isliye arrow function me 'this' outer module/window ko point karta hai, object ko nahi.",
+    "codeSnippet": "const bank = {\n  name: 'IDFC',\n  getName: () => this.name // undefined!\n};",
+    "tag": "this Binding"
+  },
+  {
+    "id": "tricky-js-05",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Type Coercion",
+    "dimension": "Code Output Puzzle",
+    "question": "What does [] == ![] evaluate to in JavaScript, and why?",
+    "answerHinglish": "Evaluates to true! Step 1: ![] converts to boolean false. Step 2: [] == false. Step 3: Boolean converts to number: [] == 0. Step 4: Array converts to primitive string \"\": \"\" == 0. Step 5: \"\" converts to number: 0 == 0 -> true!",
+    "codeSnippet": "console.log([] == ![]); // true\nconsole.log([] + []);   // \"\"\nconsole.log([] + {});   // \"[object Object]\"",
+    "tag": "Type Coercion"
+  },
+  {
+    "id": "tricky-js-06",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Security & Prototypes",
+    "dimension": "Security",
+    "question": "Why is Object.create(null) preferred over {} for high-security in-memory hash maps in banking?",
+    "answerHinglish": "`{}` Object.prototype se properties (like toString, hasOwnProperty) inherit karta hai, jisse Prototype Pollution attacks ka risk rehta hai. `Object.create(null)` ka koi prototype chain nahi hota (`__proto__ === undefined`), isliye ye 100% clean key-value lookup guarantee karta hai.",
+    "codeSnippet": "const safeMap = Object.create(null);\nconsole.log('toString' in safeMap); // false!",
+    "tag": "Prototype Pollution"
+  },
+  {
+    "id": "tricky-js-07",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Promise Concurrency",
+    "dimension": "Comparison",
+    "question": "When should you choose Promise.allSettled over Promise.all in banking workflows?",
+    "answerHinglish": "Promise.all 'Fail-Fast' hota hai (koi ek bhi reject hua toh turant abort kar deta hai). EOD statements ya bulk notification batch processing me agar 1 account fail ho toh baaki 9,999 ko process hona chahiye; iske liye Promise.allSettled use karte hain kyunki ye kabhi reject nahi hota aur sabka status deta hai.",
+    "codeSnippet": "const results = await Promise.allSettled(userPromises);\nconst failed = results.filter(r => r.status === 'rejected');",
+    "tag": "Promise Patterns"
+  },
+  {
+    "id": "tricky-js-08",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "V8 Optimization",
+    "dimension": "V8 Internals",
+    "question": "How do inconsistent property insertion orders de-optimize V8 Hidden Classes into slow dictionary mode?",
+    "answerHinglish": "V8 dynamic objects ke liye internal Hidden Classes (Shapes) banata hai. Agar do objects me same properties alag-alag order me add ki jayein, toh V8 alag transition tree banata hai aur inline caches (IC) fail ho jate hain. Object slow hash-table dictionary mode me chala jata hai.",
+    "codeSnippet": "// Always initialize all fields in the constructor in identical order:\nclass Account {\n  constructor(id, pan = null) {\n    this.id = id;\n    this.pan = pan;\n  }\n}",
+    "tag": "V8 Hidden Classes"
+  },
+  {
+    "id": "tricky-js-09",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Async Rate Limiting",
+    "dimension": "Implementation",
+    "question": "What is the core architectural difference between Debounce and Throttle?",
+    "answerHinglish": "Debounce events ke shant hone ka wait karta hai (user typing stop kare tab 300ms baad call ho - IFSC search). Throttle guaranteed interval rate enforce karta hai (user chahe 100 baar click kare, function har 2 second me max 1 baar hi execute hoga - Payment submit button).",
+    "codeSnippet": "// Debounce: waits for idle period\n// Throttle: caps execution frequency",
+    "tag": "Debounce vs Throttle"
+  },
+  {
+    "id": "tricky-js-10",
+    "domain": "JavaScript & V8 Internals",
+    "topic": "Deep Cloning",
+    "dimension": "Trap",
+    "question": "What are the 3 major pitfalls of using JSON.parse(JSON.stringify(obj)) for deep copying?",
+    "answerHinglish": "1) Date objects ko ISO strings me convert kar deta hai (Date instance lost). 2) undefined, Function, aur Symbol properties ko silently drop kar deta hai. 3) Circular references par TypeError throw karke crash ho jata hai. Modern fix: structuredClone(obj) use karein.",
+    "codeSnippet": "const deepCopy = structuredClone(accountObject);",
+    "tag": "Deep Clone"
+  },
+  {
+    "id": "tricky-py-01",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Internals",
+    "dimension": "Memory Trap",
+    "question": "Why does a = 256; b = 256; a is b return True, but x = 257; y = 257; x is y return False in REPL?",
+    "answerHinglish": "CPython startup par -5 se 256 tak ke small integers ka array pre-allocate kar leta hai. Is range ke integers hamesha same memory object share karte hain. 257 cache range se bahar hai, isliye heap par do alag PyObject allocate hote hain. Hamesha value ke liye '==' use karein!",
+    "codeSnippet": "a = 256; b = 256\nprint(a is b) # True (Cached)\nx = 257; y = 257\nprint(x is y) # False in REPL",
+    "tag": "Small Int Cache"
+  },
+  {
+    "id": "tricky-py-02",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Functions",
+    "dimension": "Classic Trap",
+    "question": "What is the Mutable Default Argument trap, and what does def f(val, acc=[]) do internally?",
+    "answerHinglish": "Default arguments function definition time par sirf ek baar evaluate hote hain aur function object ke `__defaults__` attribute me store ho jate hain. Subsequent calls bina argument ke usi same list ko mutate karti rehti hain. Fix: Sentinel pattern `acc=None` use karein.",
+    "codeSnippet": "# Fix:\ndef f(val, acc=None):\n    if acc is None:\n        acc = []\n    acc.append(val)\n    return acc",
+    "tag": "Default Arg Trap"
+  },
+  {
+    "id": "tricky-py-03",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Closures",
+    "dimension": "Code Output Puzzle",
+    "question": "What does [lambda x: x*i for i in range(4)] return when each function is called with 2, and why?",
+    "answerHinglish": "Returns [6, 6, 6, 6]! Python closures late-binding hoti hain; 'i' ki value call time par dekhi jati hai, definition time par nahi. Loop khatam hone par i=3 hota hai, isliye sabhi 2*3=6 compute karte hain. Fix: default argument freeze `lambda x, i=i: x*i` use karein.",
+    "codeSnippet": "# Fix:\nfuncs = [lambda x, i=i: x * i for i in range(4)]\nprint([f(2) for f in funcs]) # [0, 2, 4, 6]",
+    "tag": "Late Binding Closures"
+  },
+  {
+    "id": "tricky-py-04",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Bytecode",
+    "dimension": "Brain Teaser",
+    "question": "What happens when t = ([1, 2], 3); t[0] += [4, 5] is executed?",
+    "answerHinglish": "TypeError raise hota hai AND list mutate ho jati hai! `+=` internally `__iadd__` call karke heap par list ko in-place extend kar deta hai ([1, 2, 4, 5]). Uske baad bytecode STORE_SUBSCR tuple me assignment try karta hai jo immutable hone ke kaaran TypeError throw karta hai.",
+    "codeSnippet": "t = ([1, 2], 3)\ntry:\n    t[0] += [4, 5]\nexcept TypeError:\n    pass\nprint(t) # ([1, 2, 4, 5], 3)!",
+    "tag": "Tuple Mutation Trap"
+  },
+  {
+    "id": "tricky-py-05",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Concurrency",
+    "dimension": "GIL Internals",
+    "question": "Does NumPy matrix computation release the Python GIL?",
+    "answerHinglish": "Yes! NumPy, Pandas C-extensions, aur SciPy heavy array/matrix mathematical operations execute karte waqt GIL release kar dete hain. Isliye NumPy C-level threads me multiple CPU cores par parallelly execute ho sakta hai, jabki pure Python loops 1 core par limit rehte hain.",
+    "codeSnippet": "# NumPy releases GIL during heavy C-array calculations\nresult = np.dot(matrix_a, matrix_b)",
+    "tag": "GIL & NumPy"
+  },
+  {
+    "id": "tricky-py-06",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python OOP",
+    "dimension": "MRO & Super",
+    "question": "In Python multiple inheritance Diamond Problem, how does super() prevent parent methods from being called twice?",
+    "answerHinglish": "super() direct parent ko call nahi karta balki C3 Linearization algorithm se bani class ki MRO (Method Resolution Order) list me agle class ko call karta hai. Is tarah diamond apex class poore hierarchy me sirf ek baar run hoti hai.",
+    "codeSnippet": "class D(B, C): pass\nprint([cls.__name__ for cls in D.mro()])\n# ['D', 'B', 'C', 'A', 'object']",
+    "tag": "MRO Diamond Problem"
+  },
+  {
+    "id": "tricky-py-07",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Memory",
+    "dimension": "Optimization",
+    "question": "How does __slots__ save 50%+ memory in classes handling millions of transaction objects?",
+    "answerHinglish": "Standard Python class har instance ke liye dynamic `__dict__` allocate karti hai (~150-200 bytes per object). `__slots__ = ('id', 'amt')` declare karne se Python per-instance dict eliminate kar deta hai aur fixed C-style pointer struct banata hai, reducing RAM by 40-60%.",
+    "codeSnippet": "class FastTxn:\n    __slots__ = ('id', 'amount')\n    def __init__(self, id, amt):\n        self.id = id\n        self.amount = amt",
+    "tag": "Slots Optimization"
+  },
+  {
+    "id": "tricky-py-08",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Context Managers",
+    "dimension": "Exception Handling",
+    "question": "How does a context manager's __exit__ method suppress an exception?",
+    "answerHinglish": "Agar `__exit__(self, exc_type, exc_val, exc_tb)` method explicitly `True` return kare, toh Python with-block ke andar hui exception ko suppress kar deta hai aur program normally continue hota hai. Agar False ya None return kare, toh exception re-raise ho jati hai.",
+    "codeSnippet": "def __exit__(self, exc_type, exc_val, exc_tb):\n    if issubclass(exc_type, TransientError):\n        return True # Suppress!\n    return False # Re-raise fatal",
+    "tag": "Context Managers"
+  },
+  {
+    "id": "tricky-py-09",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Operators",
+    "dimension": "Brain Teaser",
+    "question": "Why does False == False in [False] print True in Python?",
+    "answerHinglish": "Python me comparisons chain hoti hain jaise `a < b < c` -> `(a < b) and (b < c)`. Isliye `False == False in [False]` internally expand hota hai: `(False == False) and (False in [False])`. Both evaluate to True, so result is True!",
+    "codeSnippet": "print(False == False in [False]) # True!",
+    "tag": "Chained Comparisons"
+  },
+  {
+    "id": "tricky-py-10",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Python Flow Control",
+    "dimension": "Control Flow Trap",
+    "question": "What does a function return if both try and finally blocks have explicit return statements?",
+    "answerHinglish": "Finally block ka return statement hamesha try block ke return statement ko silently overwrite kar deta hai! Finally block function stack frame exit hone se pehle execute hota hai, isliye uska return value jeet jata hai.",
+    "codeSnippet": "def f():\n    try:\n        return 100\n    finally:\n        return 200\nprint(f()) # 200",
+    "tag": "Finally Return Override"
+  },
+  {
+    "id": "tricky-sql-01",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "SQL Three-Valued Logic",
+    "dimension": "Catastrophic Trap",
+    "question": "Why does SELECT * FROM accounts WHERE id NOT IN (SELECT id FROM frozen) return 0 rows if frozen has even a single NULL?",
+    "answerHinglish": "SQL 3-valued logic (TRUE, FALSE, UNKNOWN) follow karta hai. `x NOT IN (1, 2, NULL)` expand hota hai: `(x <> 1) AND (x <> 2) AND (x <> NULL)`. SQL me `x <> NULL` hamesha UNKNOWN hota hai. Poora expression UNKNOWN ban jata hai aur saari rows filter ho jati hain. Hamesha NOT EXISTS use karein!",
+    "codeSnippet": "-- FIX:\nSELECT * FROM accounts a\nWHERE NOT EXISTS (\n  SELECT 1 FROM frozen f WHERE f.id = a.id\n);",
+    "tag": "NOT IN NULL Trap"
+  },
+  {
+    "id": "tricky-sql-02",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Concurrency & Locking",
+    "dimension": "FinTech Solution",
+    "question": "How do you prevent double-spending in a high-concurrency bank balance debit without explicit transactions?",
+    "answerHinglish": "Atomic in-place conditional decrement use karein: `UPDATE accounts SET balance = balance - :amt WHERE id = :id AND balance >= :amt;`. Backend me check karein rowCount: agar 1 hai toh success, agar 0 hai toh insufficient balance.",
+    "codeSnippet": "UPDATE accounts\nSET balance = balance - 500\nWHERE id = 'ACC-101' AND balance >= 500;",
+    "tag": "Atomic Decrement"
+  },
+  {
+    "id": "tricky-sql-03",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Deadlock Prevention",
+    "dimension": "FinTech Architecture",
+    "question": "How do you guarantee zero deadlocks when transferring funds between two arbitrary accounts concurrently?",
+    "answerHinglish": "Deterministic Lock Ordering enforce karein: chahe transfer A to B ho ya B to A, locks hamesha sorted account_id order me acquire karein (`first, second = sorted([acc_a, acc_b])`). Isse cycle in wait-for graph kabhi ban hi nahi sakti.",
+    "codeSnippet": "-- Lock lower ID first, then higher ID:\nSELECT * FROM accounts WHERE id = :lower_id FOR UPDATE;\nSELECT * FROM accounts WHERE id = :higher_id FOR UPDATE;",
+    "tag": "Deadlock Prevention"
+  },
+  {
+    "id": "tricky-sql-04",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Window Frames",
+    "dimension": "FinTech Passbook Bug",
+    "question": "Why does default SUM(amt) OVER (ORDER BY date) produce buggy running balances when transactions have duplicate timestamps?",
+    "answerHinglish": "ORDER BY ke sath default frame specification `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` hoti hai. RANGE identical timestamp wale rows (peers) ko combine karke duplicate dates par same aggregate total dikhata hai. True passbook running balance ke liye explicit `ROWS` frame specify karna compulsory hai.",
+    "codeSnippet": "SUM(amount) OVER (\n  PARTITION BY account_id \n  ORDER BY txn_date, txn_id \n  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n)",
+    "tag": "Window Frame ROWS vs RANGE"
+  },
+  {
+    "id": "tricky-sql-05",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Ranking Functions",
+    "dimension": "Comparison",
+    "question": "Why is DENSE_RANK() preferred over LIMIT 1 OFFSET 1 to find the second highest balance?",
+    "answerHinglish": "Agar top 2 accounts ka balance exactly same ho (tie: \u20b910,00,000 each), toh `LIMIT 1 OFFSET 1` dusre tied account ko hi return kar dega (still \u20b910L). `DENSE_RANK()` tied rows ko same rank 1 deta hai aur strictly next unique balance tier ko rank 2 assign karta hai.",
+    "codeSnippet": "WITH R AS (\n  SELECT balance, DENSE_RANK() OVER (ORDER BY balance DESC) as rk\n  FROM accounts\n)\nSELECT balance FROM R WHERE rk = 2;",
+    "tag": "Ranking Functions"
+  },
+  {
+    "id": "tricky-sql-06",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Hierarchical Data",
+    "dimension": "FinTech Fraud Detection",
+    "question": "How do you trace multi-hop circular money laundering mule account chains using SQL?",
+    "answerHinglish": "Recursive Common Table Expression (CTE) use karein with an Anchor Member (starting transfer) and a Recursive Member (subsequent hops). Cycle detection ke liye visited account IDs ka array track karein (`WHERE NOT (to_account = ANY(path))`).",
+    "codeSnippet": "WITH RECURSIVE MuleChain AS (\n  SELECT from_acc, to_acc, 1 as hop, ARRAY[from_acc, to_acc] as path\n  FROM txns WHERE from_acc = 101\n  UNION ALL\n  SELECT t.from_acc, t.to_acc, mc.hop + 1, path || t.to_acc\n  FROM txns t JOIN MuleChain mc ON t.from_acc = mc.to_acc\n  WHERE NOT (t.to_acc = ANY(mc.path)) AND mc.hop < 10\n)",
+    "tag": "Recursive CTE"
+  },
+  {
+    "id": "tricky-sql-07",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "B+ Tree Indexing",
+    "dimension": "Optimization",
+    "question": "If an index exists on (branch, txn_date, amount), why does WHERE txn_date = '2026-03-01' cause a Full Table Scan?",
+    "answerHinglish": "Leftmost Prefix Rule ke mutabiq! Composite B+ Tree index leading column (branch) ke hisaab se pehle sorted hota hai, fir txn_date ke hisaab se. Ye phonebook jaisa hai: bina Last Name ke aap First Name se binary search nahi kar sakte.",
+    "codeSnippet": "-- Uses Index:\nWHERE branch = 'B01' AND txn_date = '2026-03-01'\n-- Full Table Scan:\nWHERE txn_date = '2026-03-01'",
+    "tag": "Leftmost Prefix Rule"
+  },
+  {
+    "id": "tricky-sql-08",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "B+ Tree Indexing",
+    "dimension": "Covering Index",
+    "question": "What is the purpose of the INCLUDE clause in PostgreSQL CREATE INDEX?",
+    "answerHinglish": "Payload non-key columns ko B+ Tree leaf pages me store karta hai bina unhe index search key me include kiye. Isse index size chota rehta hai aur queries bina table heap ko touch kiye 'Index-Only Scan' execute kar sakti hain.",
+    "codeSnippet": "CREATE INDEX idx_cov ON txns(account_id, txn_date) \nINCLUDE (amount, status);",
+    "tag": "Covering Index"
+  },
+  {
+    "id": "tricky-sql-09",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Gaps and Islands",
+    "dimension": "Advanced Analytics",
+    "question": "How do you detect consecutive days of customer transaction activity (streak analysis)?",
+    "answerHinglish": "ROW_NUMBER() trick use karein: `(txn_date - ROW_NUMBER() * INTERVAL '1 day')`. Consecutive dates ke liye ye difference CONSTANT rehta hai, jo islands (streaks) ko ek unique group identifier provide karta hai jise GROUP BY kiya ja sakta hai.",
+    "codeSnippet": "SELECT customer_id, MIN(act_date), MAX(act_date), COUNT(*)\nFROM (\n  SELECT customer_id, act_date,\n         act_date - (ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY act_date) * INTERVAL '1 day') as grp\n  FROM user_active_days\n)\nGROUP BY customer_id, grp HAVING COUNT(*) >= 3;",
+    "tag": "Gaps and Islands"
+  },
+  {
+    "id": "tricky-sql-10",
+    "domain": "SQL & Advanced DBMS",
+    "topic": "Aggregations & NULLs",
+    "dimension": "Trap",
+    "question": "What does SELECT SUM(amount) FROM txns WHERE 1=0 return, and why does it break financial code?",
+    "answerHinglish": "Returns NULL, NOT 0! JavaScript ya Python backend me `null + 500` null ya TypeError create karta hai. Production banking rule: Aggregate functions ko hamesha `COALESCE(SUM(amount), 0)` se wrap karein.",
+    "codeSnippet": "-- Correct Banking Query:\nSELECT COALESCE(SUM(amount), 0) AS total_settled \nFROM settlements \nWHERE status = 'SUCCESS';",
+    "tag": "COALESCE Aggregation"
+  },
+  {
+    "id": "pandas-01",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Fundamentals",
+    "dimension": "Concept",
+    "question": "What is the structural difference between a pandas Series and a DataFrame?",
+    "answerHinglish": "Series 1-dimensional labeled array hai jisme single column aur explicit row labels (index) hote hain. DataFrame ek 2-dimensional labeled tabular data structure hai jo multiple Series ko ek common index ke under share karti hai.",
+    "codeSnippet": "s = pd.Series([100, 200], index=['a', 'b'])\ndf = pd.DataFrame({'amt': s, 'tax': s * 0.18})",
+    "tag": "Pandas Architecture"
+  },
+  {
+    "id": "pandas-02",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Internals",
+    "dimension": "OOP / Rule",
+    "question": "Why do some pandas commands end with parentheses () while others do not?",
+    "answerHinglish": "Attributes (jaise df.shape, df.dtypes, df.columns) DataFrame ki already computed state/properties hoti hain, isliye parentheses nahi hote. Methods (jaise df.head(), df.describe(), df.mean()) action verbs hote hain jo computation ya transformation execute karte hain, isliye parentheses compulsory hote hain.",
+    "codeSnippet": "print(df.shape)    # Attribute (No parentheses)\nprint(df.describe()) # Method (Requires parentheses)",
+    "tag": "Pandas OOP"
+  },
+  {
+    "id": "pandas-03",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Ingestion",
+    "dimension": "Syntax",
+    "question": "How do you read a pipe-delimited file without headers and assign custom column names during ingestion?",
+    "answerHinglish": "pd.read_csv() me sep='|', header=None, aur names=['col1', 'col2'] pass karein. Isse pandas pehli data row ko header samajhne ki galti nahi karega aur custom column labels assign kar dega.",
+    "codeSnippet": "cols = ['user_id', 'age', 'gender', 'zip']\ndf = pd.read_csv('data.txt', sep='|', header=None, names=cols)",
+    "tag": "Data Ingestion"
+  },
+  {
+    "id": "pandas-04",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Ingestion",
+    "dimension": "Optimization",
+    "question": "How do you read only specific columns and top N rows from a multi-gigabyte CSV into memory?",
+    "answerHinglish": "usecols parameter me required columns ki list aur nrows parameter me desired row count pass karein. Pandas unused columns aur trailing rows ko disk se parse hi nahi karega, jisse 90%+ RAM aur time save hota hai.",
+    "codeSnippet": "df = pd.read_csv('huge_ledger.csv', usecols=['txn_id', 'amount'], nrows=10000)",
+    "tag": "Ingestion Optimization"
+  },
+  {
+    "id": "pandas-05",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Schema Evolution",
+    "dimension": "Syntax",
+    "question": "What is the recommended immutable way to rename specific columns in a DataFrame?",
+    "answerHinglish": "df.rename(columns={'old_name': 'new_name'}) use karein. Ye selectively sirf specified columns ko rename karta hai aur bina original schema ko mutate kiye naya DataFrame return karta hai.",
+    "codeSnippet": "df_renamed = df.rename(columns={'cust_vpa': 'upi_handle', 'amt': 'amount'})",
+    "tag": "Schema Evolution"
+  },
+  {
+    "id": "pandas-06",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Schema Evolution",
+    "dimension": "Syntax",
+    "question": "How do you replace spaces with underscores across all column names in a single vectorized step?",
+    "answerHinglish": "df.columns index object par .str.replace(' ', '_') execute karein: df.columns = df.columns.str.replace(' ', '_'). Ye bina kisi Python loop ke pure column index ko transform kar deta hai.",
+    "codeSnippet": "df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')",
+    "tag": "Column Sanitation"
+  },
+  {
+    "id": "pandas-07",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Axis Mechanics",
+    "dimension": "Mental Model",
+    "question": "What is the exact behavioral difference between axis=0 and axis=1 in pandas operations?",
+    "answerHinglish": "axis=0 (or 'index') vertically rows ke along move karta hai aur saari rows ko collapse karke har column ka single aggregate deta hai. axis=1 (or 'columns') horizontally columns ke along move karta hai aur har individual row ke liye single aggregate compute karta hai.",
+    "codeSnippet": "df.mean(axis=0) # 1 mean per column (across all rows)\ndf.mean(axis=1) # 1 mean per row (across all columns)",
+    "tag": "Axis Invariant"
+  },
+  {
+    "id": "pandas-08",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Traps",
+    "dimension": "Trap",
+    "question": "Why does df.drop('column_name') throw a KeyError by default, and how do you fix it?",
+    "answerHinglish": "Kyunki df.drop() me axis default 0 (rows) hota hai! Pandas 'column_name' label ki row search karta hai jo milti nahi hai. Fix: Explicitly axis=1 ya columns='column_name' pass karein.",
+    "codeSnippet": "# Fix:\ndf.drop('column_name', axis=1)\n# Modern alternative:\ndf.drop(columns=['column_name'])",
+    "tag": "Axis Trap"
+  },
+  {
+    "id": "pandas-09",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Sorting",
+    "dimension": "Syntax",
+    "question": "How do you sort a banking ledger by Branch ascending and Transaction Amount descending?",
+    "answerHinglish": "df.sort_values(by=['branch', 'amount'], ascending=[True, False]) use karein. Multiple columns aur corresponding boolean flags ki lists pass karke multi-level hierarchical sort hota hai.",
+    "codeSnippet": "df_sorted = df.sort_values(by=['branch_code', 'amount'], ascending=[True, False])",
+    "tag": "Sorting"
+  },
+  {
+    "id": "pandas-10",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Traps",
+    "dimension": "Debugging",
+    "question": "Why does df[df.amount > 5000 and df.status == 'SUCCESS'] fail in Python, and how do you fix it?",
+    "answerHinglish": "Python ka 'and' pure Series object ki single truth value evaluate karne ki koshish karta hai, jisse ValueError: The truth value of a Series is ambiguous crash hota hai. Fix: Hamesha bitwise & operator use karo aur har individual condition ko parentheses (...) me wrap karo.",
+    "codeSnippet": "# Fix:\ndf[(df['amount'] > 5000) & (df['status'] == 'SUCCESS')]",
+    "tag": "Boolean Filtering"
+  },
+  {
+    "id": "pandas-11",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Filtering",
+    "dimension": "Syntax",
+    "question": "How do you filter a DataFrame for rows where status is either SUCCESS, PENDING, or SETTLED without chaining | operators?",
+    "answerHinglish": "Series method .isin(['SUCCESS', 'PENDING', 'SETTLED']) use karein: df[df['status'].isin(['SUCCESS', 'PENDING', 'SETTLED'])]. Ye cleaner, faster aur maintainable hota hai.",
+    "codeSnippet": "allowed = ['SUCCESS', 'PENDING', 'SETTLED']\nclean_df = df[df['status'].isin(allowed)]",
+    "tag": "Boolean Indexing"
+  },
+  {
+    "id": "pandas-12",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Performance",
+    "dimension": "Anti-Pattern",
+    "question": "Why is for index, row in df.iterrows(): considered a severe anti-pattern in production pipelines?",
+    "answerHinglish": "iterrows() har single row ke liye ek naya pandas Series object instantiate karta hai aur type conversion overhead create karta hai. Ye C-level vectorization bypass karta hai aur 100x se 1000x slow hota hai. Vectorized operations ya .apply() ya list comprehensions use karein.",
+    "codeSnippet": "# BAD: 10,000 ms\nfor idx, row in df.iterrows():\n    total += row['amt']\n\n# GOOD: 2 ms (Vectorized)\ntotal = df['amt'].sum()",
+    "tag": "Performance Traps"
+  },
+  {
+    "id": "pandas-13",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Strings",
+    "dimension": "Syntax",
+    "question": "How do you extract domain handles from email VPAs using the .str accessor without loops?",
+    "answerHinglish": ".str.split('@').str[1] use karein. Pehla .str.split('@') har string ko list of tokens me todta hai, aur dusra .str[1] vectorized tareeqe se har list ka 1st index (domain handle) project karta hai.",
+    "codeSnippet": "df['psp'] = df['vpa'].str.split('@').str[1]\n# 'user@okhdfcbank' -> 'okhdfcbank'",
+    "tag": "Vectorized Strings"
+  },
+  {
+    "id": "pandas-14",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Strings",
+    "dimension": "Syntax",
+    "question": "How do you perform a case-insensitive substring search across transaction narration text?",
+    "answerHinglish": "df['narration'].str.contains('SALARY|NEFT', case=False, na=False) use karein. case=False case-sensitivity ignore karta hai aur na=False missing NaN values ko silently False treat karta hai.",
+    "codeSnippet": "salary_txns = df[df['narration'].str.contains('salary', case=False, na=False)]",
+    "tag": "Vectorized Strings"
+  },
+  {
+    "id": "pandas-15",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Data Types",
+    "dimension": "Data Cleaning",
+    "question": "How do you clean and cast a currency column containing symbols like \u20b9 or $ and commas into numeric floats?",
+    "answerHinglish": "Pehle .str.replace() se currency symbols aur commas remove karein, fir .astype(float) ya pd.to_numeric() me cast karein.",
+    "codeSnippet": "df['clean_amt'] = df['amount'].str.replace('\u20b9', '').str.replace(',', '').astype(float)",
+    "tag": "Data Cleaning"
+  },
+  {
+    "id": "pandas-16",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Data Types",
+    "dimension": "Robustness",
+    "question": "What does pd.to_numeric(df['amt'], errors='coerce') do when encountering dirty string entries like 'N/A' or 'CORRUPT'?",
+    "answerHinglish": "errors='coerce' unparseable dirty strings ko exception throw kiye bina NaN (Not a Number) me convert kar deta hai. Iske baad aap .fillna() ya .dropna() se missing records ko cleanly handle kar sakte hain.",
+    "codeSnippet": "df['clean_amount'] = pd.to_numeric(df['raw_col'], errors='coerce')\ndf['clean_amount'].fillna(0.0, inplace=True)",
+    "tag": "Type Coercion"
+  },
+  {
+    "id": "pandas-17",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Exploration",
+    "dimension": "Syntax",
+    "question": "How do you compute relative percentage frequencies including missing values using value_counts()?",
+    "answerHinglish": "normalize=True pass karne se absolute counts ke bajaye fractions (percentages) milti hain, aur dropna=False pass karne se missing NaN values bhi distribution me include hoti hain.",
+    "codeSnippet": "print(df['kyc_status'].value_counts(normalize=True, dropna=False) * 100)",
+    "tag": "Data Exploration"
+  },
+  {
+    "id": "pandas-18",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Exploration",
+    "dimension": "Syntax",
+    "question": "How do you compute a 2-way frequency contingency table between Customer Segment and Default Status?",
+    "answerHinglish": "pd.crosstab(df['segment'], df['defaulted'], margins=True) use karein. margins=True row aur column totals (All) bhi compute karke deta hai.",
+    "codeSnippet": "ct = pd.crosstab(df['segment'], df['is_fraud'], margins=True, normalize='index')",
+    "tag": "Contingency Table"
+  },
+  {
+    "id": "pandas-19",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Missing Data",
+    "dimension": "Syntax",
+    "question": "How do you drop rows from a DataFrame ONLY IF both Account Number and Transaction ID are NaN?",
+    "answerHinglish": "df.dropna(how='all', subset=['account_id', 'txn_id']) use karein. how='all' condition tabhi satisfy hogi jab subset ke saare columns simultaneously NaN honge.",
+    "codeSnippet": "df_valid = df.dropna(how='all', subset=['account_id', 'txn_id'])",
+    "tag": "Missing Data"
+  },
+  {
+    "id": "pandas-20",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Missing Data",
+    "dimension": "FinTech Scenario",
+    "question": "Why is forward-filling (.ffill()) standard for financial NAV/stock prices while median imputation is used for transaction amounts?",
+    "answerHinglish": "Financial market tick/NAV prices time-series continuity follow karte hain: agar weekend par price record nahi hua toh last traded price hi current valuation hoti hai (ffill). Lekin missing transaction amounts independent events hain jisme mean/median baseline preserve karta hai.",
+    "codeSnippet": "df['nav_price'] = df['nav_price'].ffill()",
+    "tag": "Time Series Imputation"
+  },
+  {
+    "id": "pandas-21",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Indexing",
+    "dimension": "Comparison",
+    "question": "What is the crucial boundary difference between .loc and .iloc?",
+    "answerHinglish": ".loc label-based selection hai aur iska stop boundary hamesha INCLUSIVE hota hai (e.g. 'a':'c' me 'c' include hoga). .iloc 0-indexed integer position-based hai aur iska stop boundary hamesha EXCLUSIVE hota hai (e.g. 0:3 me index 0, 1, 2 include honge, 3 nahi).",
+    "codeSnippet": "df.loc['2026-01-01':'2026-01-05'] # Jan 5 is INCLUDED\ndf.iloc[0:5]                       # Row 5 is EXCLUDED",
+    "tag": "Indexing"
+  },
+  {
+    "id": "pandas-22",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Index Mechanics",
+    "dimension": "Internals",
+    "question": "What is automatic index alignment in pandas arithmetic operations?",
+    "answerHinglish": "Jab aap do Series add karte hain (s1 + s2), pandas integer position match nahi karta balki row INDEX LABELS ko match karta hai. Agar koi label dono me present hai, toh values add hongi; agar koi label ek me present hai aur dusre me missing hai, toh result NaN ho jayega.",
+    "codeSnippet": "s1 = pd.Series([10, 20], index=['A', 'B'])\ns2 = pd.Series([30, 40], index=['B', 'C'])\n# s1 + s2 -> A: NaN, B: 50.0, C: NaN",
+    "tag": "Index Alignment"
+  },
+  {
+    "id": "pandas-23",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Traps",
+    "dimension": "Trap",
+    "question": "What causes the SettingWithCopyWarning and what is the definitive production fix?",
+    "answerHinglish": "Ye warning tab aati hai jab aap Chained Indexing karte hain (df[df.a > 0]['b'] = 10). Pandas guarantee nahi karta ki pehla slice View tha ya Copy; agar copy thi toh modification silently lost ho jayegi. Fix: Hamesha single-step .loc assignment use karein: df.loc[df.a > 0, 'b'] = 10.",
+    "codeSnippet": "# Buggy:\ndf[df.amount > 10000]['flag'] = True\n# Fixed:\ndf.loc[df.amount > 10000, 'flag'] = True",
+    "tag": "SettingWithCopyWarning"
+  },
+  {
+    "id": "pandas-24",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Internals",
+    "dimension": "Best Practice",
+    "question": "Why is inplace=True considered a historical anti-pattern in modern pandas codebases?",
+    "answerHinglish": "inplace=True memory allocation save nahi karta (pandas internally naya buffer allocate karta hai aur pointer swap karta hai). Iske alawa ye method chaining (.pipe().drop().sort()) ko break kar deta hai kyunki ye None return karta hai. Modern pandas me assignment pattern (df = df.dropna()) standard hai.",
+    "codeSnippet": "# Discouraged:\ndf.dropna(inplace=True)\n# Modern Best Practice (Chainable):\ndf = df.dropna()",
+    "tag": "Modern Pandas"
+  },
+  {
+    "id": "pandas-25",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Indexing",
+    "dimension": "Syntax",
+    "question": "How do you reset a customized index back into regular columns while avoiding duplicate index columns?",
+    "answerHinglish": "df.reset_index(drop=True) use karein agar aapko old index discard karna ho, ya df.reset_index() use karein agar old index ko regular column banakar retain karna ho.",
+    "codeSnippet": "df_clean = df.reset_index(drop=True)",
+    "tag": "Index Mechanics"
+  },
+  {
+    "id": "pandas-26",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Memory",
+    "dimension": "Optimization",
+    "question": "How does the category dtype reduce pandas DataFrame memory by 80%+ in large financial ledgers?",
+    "answerHinglish": "Standard object dtype me har string value ke liye 8-byte pointer aur heap object allocate hota hai. category dtype repetitive string values ko internally small integers (e.g. uint8, 1 byte) me encode karta hai jo ek single unique string lookup array ko point karte hain. High-repetition columns (like SUCCESS, FAILED) me RAM 80-90% drop ho jati hai.",
+    "codeSnippet": "df['status'] = df['status'].astype('category')\nprint(df.info(memory_usage='deep'))",
+    "tag": "Memory Optimization"
+  },
+  {
+    "id": "pandas-27",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Memory",
+    "dimension": "Inspection",
+    "question": "Why does df.info() underestimate DataFrame memory usage unless memory_usage='deep' is specified?",
+    "answerHinglish": "By default df.info() sirf pointers aur fixed-size C structs ki shallow memory calculate karta hai. String object dtype ke heap allocations (actual text characters) inspect nahi hote. memory_usage='deep' pass karne se pandas pure heap memory tree ko traverse karke true memory footprint calculate karta hai.",
+    "codeSnippet": "df.info(memory_usage='deep')",
+    "tag": "Memory Profiling"
+  },
+  {
+    "id": "pandas-28",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Memory",
+    "dimension": "Optimization",
+    "question": "How do you downcast 64-bit integer and float columns to their smallest safe numeric subtypes?",
+    "answerHinglish": "pd.to_numeric() with downcast='integer' ya downcast='float' use karein. Pandas data ke min/max range ko inspect karke int64 ko int16 ya int8 me safely compact kar deta hai.",
+    "codeSnippet": "df['age'] = pd.to_numeric(df['age'], downcast='integer') # int64 -> int8",
+    "tag": "Numeric Downcasting"
+  },
+  {
+    "id": "pandas-29",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Groupby",
+    "dimension": "Concept",
+    "question": "What is the Split-Apply-Combine pattern in pandas groupby()?",
+    "answerHinglish": "1) Split: DataFrame ko key column ke unique values ke basis par alag-alag groups me divide karta hai. 2) Apply: Har group par mathematical function (sum, mean, count) independently compute karta hai. 3) Combine: Saare group results ko ek single consolidated DataFrame me merge karke return karta hai.",
+    "codeSnippet": "df.groupby('branch')['amount'].agg(['count', 'sum', 'mean'])",
+    "tag": "Groupby"
+  },
+  {
+    "id": "pandas-30",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Datetime",
+    "dimension": "Syntax",
+    "question": "How do you filter transactions executed between 11 PM and 4 AM using the .dt accessor?",
+    "answerHinglish": "df['timestamp'] = pd.to_datetime(df['timestamp']) karke .dt.hour property use karein: df[(df['timestamp'].dt.hour >= 23) | (df['timestamp'].dt.hour < 4)].",
+    "codeSnippet": "df['hour'] = pd.to_datetime(df['timestamp']).dt.hour\nnight_txns = df[(df['hour'] >= 23) | (df['hour'] < 4)]",
+    "tag": "Datetime Analytics"
+  },
+  {
+    "id": "pandas-31",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Duplication",
+    "dimension": "Syntax",
+    "question": "What does df.duplicated(keep=False) do, and why is it preferred in fraud audits?",
+    "answerHinglish": "Default keep='first' duplicate rows me se pehle occurrence ko False mark karta hai aur baaki ko True. Lekin keep=False saari conflicting duplicate rows (including first occurrence) ko True mark karta hai, taaki fraud investigator sabhi colliding transaction records ko ek sath inspect kar sake.",
+    "codeSnippet": "colliding_txns = df[df.duplicated(subset=['card_id', 'amount'], keep=False)]",
+    "tag": "Fraud Detection"
+  },
+  {
+    "id": "pandas-32",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Feature Engineering",
+    "dimension": "Machine Learning",
+    "question": "What is the Dummy Variable Trap, and how does drop_first=True in pd.get_dummies() prevent it?",
+    "answerHinglish": "Agar categorical variable me k categories hain aur aap k dummy columns banate hain, toh unka sum hamesha 1 hota hai (perfect multicollinearity), jisse regression models singular matrix crash karte hain. drop_first=True pehli reference category drop karta hai (k-1 dummy columns).",
+    "codeSnippet": "dummies = pd.get_dummies(df['account_type'], prefix='acc', drop_first=True)",
+    "tag": "One-Hot Encoding"
+  },
+  {
+    "id": "pandas-33",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Joins",
+    "dimension": "FinTech Scenario",
+    "question": "How do you audit unreconciled transactions during a DataFrame merge using indicator=True?",
+    "answerHinglish": "pd.merge(df1, df2, on='txn_id', how='outer', indicator=True) merge me ek naya _merge column add karta hai jisme values hoti hain: both (matched), left_only (core bank me hai par gateway me nahi), aur right_only (gateway me hai par core bank me nahi). Isse unmatched settlement breaks instant audit ho jate hain.",
+    "codeSnippet": "m = pd.merge(core_ledger, switch_feed, on='rrn', how='outer', indicator=True)\nunmatched = m[m['_merge'] != 'both']",
+    "tag": "Reconciliation"
+  },
+  {
+    "id": "pandas-34",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Joins",
+    "dimension": "Integrity Check",
+    "question": "How does the validate parameter in pd.merge() prevent silent cross-join data explosion?",
+    "answerHinglish": "pd.merge(..., validate='1:m') ya validate='1:1' verify karta hai ki join key left/right table me unique hai ya nahi. Agar unexpected duplicate keys hain, toh pandas cross-join explosion ke bajaye instant MergeError raise karta hai.",
+    "codeSnippet": "df_merged = pd.merge(accounts, txns, on='account_id', validate='1:m')",
+    "tag": "Join Integrity"
+  },
+  {
+    "id": "pandas-35",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Function Application",
+    "dimension": "Comparison",
+    "question": "What is the difference between Series.map(), Series.apply(), and DataFrame.map()?",
+    "answerHinglish": "Series.map() element-wise substitution ke liye dictionary ya function use karta hai. Series.apply() complex lambdas aur functions ke liye use hota hai. DataFrame.map() (formerly applymap) pure 2D DataFrame ke har single cell par element-wise function execute karta hai.",
+    "codeSnippet": "df['status_code'] = df['status'].map({'SUCCESS': 1, 'FAILED': 0})\ndf = df.map(lambda x: str(x).strip()) # cleans every cell",
+    "tag": "Function Application"
+  },
+  {
+    "id": "pandas-36",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas MultiIndex",
+    "dimension": "Concept",
+    "question": "How do unstack() and stack() reshape hierarchical MultiIndex DataFrames?",
+    "answerHinglish": "unstack() innermost row index level ko pivot karke column headers me convert karta hai (table wide ho jati hai). stack() outermost column headers ko pivot karke innermost row index me convert karta hai (table tall/long ho jati hai).",
+    "codeSnippet": "# Groupby produces MultiIndex (Branch, Year):\ng = df.groupby(['branch', 'year'])['revenue'].sum()\nwide_table = g.unstack() # year becomes columns!",
+    "tag": "MultiIndex Reshaping"
+  },
+  {
+    "id": "pandas-37",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas MultiIndex",
+    "dimension": "Syntax",
+    "question": "How do you select a specific cross-section of data from an arbitrary level of a MultiIndex without unstacking?",
+    "answerHinglish": "DataFrame method .xs(key, level='level_name') use karein. Ye specified hierarchical level se slice extract karta hai bina pure DataFrame ka structure alter kiye.",
+    "codeSnippet": "# Select all records where level 'city' == 'MUMBAI':\ndf_mumbai = df.xs('MUMBAI', level='city')",
+    "tag": "MultiIndex Cross-Section"
+  },
+  {
+    "id": "pandas-38",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Filtering",
+    "dimension": "Syntax",
+    "question": "How do you use df.query() to filter rows while referencing local Python variables?",
+    "answerHinglish": "df.query() string expressions accept karta hai. Local Python variables ko reference karne ke liye variable name ke aage @ symbol lagaya jata hai (jaise @threshold).",
+    "codeSnippet": "min_amt = 50000\nflagged = df.query('amount > @min_amt and status == \"SUCCESS\"')",
+    "tag": "Query API"
+  },
+  {
+    "id": "pandas-39",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Reshaping",
+    "dimension": "Modern Trick",
+    "question": "How do you flatten a column containing lists of transaction tags into individual row records?",
+    "answerHinglish": "df.explode('tags') use karein. Ye list ke har element ke liye ek separate row produce karta hai jabki baaki columns ki values duplicate ho jati hain.",
+    "codeSnippet": "# ['UPI', 'CASHBACK'] -> 2 separate rows\ndf_exploded = df.explode('payment_tags')",
+    "tag": "Explode Reshaping"
+  },
+  {
+    "id": "pandas-40",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Analytics",
+    "dimension": "Syntax",
+    "question": "What is the operational difference between pd.cut() and pd.qcut() in risk scoring?",
+    "answerHinglish": "pd.cut() continuous variable ko fixed-width value bins me divide karta hai (e.g. 0-500, 500-1000). pd.qcut() quantiles (percentiles) use karta hai jisse har bin me equal number of sample observations aate hain.",
+    "codeSnippet": "df['amt_tier'] = pd.cut(df['amount'], bins=[0, 1000, 10000, 100000])\ndf['amt_quartile'] = pd.qcut(df['amount'], q=4) # 4 equal quartiles",
+    "tag": "Data Discretization"
+  },
+  {
+    "id": "pandas-41",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Modern Pandas",
+    "dimension": "Internals",
+    "question": "What is Copy-on-Write (CoW) in modern Pandas 2.0+, and how does it solve defensive copying?",
+    "answerHinglish": "Copy-on-Write ensure karta hai ki DataFrame ka slice create karte waqt data copy na ho (shallow view share ho), lekin jaise hi slice me koi modification ki jati hai, pandas automatically lazy copy banata hai. Isse SettingWithCopyWarning permanently eliminate ho jati hai.",
+    "codeSnippet": "pd.set_option('mode.copy_on_write', True)",
+    "tag": "Modern Pandas"
+  },
+  {
+    "id": "pandas-42",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Pipelines",
+    "dimension": "Best Practice",
+    "question": "How does method chaining with .pipe() produce clean, production-grade audit transformations?",
+    "answerHinglish": ".pipe() custom functions ko chain karne deta hai jisme pehla argument DataFrame hota hai. Isse code nested readability pyramid ke bajaye clean sequential pipeline me transform ho jata hai: df.pipe(clean_dates).pipe(remove_outliers).pipe(calc_risk_score).",
+    "codeSnippet": "final_df = (raw_df\n    .pipe(clean_schema)\n    .pipe(filter_active_accounts)\n    .pipe(compute_aggregates))",
+    "tag": "Method Chaining"
+  },
   {
     "id": "node-01",
     "domain": "Node.js & Backend Architecture",

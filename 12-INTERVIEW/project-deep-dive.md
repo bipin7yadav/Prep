@@ -18,7 +18,7 @@
 
 #### 1. Architecture Questions
 * **Q1.1:** *"Walk me through the schema design of your Config-Driven UI. How did your JSON schema represent nested form fields, conditional visibility rules (Field B appears only if Field A is 'Yes'), and validation schemas?"*
-  - **Your Defense:** Explain that the form schema was modeled as a directed acyclic graph (DAG) or tree. Each field definition had `{ id, type, label, validationRules, dependsOn: { fieldId, operator, value }, calculationFormula }`. Formik or custom form state managed values, while a central engine parsed dependency expressions in $O(1)$ lookup via field maps.
+  - **Your Defense:** Explain that the form schema was modeled as a directed acyclic graph (DAG) or tree. Each field definition had `{ id, type, label, validationRules, dependsOn: { fieldId, operator, value }, calculationFormula }`. Formik or custom form state managed values, while a central engine parsed dependency expressions in O(1) lookup via field maps.
 * **Q1.2:** *"How did the Auto-Calculation module work without triggering cascading re-renders across the entire form tree?"*
   - **Your Defense:** If Field C depends on Field A + Field B, naive state update re-renders the whole form. You decoupled the calculation graph using topological sorting and memoized field renderers (`React.memo`), updating only the dependent leaf nodes.
 
@@ -43,7 +43,7 @@
   - **Your Defense:** In Node.js, handling large multipart file uploads naively (e.g., buffering full image files in V8 heap memory or parsing multiple images synchronously on the main thread) blocks the single event loop. Network sockets stalled because incoming HTTP requests couldn't be polled while the CPU was saturated resizing/compressing buffers.
 * **Q2.2:** *"How did you resolve the stall? Did you compress on the client side, server side, or both?"*
   - **Your Defense:** 
-    1. **Client-side pre-compression:** Used browser canvas / web workers to downscale high-resolution images (5MB $\to$ 800KB) *before* transmission, cutting upload payload by 70%.
+    1. **Client-side pre-compression:** Used browser canvas / web workers to downscale high-resolution images (5MB → 800KB) *before* transmission, cutting upload payload by 70%.
     2. **Streaming on the server:** In Express, used streaming multipart parsers (`busboy` / `multer.memoryStorage` avoided) to stream chunks directly to storage (S3/GCS or disk) without buffering in Node.js V8 heap.
 
 #### 2. Security & Production Questions
@@ -80,7 +80,7 @@
 #### 1. Banking & Payment Gateway Questions (Directly Relevant to IDFC FIRST Bank)
 * **Q4.1:** *"Which payment gateway did you integrate in Booknook (Razorpay, Stripe, etc.)? Walk me through the complete payment lifecycle from the React checkout button to database order confirmation."*
   - **Your Defense:**
-    1. React client clicks 'Checkout' $\to$ calls `POST /api/orders/create` with cart items.
+    1. React client clicks 'Checkout' → calls `POST /api/orders/create` with cart items.
     2. Node backend validates stock, calculates total on server (never trust client amounts!), creates order via Razorpay/Stripe API, and saves order in database with status `PENDING`.
     3. Returns `gateway_order_id` to React client, which opens the Razorpay checkout SDK.
     4. User enters payment details (UPI/Card). Gateway processes payment.

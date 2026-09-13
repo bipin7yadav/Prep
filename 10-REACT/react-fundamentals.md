@@ -81,7 +81,7 @@ function FreshCounter() {
 In IDFC FIRST Bank's customer portal, a user loads a 1-year transaction statement containing 15,000 records.
 - **Naive Rendering:** Creating 15,000 DOM nodes (`<tr>`) consumes 300MB of RAM and causes severe scroll jank.
 - **Windowing / Virtualization (`react-window` / `@tanstack/react-virtual`):**
-  The virtualizer calculates the viewport height and renders **strictly the 20 visible rows** plus an overscan buffer of 5 rows. As the user scrolls, old DOM nodes are recycled and repositioned via absolute transforms. DOM nodes remain capped at $\approx 30$, maintaining $60\text{ FPS}$ smooth scrolling regardless of dataset size.
+  The virtualizer calculates the viewport height and renders **strictly the 20 visible rows** plus an overscan buffer of 5 rows. As the user scrolls, old DOM nodes are recycled and repositioned via absolute transforms. DOM nodes remain capped at ≈ 30, maintaining 60 FPS smooth scrolling regardless of dataset size.
 
 ---
 
@@ -156,12 +156,12 @@ export default function StatementDashboard({ transactions }) {
 ---
 
 ## 7. How It Works Internally: Diffing Heuristics & Keys
-The React reconciliation algorithm operates in $O(N)$ linear time by enforcing two core heuristics:
+The React reconciliation algorithm operates in O(N) linear time by enforcing two core heuristics:
 1. **Different Element Types:** Two elements of different types produce different trees. If a `<div>` is replaced by a `<span>`, React destroys the old subtree and reconstructs from scratch.
 2. **The `key` Prop Invariant:**
    - Keys must be stable, predictable, and unique across siblings.
    - When an item is prepended to a list without keys, React compares old index 0 to new index 0, mutating every single child DOM node!
-   - With unique keys (`key={tx.id}`), React identifies that items shifted and performs a single DOM move (`insertBefore`) in $O(1)$.
+   - With unique keys (`key={tx.id}`), React identifies that items shifted and performs a single DOM move (`insertBefore`) in O(1).
    - **Index as Key Anti-Pattern:** Using array index as key (`key={index}`) causes corrupted form inputs and subtle UI bugs when list items are filtered, deleted, or reordered!
 
 ---
@@ -179,12 +179,12 @@ The React reconciliation algorithm operates in $O(N)$ linear time by enforcing t
 | :--- | :--- | :--- |
 | **`React.memo`** | Skips child re-renders if props are shallow equal | Shallow comparison check per render |
 | **`useCallback`** | Preserves function reference equality | Retains closure memory |
-| **`useMemo`** | Caches expensive $O(N \log N)$ calculations | Memory allocation for cached result |
-| **List Virtualization** | Limits DOM nodes to visible viewport ($\approx 25$ nodes) | Scroll calculation listener |
+| **`useMemo`** | Caches expensive O(N log N) calculations | Memory allocation for cached result |
+| **List Virtualization** | Limits DOM nodes to visible viewport (≈ 25 nodes) | Scroll calculation listener |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the Virtual DOM and how does React use it to optimize rendering?

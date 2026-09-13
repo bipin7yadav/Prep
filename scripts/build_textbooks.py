@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 import markdown
+from sanitize_math_markup import sanitize_markdown_text
 from pygments.formatters import HtmlFormatter
 
 # Pygments CSS for Friendly / Clean code theme
@@ -26,7 +27,9 @@ TEXTBOOK_EDITIONS = [
             "01-PYTHON/matplotlib.md",
             "01-PYTHON/sql-vs-pandas.md",
             "01-PYTHON/pipeline.md",
-            "14-CHEATSHEETS/python-data-ecosystem.md"
+            "01-PYTHON/tricky-python.md",
+            "14-CHEATSHEETS/python-data-ecosystem.md",
+            "14-CHEATSHEETS/pandas-last-minute.md"
         ]
     },
     {
@@ -48,6 +51,7 @@ TEXTBOOK_EDITIONS = [
             "05-SQL-DBMS/acid.md",
             "05-SQL-DBMS/isolation-levels.md",
             "05-SQL-DBMS/locking.md",
+            "05-SQL-DBMS/tricky-sql.md",
             "14-CHEATSHEETS/sql.md"
         ]
     },
@@ -63,6 +67,7 @@ TEXTBOOK_EDITIONS = [
         "summary": "V8 Call Stack, Closures, Prototypal Chain, Libuv Event Loop phases (Timers, Poll, Check), process.nextTick vs setImmediate, Streams & Backpressure, Cluster scaling, and Worker Threads.",
         "files": [
             "03-JAVASCRIPT/event-loop.md",
+            "03-JAVASCRIPT/tricky-js.md",
             "04-NODE-EXPRESS/event-loop.md",
             "14-CHEATSHEETS/node.md"
         ]
@@ -170,6 +175,7 @@ TEXTBOOK_EDITIONS = [
             "14-CHEATSHEETS/node.md",
             "14-CHEATSHEETS/system-design.md",
             "14-CHEATSHEETS/python-data-ecosystem.md",
+            "14-CHEATSHEETS/tricky-js-python-sql.md",
             "15-FLASHCARDS/flashcards.md"
         ]
     }
@@ -782,6 +788,7 @@ def build_edition_html(spec):
             continue
         with open(filepath, 'r', encoding='utf-8') as f:
             raw_md = f.read()
+        raw_md = sanitize_markdown_text(raw_md)
         
         c_title, c_bullets = extract_chapter_info(raw_md, filepath)
         

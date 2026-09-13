@@ -3,6 +3,7 @@ import glob
 import re
 import json
 import markdown
+from sanitize_math_markup import sanitize_markdown_text
 
 DOMAIN_MAP = {
     "00-FOUNDATION": "Foundations & Complexity",
@@ -41,7 +42,11 @@ PRIORITY_MAP = {
     "10-REACT/react-fundamentals.md": "🔴 Must Know",
     "11-BANKING-FINTECH/upi.md": "🔴 Must Know",
     "12-INTERVIEW/project-deep-dive.md": "🔴 Must Know",
-    "12-INTERVIEW/idfc-question-bank.md": "🔴 Must Know"
+    "12-INTERVIEW/idfc-question-bank.md": "🔴 Must Know",
+    "01-PYTHON/tricky-python.md": "🔴 Must Know",
+    "03-JAVASCRIPT/tricky-js.md": "🔴 Must Know",
+    "05-SQL-DBMS/tricky-sql.md": "🔴 Must Know",
+    "14-CHEATSHEETS/tricky-js-python-sql.md": "🔴 Must Know"
 }
 
 def clean_title(text):
@@ -93,6 +98,7 @@ def bundle_all_markdown():
         rel_path = os.path.relpath(fpath, root_dir)
         with open(fpath, 'r', encoding='utf-8') as f:
             raw_text = f.read()
+        raw_text = sanitize_markdown_text(raw_text)
             
         parts = rel_path.split(os.sep)
         folder = parts[0] if len(parts) > 1 else "ROADMAPS"
@@ -145,7 +151,9 @@ def bundle_all_markdown():
             "filename": filename,
             "title": title,
             "domain": domain,
+            "category": domain,
             "readTime": read_time,
+            "readingTimeMinutes": read_time_min,
             "priority": priority,
             "difficulty": difficulty,
             "summary": summary[:280],
@@ -161,7 +169,8 @@ def bundle_all_markdown():
     js_content = "/* Auto-generated lesson content bundle - All 45+ Markdown documents */\n\n"
     js_content += f"export const LESSONS_COUNT = {len(lessons)};\n\n"
     js_content += "export const LESSONS_CONTENT = " + json.dumps(lessons, indent=2) + ";\n\n"
-    js_content += "export const LESSONS_BY_ID = Object.fromEntries(LESSONS_CONTENT.map(l => [l.id, l]));\n"
+    js_content += "export const LESSONS_BY_ID = Object.fromEntries(LESSONS_CONTENT.map(l => [l.id, l]));\n\n"
+    js_content += "export const LESSONS_METADATA = LESSONS_CONTENT.map(({ html, ...meta }) => meta);\n"
     
     with open(out_file, 'w', encoding='utf-8') as f:
         f.write(js_content)

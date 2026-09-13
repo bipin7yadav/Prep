@@ -35,8 +35,8 @@ reversed_str = account_num[::-1] # Pure string reverse in O(N)
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **`list`** | `[1, 2, 3]` | **Mutable** | Yes | Yes | Dynamic Array (`PyObject**`) |
 | **`tuple`** | `(1, 2, 3)` | **Immutable** | Yes | Yes | Fixed-size array (Cache friendly) |
-| **`set`** | `{1, 2, 3}` | **Mutable** | **No** | No | Hash Table (Keys only, $O(1)$ avg) |
-| **`dict`** | `{"a": 1}` | **Mutable** | No (Keys) | **Yes (3.7+)** | Compact Hash Table ($O(1)$ avg) |
+| **`set`** | `{1, 2, 3}` | **Mutable** | **No** | No | Hash Table (Keys only, O(1) avg) |
+| **`dict`** | `{"a": 1}` | **Mutable** | No (Keys) | **Yes (3.7+)** | Compact Hash Table (O(1) avg) |
 
 ```python
 # Unpacking and *args, **kwargs
@@ -299,6 +299,6 @@ calculate_compound_interest(100000, 0.07, 5) # Instant cache hit!
 ## 6. Quick Revision & Interview Flashcards
 - **Variables = Pointers:** Python variables heap objects ko refer karte hain.
 - **Reference Counting + Generational GC:** Python ref count 0 hote hi free karta hai; cycles ko cyclic GC handle karta hai.
-- **Generators (`yield`):** Lazy evaluation, memory consumption strictly $O(1)$.
+- **Generators (`yield`):** Lazy evaluation, memory consumption strictly O(1).
 - **Decorators:** Functions that wrap other functions (syntactic sugar `@decorator`).
 - **Context Managers (`__enter__`, `__exit__`):** Guarantees resource cleanup even on crashes.

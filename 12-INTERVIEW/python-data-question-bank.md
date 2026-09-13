@@ -21,9 +21,9 @@ am karta hai?**
 7. **What is a reference cycle in Python?**  
    *Answer:* Jab do objects ek doosre ko refer karein (`a.b = b`, `b.a = a`), unka reference count kabhi zero nahi hota, cyclic GC required hota hai.
 8. **Generators aur normal functions mein kya difference hai?**  
-   *Answer:* Normal function `return` par stack frame destroy karta hai; generator `yield` par state pause karta hai aur $O(1)$ memory mein stream produce karta hai.
+   *Answer:* Normal function `return` par stack frame destroy karta hai; generator `yield` par state pause karta hai aur O(1) memory mein stream produce karta hai.
 9. **`range()` vs `list(range())` memory difference?**  
-   *Answer:* `range()` generator jaisa lightweight object hai jo start/stop/step store karta hai ($O(1)$ RAM); `list()` pura array memory mein allocate karta hai ($O(N)$ RAM).
+   *Answer:* `range()` generator jaisa lightweight object hai jo start/stop/step store karta hai (O(1) RAM); `list()` pura array memory mein allocate karta hai (O(N) RAM).
 10. **Decorators kya hote hain aur `@functools.wraps` kyu lagate hain?**  
     *Answer:* Decorator higher-order function hai jo doosre function ki behavior extend karta hai. `@wraps` original function ka name aur docstring preserve karta hai.
 11. **Context Manager (`with` statement) ka internal working kya hai?**  
@@ -62,7 +62,7 @@ am karta hai?**
 28. **How does Python manage string interning?**  
     *Answer:* Common short strings aur identifiers ko singleton memory addresses par reuse karta hai.
 29. **What is the difference between `list.sort()` and `sorted()`?**  
-    *Answer:* `list.sort()` in-place mutate karta hai (returns `None`, $O(1)$ space); `sorted()` naya sorted list return karta hai ($O(N)$ space).
+    *Answer:* `list.sort()` in-place mutate karta hai (returns `None`, O(1) space); `sorted()` naya sorted list return karta hai (O(N) space).
 30. **How do you define type hints in Python? Does Python enforce them at runtime?**  
     *Answer:* `def f(x: int) -> str:`. No, Python type hints are ignored at runtime; enforced via static linters like `mypy`.
 31. **What is the difference between `try...except...else...finally`?**

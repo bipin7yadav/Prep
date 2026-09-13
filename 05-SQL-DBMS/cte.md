@@ -137,14 +137,14 @@ ORDER BY hierarchy_level, entity_name;
 
 | Technique | Execution Model | Memory Impact |
 | :--- | :--- | :--- |
-| **Inlined CTE (Default)** | Blended into outer query plan | $O(1)$ extra memory (streaming) |
-| **Materialized CTE** | Computed once and cached in RAM | $O(K)$ where $K$ is CTE row count |
-| **Recursive CTE** | Breadth-First loop over working table | $O(\text{depth} \times \text{breadth})$ |
+| **Inlined CTE (Default)** | Blended into outer query plan | O(1) extra memory (streaming) |
+| **Materialized CTE** | Computed once and cached in RAM | O(K) where K is CTE row count |
+| **Recursive CTE** | Breadth-First loop over working table | O(depth * breadth) |
 | **Deeply Nested Subqueries** | Hard to read; optimizer rewrites | Equivalent to inlined CTE |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is a Common Table Expression (CTE) and how does it differ from a database View?

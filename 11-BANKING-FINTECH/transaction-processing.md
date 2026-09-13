@@ -16,7 +16,7 @@ In banking applications at IDFC FIRST Bank, money is never simply an integer upd
 
 ### 1. The Double-Entry Bookkeeping Principle
 In accounting, money is neither created nor destroyed; it simply transfers between accounts.
-$$\sum \text{Debits} = \sum \text{Credits}$$
+Σ Debits = Σ Credits
 - **Debit:** An increase in Assets or Expenses, or a decrease in Liabilities or Equity.
 - **Credit:** An increase in Liabilities or Equity, or a decrease in Assets or Expenses.
 - **The Ledger Invariant:** Every financial transaction must insert **at least two immutable ledger entries**: one debit and one credit. The net sum of the entries for any transaction must strictly equal **zero**.
@@ -183,13 +183,13 @@ function idempotencyMiddleware(ttlSeconds = 86400) { // 24-hour retention
 
 | Ledger Model | Read Complexity (Balance) | Write Complexity | Auditability |
 | :--- | :---: | :---: | :---: |
-| **Naive Balance Update** | $O(1)$ | $O(1)$ | Zero (Dangerous) |
-| **Pure Immutable Ledger (Sum of entries)** | $O(N)$ (Requires caching snapshot) | $O(1)$ append-only | $100\%$ Perfect |
-| **Hybrid (Snapshot Balance + Ledger Table)** | $O(1)$ read snapshot | $O(1)$ append + lock update | Excellent & Production Standard |
+| **Naive Balance Update** | O(1) | O(1) | Zero (Dangerous) |
+| **Pure Immutable Ledger (Sum of entries)** | O(N) (Requires caching snapshot) | O(1) append-only | 100% Perfect |
+| **Hybrid (Snapshot Balance + Ledger Table)** | O(1) read snapshot | O(1) append + lock update | Excellent & Production Standard |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the core rule of double-entry bookkeeping?
@@ -229,7 +229,7 @@ Review the `transactions` and `payments` tables in `05-SQL-DBMS/schema.sql`. Not
 ---
 
 ## 14. Quick Revision
-- Double-entry: $\sum \text{Debits} = \sum \text{Credits}$; net sum of transaction is zero.
+- Double-entry: Σ Debits = Σ Credits; net sum of transaction is zero.
 - Never mutate balances without creating append-only ledger entries.
 - Idempotency middleware uses Redis `SET NX` with a 24-hour TTL and caches the response.
 - Sagas replace 2PC across microservices using local transactions + compensating actions.

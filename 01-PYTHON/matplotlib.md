@@ -140,7 +140,7 @@ plt.tight_layout() # Prevents label overlapping!
 14. **How do you change the color palette or style sheet in Matplotlib?**  
     *Answer:* `plt.style.use('seaborn-v0_8-whitegrid')` or `plt.style.use('ggplot')`.
 15. **What is a Box Plot (`ax.boxplot()`) and what 5 summary metrics does it display?**  
-    *Answer:* Minimum, 25th percentile (Q1), Median, 75th percentile (Q3), Maximum, and Outliers beyond $1.5 \times \text{IQR}$.
+    *Answer:* Minimum, 25th percentile (Q1), Median, 75th percentile (Q3), Maximum, and Outliers beyond 1.5 * IQR.
 16. **How do you add a horizontal benchmark line across a chart?**  
     *Answer:* `ax.axhline(y=50000, color='red', linestyle='--')`.
 17. **How do you control the resolution of saved image files?**  

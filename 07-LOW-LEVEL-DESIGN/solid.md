@@ -232,7 +232,7 @@ class InMemoryMockAccountRepository implements AccountRepository {
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What does SOLID stand for? Briefly summarize each principle.
@@ -280,7 +280,7 @@ Review Section 5 and implement a mock `CbdcPaymentGateway` (Central Bank Digital
 ---
 
 ## 14. Quick Revision
-- S: Single responsibility $\implies$ one reason to change.
+- S: Single responsibility ⟹ one reason to change.
 - O: Open for extension, closed for modification (Strategy / Factory patterns).
 - L: Subclasses must be substitutable for base classes without throwing unsupported errors.
 - I: Keep interfaces small and client-focused.

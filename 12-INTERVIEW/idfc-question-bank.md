@@ -7,17 +7,17 @@
 
 ### Q1.1: Invert a Binary Tree & Level-Order Traversal (BFS)
 - **Topic:** Trees & Queues | **Difficulty:** Easy-Medium
-- **Expected Answer Depth:** Explain why BFS uses `collections.deque` rather than a standard list to maintain $O(V)$ time.
+- **Expected Answer Depth:** Explain why BFS uses `collections.deque` rather than a standard list to maintain O(V) time.
 - **Model Answer:**
-  "We traverse level-by-level using a FIFO queue. At each level, we measure `queue.length`, iterate through all nodes at the current depth, swap their left and right child pointers, and enqueue non-null children. Because `collections.deque.popleft()` operates in $O(1)$ time compared to Python list's $O(N)$ memory shift, total time complexity is strictly $O(N)$ with $O(W)$ auxiliary space, where $W$ is the maximum tree width."
-- **Follow-up:** *"What is the maximum width of a full binary tree with $N$ nodes?"* (Answer: $\approx N/2$ at the leaf level).
+  "We traverse level-by-level using a FIFO queue. At each level, we measure `queue.length`, iterate through all nodes at the current depth, swap their left and right child pointers, and enqueue non-null children. Because `collections.deque.popleft()` operates in O(1) time compared to Python list's O(N) memory shift, total time complexity is strictly O(N) with O(W) auxiliary space, where W is the maximum tree width."
+- **Follow-up:** *"What is the maximum width of a full binary tree with N nodes?"* (Answer: ≈ N/2 at the leaf level).
 
 ### Q1.2: Longest Substring with At Most K Distinct Characters
 - **Topic:** Sliding Window & Hash Map | **Difficulty:** Medium
 - **Expected Answer Depth:** Dynamic sliding window with hash map tracking character frequencies.
 - **Model Answer:**
-  "We expand a right pointer, adding each character to a frequency map. When `len(map) > k`, we increment the left pointer, decrementing frequencies and deleting keys when they hit 0, until the map contains $\le k$ keys. We update `max_len = max(max_len, right - left + 1)`. Time complexity is $O(N)$ amortized because each character enters and leaves the window at most once."
-- **Follow-up:** *"What if the alphabet size is bounded to 256 ASCII characters? What is the space complexity?"* (Answer: $O(1)$ bounded by 256).
+  "We expand a right pointer, adding each character to a frequency map. When `len(map) > k`, we increment the left pointer, decrementing frequencies and deleting keys when they hit 0, until the map contains ≤ k keys. We update `max_len = max(max_len, right - left + 1)`. Time complexity is O(N) amortized because each character enters and leaves the window at most once."
+- **Follow-up:** *"What if the alphabet size is bounded to 256 ASCII characters? What is the space complexity?"* (Answer: O(1) bounded by 256).
 
 ---
 
@@ -88,7 +88,7 @@
 - **Topic:** Queues & SLAs | **Difficulty:** Medium-Hard
 - **Expected Answer Depth:** Sub-3-second delivery, multi-vendor telco failover, dead-letter queues.
 - **Model Answer:**
-  "Banking OTPs require $< 3\text{s}$ SLA. We use an API gateway fronting **Kafka or Redis Streams** with separate priority queues (`otp-high-priority` vs `promotional-low-priority`).
+  "Banking OTPs require < 3s SLA. We use an API gateway fronting **Kafka or Redis Streams** with separate priority queues (`otp-high-priority` vs `promotional-low-priority`).
   Worker services integrate with at least 3 distinct SMS aggregators (e.g., Twilio, Infobip, Karix).
   A circuit breaker tracks delivery latency per aggregator. If Vendor A's latency spikes above 1.5s, traffic automatically diverts to Vendor B.
   If an SMS fails permanently, workers dispatch a fallback WhatsApp or Voice OTP."
@@ -114,7 +114,7 @@
 ## 📂 Category 6: Behavioral & Leadership (STAR Method for 3+ YoE)
 
 ### Q6.1: Handling a Critical Production Outage in a Live Payment Gateway
-- **Format:** Situation $\to$ Task $\to$ Action $\to$ Result
+- **Format:** Situation → Task → Action → Result
 - **Expected Depth:** Systematic triage, blameless post-mortem, prevention of recurring faults.
 - **Model Answer:**
   - **Situation:** During a month-end salary credit surge, our core payment routing service experienced a sudden spike in 504 gateway timeouts; p99 latency jumped from 200ms to 8 seconds.

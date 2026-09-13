@@ -1,4 +1,4 @@
-# 🚀 The Complete Python Data Analysis Workflow: NumPy $\to$ pandas $\to$ Matplotlib
+# 🚀 The Complete Python Data Analysis Workflow: NumPy → pandas → Matplotlib
 
 ## 1. The Real-World Engineering Pipeline
 In production banking backends and analytics microservices, raw transactional data often flows from database queries, CSV dumps, or message queues into an analytical pipeline:

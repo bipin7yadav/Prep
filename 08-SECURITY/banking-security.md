@@ -141,7 +141,7 @@ Why is AES-GCM mandatory in modern banking over older AES-CBC mode?
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** Why should you never store a credit card's CVV in a database, even if it is encrypted?

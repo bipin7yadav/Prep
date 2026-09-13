@@ -52,8 +52,8 @@ flowchart TD
 
 ### Non-Functional Requirements
 - **Consistency:** Strict consistency for balance deductions; zero double-spending.
-- **Throughput:** Handle 5,000 peak TPS with $< 1.5\text{s}$ p99 latency.
-- **Availability:** $99.999\%$ (Five Nines).
+- **Throughput:** Handle 5,000 peak TPS with < 1.5s p99 latency.
+- **Availability:** 99.999% (Five Nines).
 - **Security:** PCI-DSS Level 1 compliant; zero raw card data in application logs.
 
 ---
@@ -199,14 +199,14 @@ flowchart TD
 
 | Layer | Technology | Latency | Scalability Strategy |
 | :--- | :--- | :---: | :--- |
-| **Idempotency Gate** | Redis `SET NX` | $< 2\text{ms}$ | Sharded Redis Cluster |
-| **Payment Router** | Node.js Microservice | $< 15\text{ms}$ | Horizontal Pod Autoscaling (HPA) |
-| **Transaction DB** | PostgreSQL Multi-AZ | $< 25\text{ms}$ | Partitioned by Date / Sharded by Customer ID |
-| **Asynchronous Bus** | Apache Kafka | $< 10\text{ms}$ | Partitioned by `customer_id` for in-order events |
+| **Idempotency Gate** | Redis `SET NX` | < 2ms | Sharded Redis Cluster |
+| **Payment Router** | Node.js Microservice | < 15ms | Horizontal Pod Autoscaling (HPA) |
+| **Transaction DB** | PostgreSQL Multi-AZ | < 25ms | Partitioned by Date / Sharded by Customer ID |
+| **Asynchronous Bus** | Apache Kafka | < 10ms | Partitioned by `customer_id` for in-order events |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** Why should monetary amounts be stored as integers (e.g., paise) rather than floating-point numbers in a payment database?
@@ -237,7 +237,7 @@ flowchart TD
 > 1. **Immediate API Response:** We return HTTP 202 Accepted with status `PENDING` and the transaction reference to the client, displaying a 'Payment Processing' state.
 > 2. **Active Status Polling:** A background worker immediately initiates **Status Inquiry APIs** to the external switch at 5s, 15s, and 30s intervals using the unique RRN.
 > 3. **Terminal State Resolution:** If the switch confirms the debit succeeded, we transition the payment to `SUCCESS`, write double-entry ledger records, and dispatch a webhook. If confirmed failed, we transition to `FAILED`.
-> 4. **Nightly Reconciliation Fallback:** If the status inquiry remains unresponsive, the transaction remains `PENDING` until the nightly settlement file resolves it with $100\%$ finality."
+> 4. **Nightly Reconciliation Fallback:** If the status inquiry remains unresponsive, the transaction remains `PENDING` until the nightly settlement file resolves it with 100% finality."
 
 ---
 

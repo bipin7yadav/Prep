@@ -190,7 +190,7 @@ In Node.js 11+, the microtask queue is drained **immediately after every single 
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** Is Node.js completely single-threaded? Explain what parts are single-threaded and what parts are multi-threaded.
@@ -255,7 +255,7 @@ for (let i = 1; i <= 6; i++) {
 
 ## 14. Quick Revision
 - V8 handles JS execution; libuv handles OS event loop & thread pool.
-- Event loop phases: Timers $\to$ Pending $\to$ Poll $\to$ Check $\to$ Close.
+- Event loop phases: Timers → Pending → Poll → Check → Close.
 - Microtasks (`nextTick`, `Promise`) run *immediately* after the active stack frame empties, before the next event loop phase.
 - Network sockets do **not** use the thread pool (`epoll` handles non-blocking socket notifications).
 - Thread pool size default is 4; handles `fs`, `crypto`, `zlib`, and `dns.lookup`.

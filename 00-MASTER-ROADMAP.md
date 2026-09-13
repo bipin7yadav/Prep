@@ -51,7 +51,7 @@ flowchart TD
 ## 🎯 Curriculum Philosophy & Target Standard
 
 At IDFC FIRST Bank's Strategic Projects division, engineers build and maintain digital banking platforms handling millions of real-time transactions daily. An interview for a **3+ YoE Developer** evaluates not just syntax recall, but:
-1. **Algorithmic Efficiency:** Writing clean, optimal $O(N)$ or $O(\log N)$ code with precise complexity boundaries.
+1. **Algorithmic Efficiency:** Writing clean, optimal O(N) or O(log N) code with precise complexity boundaries.
 2. **Data Integrity:** Ensuring financial ledgers never experience race conditions, duplicate debits, or dirty reads.
 3. **Backend Mastery:** Explaining how Node.js executes asynchronous I/O via libuv and how OS threads handle blocking system calls.
 4. **System Architecture:** Designing distributed systems with guaranteed idempotency, graceful degradation, and audit compliance.
@@ -124,7 +124,7 @@ At IDFC FIRST Bank's Strategic Projects division, engineers build and maintain d
   - [16-JAVA/java-fundamentals.md](file:///home/bipin/Desktop/BankInterview/16-JAVA/java-fundamentals.md): Core OOP, ArrayList vs LinkedList, HashMap internals, interfaces.
   - [12-INTERVIEW/project-deep-dive.md](file:///home/bipin/Desktop/BankInterview/12-INTERVIEW/project-deep-dive.md): Deconstructing past projects: architecture, bottlenecks, tradeoffs.
 * **Exit Milestone:**
-  - Seamlessly answer questions spanning the full stack: React UI $\to$ Gateway $\to$ Node service $\to$ PostgreSQL $\to$ Kafka.
+  - Seamlessly answer questions spanning the full stack: React UI → Gateway → Node service → PostgreSQL → Kafka.
   - Speak comfortably about Java OOP concepts if tested by cross-stack interviewers.
 
 ---
@@ -138,4 +138,4 @@ At IDFC FIRST Bank's Strategic Projects division, engineers build and maintain d
   - [14-CHEATSHEETS/](file:///home/bipin/Desktop/BankInterview/14-CHEATSHEETS/): Last-minute revision sheets.
 * **Exit Milestone:**
   - Consistent scoring above 8.5/10 across all mock interview dimensions.
-  - Confident, polished communication adhering to: **Direct Answer $\to$ Explanation $\to$ Example $\to$ Tradeoff**.
+  - Confident, polished communication adhering to: **Direct Answer → Explanation → Example → Tradeoff**.

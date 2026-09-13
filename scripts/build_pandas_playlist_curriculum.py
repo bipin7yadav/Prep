@@ -1,0 +1,1009 @@
+#!/usr/bin/env python3
+"""
+Builds the complete Pandas Curriculum from Kevin Markham's Data School 38-video playlist:
+'Easier data analysis in Python with pandas' (PL5-da3qGB5ICCsgW1MxlZ0Hq8LL5U3u9y).
+
+Generates:
+1. 01-PYTHON/pandas.md (Complete 15-chapter interactive textbook)
+2. 14-CHEATSHEETS/pandas-last-minute.md (5m, 15m, 30m, 1h revision drill)
+3. Appends 40+ rich multi-dimensional Pandas flashcards to frontend/src/data/flashcardsData.js
+4. Appends 15 Pandas quiz questions to frontend/src/data/quizData.js
+5. Categorizes Pandas topics in frontend/src/data/importantTopicsData.js
+"""
+
+import os
+import json
+import re
+
+CURRICULUM_MD = """# 🐼 Complete pandas Mastery: Data School Q&A Curriculum (38 Videos)
+
+> **Source Verification:** Structured directly from Kevin Markham's (Data School) renowned 38-video YouTube series: *\"Easier data analysis in Python with pandas\"* ([Playlist `PL5-da3qGB5ICCsgW1MxlZ0Hq8LL5U3u9y`](https://www.youtube.com/playlist?list=PL5-da3qGB5ICCsgW1MxlZ0Hq8LL5U3u9y)).
+> Includes 100% topic coverage, banking/fintech production scenarios, Hinglish mental models, memory optimization, and IDFC FIRST Bank interview questions.
+
+---
+
+## 📋 Master Traceability Matrix (Videos 1 to 38)
+
+| # | Video Title | Length | Concepts Covered | Curriculum Chapter |
+| :---: | :--- | :---: | :--- | :---: |
+| **1** | What is pandas? | 6:24 | Tabular data representation, 1D vs 2D, NumPy relationship | Chapter 1 |
+| **2** | How do I read a tabular data file into pandas? | 8:54 | `read_csv()`, `sep`, `header`, `names`, `skiprows`, `nrows` | Chapter 1 |
+| **3** | How do I select a pandas Series from a DataFrame? | 11:10 | Bracket vs dot notation, Series extraction, column concatenation | Chapter 1 |
+| **4** | Why do some pandas commands end with parentheses (and others don't)? | 8:45 | Methods (actions) vs Attributes (state metadata) | Chapter 1 |
+| **5** | How do I rename columns in a pandas DataFrame? | 9:36 | `rename(columns={...})`, `df.columns = [...]`, `str.replace()` | Chapter 2 |
+| **6** | How do I remove columns from a pandas DataFrame? | 6:35 | `df.drop()`, `axis=1`, multi-column drop, row drop (`axis=0`) | Chapter 2 |
+| **7** | How do I sort a pandas DataFrame or a Series? | 8:56 | `Series.sort_values()`, multi-column sort, ascending flags | Chapter 3 |
+| **8** | How do I filter rows of a pandas DataFrame by column value? | 13:44 | Boolean indexing, masking, comparison operators | Chapter 3 |
+| **9** | How do I apply multiple filter criteria to a pandas DataFrame? | 9:51 | Logical `&`, `|`, parentheses requirement, `.isin()` operator | Chapter 3 |
+| **10** | Your pandas questions answered! (Part 1) | 9:06 | `usecols`, `nrows`, `iterrows` performance trap, `select_dtypes` | Chapter 3 |
+| **11** | How do I use the \"axis\" parameter in pandas? | 8:33 | `axis=0` (down rows) vs `axis=1` (across columns), row/col stats | Chapter 2 |
+| **12** | How do I use string methods in pandas? | 6:16 | `.str` accessor, `upper()`, `contains()`, `replace()`, regex | Chapter 4 |
+| **13** | How do I change the data type of a pandas Series? | 7:28 | `astype()`, currency cleaning, `pd.to_numeric(errors='coerce')` | Chapter 5 |
+| **14** | When should I use a \"groupby\" in pandas? | 8:24 | Split-Apply-Combine, aggregation functions, `.agg(['min', 'max'])` | Chapter 10 |
+| **15** | How do I explore a pandas Series? | 9:50 | `describe()`, `value_counts(normalize=True)`, `nunique()`, `crosstab` | Chapter 6 |
+| **16** | How do I handle missing values in pandas? | 14:27 | `isna()`, `dropna(how='any'|'all')`, `fillna()`, `bfill`/`ffill` | Chapter 7 |
+| **17** | What do I need to know about the pandas index? (Part 1) | 13:36 | Index as identifier, selection anchor, alignment in math | Chapter 8 |
+| **18** | What do I need to know about the pandas index? (Part 2) | 10:38 | Alignment mechanics (`s1 + s2`), `set_index()`, `reset_index()` | Chapter 8 |
+| **19** | How do I select multiple rows and columns from a pandas DataFrame? | 21:46 | `loc` (labels, inclusive) vs `iloc` (integers, exclusive), `ix` deprecation | Chapter 9 |
+| **20** | When should I use the \"inplace\" parameter in pandas? | 10:18 | `inplace=True` performance myth, chaining advantages | Chapter 9 |
+| **21** | How do I make my pandas DataFrame smaller and faster? | 19:05 | `info(memory_usage='deep')`, `category` dtype, integer codes | Chapter 11 |
+| **22** | How do I use pandas with scikit-learn to create Kaggle submissions? | 13:25 | Feature matrix `X`, target `y`, `.values`, test set alignment | Chapter 13 |
+| **23** | More of your pandas questions answered! (Part 2) | 19:23 | `df.sample()`, `Series.interpolate()`, train/test splits | Chapter 7 & 15 |
+| **24** | How do I create dummy variables in pandas? | 13:13 | `pd.get_dummies()`, `drop_first=True`, dummy variable trap | Chapter 13 |
+| **25** | How do I work with dates and times in pandas? | 10:20 | `pd.to_datetime()`, `.dt` accessor, date filtering, timedeltas | Chapter 12 |
+| **26** | How do I find and remove duplicate rows in pandas? | 9:47 | `duplicated(keep='first'|'last'|False)`, `drop_duplicates()` | Chapter 13 |
+| **27** | How do I avoid a SettingWithCopyWarning in pandas? | 13:29 | Chained assignment vs `.loc`, Views vs Copies, `.copy()` fix | Chapter 9 |
+| **28** | How do I change display options in pandas? | 14:55 | `pd.set_option()`, `max_rows`, `max_columns`, `precision` | Chapter 14 |
+| **29** | How do I create a pandas DataFrame from another object? | 14:25 | Dict of lists, list of dicts, 2D NumPy array constructor | Chapter 14 |
+| **30** | How do I apply a function to a pandas Series or DataFrame? | 17:57 | `Series.map()`, `Series.apply()`, `df.apply(axis=0|1)`, `df.map()` | Chapter 14 |
+| **31** | **Bonus:** How do I use the MultiIndex in pandas? | 25:00 | Hierarchical indexing, `unstack()`, `stack()`, cross-section `.xs()` | Chapter 15 |
+| **32** | **Bonus:** How do I merge DataFrames in pandas? | 21:48 | `pd.merge()`, inner/left/right/outer, `indicator=True`, `validate` | Chapter 15 |
+| **33** | **Bonus:** 4 new time-saving tricks in pandas | 14:50 | `df.query()`, `df.select_dtypes()`, string methods in accessors | Chapter 15 |
+| **34** | **Bonus:** 5 new changes in pandas you need to know about | 20:54 | Deprecations, copy-on-write, nullable integer dtypes | Chapter 9 & 15 |
+| **35** | **Bonus:** My top 25 pandas tricks | 27:37 | `df.explode()`, `pd.cut()`, `pd.qcut()`, `Series.clip()`, `style` | Chapter 15 |
+| **36** | **Bonus:** 21 more pandas tricks | 24:39 | `pd.read_clipboard()`, filtering with regex, profile inspection | Chapter 15 |
+| **37** | **Bonus:** Data Science Best Practices with pandas (PyCon 2019) | 1:44:16 | Method chaining with `.pipe()`, avoiding `apply()` traps | Chapter 15 |
+| **38** | **Bonus:** Your pandas questions answered! (Live Webcast) | 1:56:01 | Enterprise performance tuning, handling multi-GB ledgers | Chapter 15 |
+
+---
+
+## Chapter 1: Foundations, Ingestion & Inspection (Videos 1–4)
+
+### 🧠 1. Core Architecture: Series vs DataFrame
+A **Series** is a 1D labeled array capable of holding any data type. It is essentially a column of data accompanied by an explicit, immutable row label index.
+A **DataFrame** is a 2D labeled tabular data structure with columns of potentially different types. You can conceptualize a DataFrame as a collection of Series objects that share a common index.
+
+### 🗣️ Hinglish Mental Model
+> "NumPy ko samjho raw C-style array: fast hai par labeled nahi hai. **pandas** uske upar ek intelligent metadata layer banata hai.
+> 
+> Series ek single column hai with row labels. Jab multiple Series ek hi index share karte hain, toh wo **DataFrame** ban jate hain (jaise SQL table ya Excel sheet)."
+
+### 💻 Syntax & Reading Tabular Data
+```python
+import pandas as pd
+import numpy as np
+
+# Video 1 & 2: Reading delimited files
+# Default read_csv assumes comma separation and row 0 as header
+df_orders = pd.read_csv("data/chipotle.tsv", sep='\\t')
+
+# Reading file with NO header and custom column names
+user_cols = ['user_id', 'age', 'gender', 'occupation', 'zip_code']
+df_users = pd.read_csv("data/u.user", sep='|', header=None, names=user_cols)
+
+# Ingestion Subsetting (Optimizing memory during read)
+df_sample = pd.read_csv("data/u.user", sep='|', names=user_cols, usecols=['user_id', 'age'], nrows=50)
+```
+
+### 💻 Selecting Columns & Creating Features (Video 3)
+```python
+# Bracket notation (Universal & Recommended)
+cities = df_orders['item_name']
+
+# Dot notation (Convenient, BUT fails if column name has spaces or matches DataFrame methods)
+cities = df_orders.item_name
+
+# Creating a new combined column (MUST use bracket notation!)
+df_orders['order_summary'] = df_orders['quantity'].astype(str) + "x " + df_orders['item_name']
+```
+
+### 🔍 Methods vs Attributes Rule (Video 4)
+Why does `df.shape` have no parentheses, but `df.head()` does?
+- **Attributes (No parentheses `()`):** Describe properties or state that the DataFrame *already has* stored in memory:
+  `df.shape` (returns `(rows, cols)`), `df.dtypes` (data types), `df.columns` (headers), `df.index`.
+- **Methods (Require parentheses `()`):** Action verbs that *perform an action, calculation, or transformation*:
+  `df.head()` (slice top rows), `df.describe()` (compute summary statistics), `df.mean()` (aggregate).
+
+### ⚠️ Common Traps
+1. **Dot Notation for Assignment:** Writing `df.new_col = [1, 2, 3]` will NOT create a DataFrame column! It merely monkey-patches an attribute onto the Python object. Always use `df['new_col'] = ...`.
+2. **Column Name Collisions:** If a column is named `'count'`, `df.count` accesses the built-in method `DataFrame.count()`, not your data!
+
+### ❓ Interview Questions & Follow-ups
+- **Q:** *"Why does pandas use a separate Series structure instead of standard 1D NumPy arrays?"*
+  **A:** While a 1D NumPy array is homogenous and indexed purely by integer offsets, a pandas Series attaches a labeled index, supports heterogeneous data via object pointers, handles `NaN` missing values without crashing, and implements automatic alignment during arithmetic operations.
+- **Follow-up:** *"What is the memory overhead of a pandas Series vs a NumPy array?"*
+  **A:** A NumPy int64 array requires exactly 8 bytes per element in contiguous memory. A pandas Series stores the NumPy array plus an Index object (typically an `Index` or `RangeIndex` with hash map lookups), adding metadata overhead. For string columns, pandas historically stored pointers to Python string objects, incurring up to 5x-8x memory overhead compared to raw C char arrays.
+
+---
+
+## Chapter 2: Schema Manipulation, Renaming & Axis Mechanics (Videos 5, 6, 11)
+
+### 🧠 Concept: Renaming & Dropping Dimensions
+Modifying column headers and discarding unneeded rows or columns is the first step in financial ETL pipelines.
+Understanding the `axis` parameter is fundamental: operations in pandas can execute vertically down rows (`axis=0` / `'index'`) or horizontally across columns (`axis=1` / `'columns'`).
+
+### 🗣️ Hinglish Mental Model
+> "`axis=0` ka matlab hai: **Rows ke along travel karo (Downwards)**. Jab aap `df.drop(0, axis=0)` karte ho, toh wo row 0 ko drop karta hai. Jab aap `df.mean(axis=0)` karte ho, toh wo saari rows ko collapse karke har column ka 1 average deta hai.
+> 
+> `axis=1` ka matlab hai: **Columns ke along travel karo (Horizontally)**. `df.drop('amount', axis=1)` column ko drop karta hai. `df.mean(axis=1)` har row ke liye horizontally columns ka average nikalta hai."
+
+```mermaid
+flowchart TD
+    subgraph Axis0["axis=0 or axis='index' (Downwards across Rows)"]
+        R1["Row 0"] --> R2["Row 1"] --> R3["Row 2"]
+        R3 --> Collapse0["df.mean(axis=0) -> 1 scalar per column"]
+    end
+    subgraph Axis1["axis=1 or axis='columns' (Horizontally across Columns)"]
+        C1["Col A"] --> C2["Col B"] --> C3["Col C"]
+        C3 --> Collapse1["df.mean(axis=1) -> 1 scalar per row"]
+    end
+```
+
+### 💻 Syntax & Code Examples (Videos 5, 6, 11)
+```python
+import pandas as pd
+
+# Method 1: Selective rename via Dictionary (Safest)
+df.rename(columns={'Txn Ref': 'txn_ref', 'Amt (INR)': 'amount'}, inplace=True)
+
+# Method 2: Bulk column rename (Overwriting df.columns)
+df.columns = ['txn_id', 'vpa', 'amount', 'timestamp', 'status']
+
+# Method 3: Clean string headers with regex (Production Best Practice)
+df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
+
+# Dropping columns (axis=1)
+df.drop(['vpa', 'status'], axis=1, inplace=True)
+
+# Dropping rows by label index (axis=0)
+df.drop([0, 1, 5], axis=0, inplace=True)
+
+# The Axis Invariant in Math:
+df_financials = pd.DataFrame({
+    'q1_profit': [100, 200],
+    'q2_profit': [150, 250]
+})
+# Column-wise average (1 scalar per quarter across all branches):
+quarterly_mean = df_financials.mean(axis=0) # or axis='index'
+
+# Row-wise average (1 scalar per branch across both quarters):
+branch_mean = df_financials.mean(axis=1)    # or axis='columns'
+```
+
+### ⚠️ Common Traps
+- Forgetting `axis=1` when dropping columns: `df.drop('my_col')` defaults to `axis=0` and throws `KeyError: "['my_col'] not found in axis"` because pandas searched for a *row* labeled `'my_col'`.
+
+---
+
+## Chapter 3: Sorting, Boolean Filtering & Set Operations (Videos 7–10)
+
+### 🧠 Concept: Boolean Indexing & Predicate Pushdown
+Boolean indexing filters a DataFrame by passing a Series of `True`/`False` values matching the length of the DataFrame.
+
+### 🗣️ Hinglish Mental Model
+> "Boolean filtering SQL ke `WHERE` clause jaisa hai.
+> 
+> Python ka standard `and` / `or` pure object ki truth value dekhta hai, isliye pandas Series par fail ho jata hai (`ValueError: Truth value of Series is ambiguous`).
+> Pandas mein hamesha bitwise `&` (AND) aur `|` (OR) use karo, aur **har individual condition ko brackets `(...)` mein wrap karna compulsory hai** kyunki Python mein bitwise operators ki precedence comparison operators (`>`, `==`) se higher hoti hai!"
+
+### 💻 Syntax & Multi-Criteria Filtering
+```python
+# Video 7: Multi-column sorting
+df.sort_values(by=['branch_id', 'amount'], ascending=[True, False], inplace=True)
+
+# Video 8: Single Boolean Filter
+high_value = df[df['amount'] >= 50000]
+
+# Video 9: Multiple Filter Criteria (& and |)
+# WRONG: df[df.amount >= 50000 and df.status == 'SUCCESS']  -> CRASHES!
+# CORRECT:
+flagged_txns = df[(df['amount'] >= 50000) & (df['status'] == 'FAILED')]
+
+# Set Membership with .isin() (Cleaner and faster than multiple OR conditions)
+top_metro_txns = df[df['city'].isin(['Mumbai', 'Bengaluru', 'Delhi', 'Chennai'])]
+
+# Inverse filter (NOT in set via tilde ~ operator)
+non_metro = df[~df['city'].isin(['Mumbai', 'Bengaluru', 'Delhi'])]
+```
+
+### 💻 Ingestion Performance & Memory Control (Video 10)
+```python
+# Reading only necessary columns drastically saves memory on multi-GB files
+df_light = pd.read_csv("transactions_2026.csv", usecols=['txn_id', 'amount', 'status'], nrows=100000)
+
+# Iteration Performance Trap:
+# BAD (100x slower):
+# for idx, row in df.iterrows(): ...
+# GOOD (Vectorized):
+df['tax'] = df['amount'] * 0.18
+```
+
+---
+
+## Chapter 4: Vectorized String Operations (`.str` Accessor) (Video 12)
+
+### 🧠 Concept: Vectorized String Processing
+Python's standard string methods (`.upper()`, `.split()`) only work on individual string scalars. The `.str` accessor allows these methods to be applied element-wise across an entire pandas Series without manual Python `for` loops.
+
+### 🗣️ Hinglish Mental Model
+> "Agar aap `df['vpa'].upper()` likhoge toh error aayega kyunki Series par direct string method nahi hota.
+> `.str` ek bridge hai jo Series ke har element par string method vectorize karke run karta hai: `df['vpa'].str.upper()`."
+
+### 💻 Banking Examples & Pattern Extraction
+```python
+# Sample Banking Dataset
+df = pd.DataFrame({
+    'vpa': ['rohan@okhdfcbank', 'priya@icici', 'amit@idfcbank'],
+    'narration': ['UPI/409210/Transfer to Sharma', 'NEFT/5512/Salary Oct', 'IMPS/9912/Vendor Bill'],
+    'dirty_amount': [' INR 5,000.00 ', ' INR 12,450.50 ', ' INR 750.00 ']
+})
+
+# 1. Pattern Matching & Filtering
+is_idfc = df['vpa'].str.contains('idfc', case=False)
+
+# 2. String Splitting & Accessing Components
+# Extract UPI PSP handle (the domain after '@')
+df['psp_handle'] = df['vpa'].str.split('@').str[1] # .str[1] gets second element of each split list!
+
+# 3. String Cleansing & Stripping
+df['clean_amount'] = (
+    df['dirty_amount']
+    .str.replace('INR', '')
+    .str.replace(',', '')
+    .str.strip()
+    .astype(float)
+)
+```
+
+---
+
+## Chapter 5: Data Types, Casting & Coercion (Video 13)
+
+### 🧠 Concept: Dtype Casting & Error Coercion
+Data imported from text or CSV files often defaults to `object` (string) due to dirty characters or corrupted rows. Converting to native numeric dtypes is mandatory before performing mathematical or statistical operations.
+
+### 💻 Syntax & Error Coercion
+```python
+# Standard Type Casting
+df['account_id'] = df['account_id'].astype(str) # Prevents treating IDs as math numbers
+df['is_flagged'] = df['flag_code'].astype(bool)
+
+# The Coercion Superpower: pd.to_numeric
+# Suppose an amount column has dirty strings like 'UNKNOWN', 'ERROR', 'REFUND'
+raw_amounts = pd.Series(['100.50', '250.00', 'CORRUPT_DATA', '450.75'])
+
+# errors='coerce' turns unparseable values into NaN instead of crashing!
+clean_amounts = pd.to_numeric(raw_amounts, errors='coerce')
+# Result: [100.50, 250.00, NaN, 450.75]
+```
+
+---
+
+## Chapter 6: Series Exploration & Univariate Analysis (Video 15)
+
+### 🧠 Concept: Descriptive Statistics & Frequency Distributions
+Univariate inspection allows rapid verification of value distributions, card fraud velocity, and categorical proportions.
+
+### 💻 Syntax & Examples
+```python
+# Summary statistics for numeric Series (count, mean, std, min, 25%, 50%, 75%, max)
+df['amount'].describe()
+
+# Frequency counts of categorical column
+channel_counts = df['channel'].value_counts()
+
+# Proportional / Percentage breakdown (normalize=True)
+channel_percentages = df['channel'].value_counts(normalize=True) * 100
+
+# Include missing values in count
+channel_counts_with_na = df['channel'].value_counts(dropna=False)
+
+# Bivariate Contingency Table (Cross-Tabulation)
+# Shows transaction count by Channel across Status in a 2D matrix
+pd.crosstab(df['channel'], df['status'], margins=True)
+```
+
+---
+
+## Chapter 7: Missing Data Detection, Filtration & Imputation (Video 16)
+
+### 🧠 Concept: NaN Semantics & Imputation Strategies
+In pandas, missing values are represented as `np.nan` (IEEE floating-point Not-a-Number) or `pd.NA`. Missing data must either be filtered out or mathematically imputed before machine learning ingestion or ledger calculation.
+
+### 🗣️ Hinglish Mental Model
+> "`df.dropna()` data ko delete karta hai, jabki `df.fillna()` missing values ko kisi sensible constant (mean, median, mode ya 'UNKNOWN') se replace karta hai.
+> 
+> Financial transaction ledgers mein kabhi bhi blind `mean` impute nahi karte, kyunki outliers data ko skew kar dete hain; **median** hamesha safer rehta hai."
+
+### 💻 Syntax & Examples
+```python
+# 1. Detection
+missing_per_column = df.isna().sum()
+percentage_missing = df.isna().mean() * 100
+
+# 2. Dropping
+# Drop row if ANY column is NaN
+df_clean = df.dropna(how='any')
+
+# Drop row ONLY if ALL columns are NaN
+df_clean = df.dropna(how='all')
+
+# Drop row only if specific critical columns are NaN
+df_clean = df.dropna(subset=['account_id', 'amount'], how='any')
+
+# 3. Imputation
+# Constant imputation
+df['merchant_category'].fillna('UNCLASSIFIED', inplace=True)
+
+# Skew-resistant statistical imputation
+median_bal = df['balance'].median()
+df['balance'].fillna(median_bal, inplace=True)
+
+# Forward Fill (propagate last valid observation forward - common in stock tick data)
+df['stock_price'].ffill(inplace=True)
+```
+
+---
+
+## Chapter 8: The Pandas Index & Automatic Arithmetic Alignment (Videos 17–18)
+
+### 🧠 Concept: The Index Invariant & Automatic Alignment
+The index in pandas serves three critical functions:
+1. **Identification:** Direct row identity independent of position.
+2. **Selection:** Fast O(1) hash-based label lookups via `.loc`.
+3. **Automatic Alignment:** When performing arithmetic operations between two Series (`s1 + s2`), pandas aligns data on **matching index labels**, NOT on integer position!
+
+### 💻 Code: Proving Index Alignment
+```python
+# Series 1: Branch revenue in Jan
+jan_rev = pd.Series([100, 200, 300], index=['Bengaluru', 'Mumbai', 'Delhi'])
+
+# Series 2: Branch revenue in Feb (Note: different branch ordering and new branch!)
+feb_rev = pd.Series([150, 250, 400], index=['Mumbai', 'Bengaluru', 'Hyderabad'])
+
+total_rev = jan_rev + feb_rev
+print(total_rev)
+# Output:
+# Bengaluru    450.0  (100 + 350 aligned!)
+# Delhi          NaN  (Exists in Jan, missing in Feb -> NaN)
+# Hyderabad      NaN  (Exists in Feb, missing in Jan -> NaN)
+# Mumbai       350.0  (200 + 150 aligned!)
+```
+
+### 💻 Index Manipulation Syntax
+```python
+# Setting a column as index
+df.set_index('account_id', inplace=True)
+
+# Resetting index back to standard default 0, 1, 2... integer range
+df.reset_index(inplace=True)
+```
+
+---
+
+## Chapter 9: Selection Mastery (`loc`, `iloc`) & The SettingWithCopyWarning (Videos 19, 20, 27)
+
+### 🧠 Concept: Label (`loc`) vs Position (`iloc`) & Views vs Copies
+- **`df.loc[row_labels, col_labels]`:** Purely label-based. **Endpoint is INCLUSIVE!**
+- **`df.iloc[row_positions, col_positions]`:** Purely 0-indexed integer position. **Endpoint is EXCLUSIVE!**
+
+### 🗣️ Hinglish Mental Model: The SettingWithCopyWarning Trap
+> "Sabse zyada pooche jaane wala interview bug!
+> 
+> Jab aap `df[df.amount > 5000]['status'] = 'FLAGGED'` likhte ho, toh pehle `df[df.amount > 5000]` ek subset return karta hai, aur fir `['status'] = ...` uspar write karta hai. Isko bolte hain **Chained Indexing**.
+> 
+> Pandas guarantee nahi de sakta ki wo intermediate subset underlying memory ka **VIEW** tha ya memory ki nayi **COPY**! Agar wo copy thi, toh original DataFrame update nahi hoga aur data silently corrupt ho jayega.
+> 
+> **Golden Fix:** Hamesha single-bracket `.loc` use karo: `df.loc[df.amount > 5000, 'status'] = 'FLAGGED'`. Aur agar intentionally slice banana hai, toh explicitly `.copy()` call karo!"
+
+### 💻 Code: Correct vs Broken Assignment
+```python
+# ❌ DANGEROUS: Causes SettingWithCopyWarning
+df[df['amount'] > 100000]['risk_tier'] = 'HIGH'
+
+# ✅ CORRECT: Single-stage label assignment via .loc
+df.loc[df['amount'] > 100000, 'risk_tier'] = 'HIGH'
+
+# ✅ CORRECT: Explicit isolated copy
+high_net_worth = df[df['balance'] > 5000000].copy()
+high_net_worth['relationship_manager'] = 'Senior VP' # Completely safe!
+```
+
+---
+
+## Chapter 10: Groupby & Aggregation Mastery (Split-Apply-Combine) (Video 14)
+
+### 🧠 Concept: Split → Apply → Combine
+1. **Split:** Divides the dataset into discrete buckets based on unique values in key columns.
+2. **Apply:** Computes an aggregation (sum, mean, count) or transformation independently per bucket.
+3. **Combine:** Merges results into a single consolidated output DataFrame.
+
+```mermaid
+flowchart TD
+    Raw["Transactions DataFrame"] --> Split["Split by 'account_type'"]
+    Split --> S1["SAVINGS Bucket"]
+    Split --> S2["CURRENT Bucket"]
+    Split --> S3["NRI Bucket"]
+    S1 --> Agg1["Compute mean(amount)"]
+    S2 --> Agg2["Compute mean(amount)"]
+    S3 --> Agg3["Compute mean(amount)"]
+    Agg1 --> Combine["Combine into Summary DataFrame"]
+    Agg2 --> Combine
+    Agg3 --> Combine
+```
+
+### 💻 Advanced Syntax: Named Aggregations
+```python
+# Multi-column groupby with named aggregations (Cleanest Production Syntax)
+branch_metrics = df.groupby(['branch_id', 'channel']).agg(
+    total_volume=('amount', 'sum'),
+    avg_ticket_size=('amount', 'mean'),
+    txn_count=('txn_id', 'count'),
+    max_single_txn=('amount', 'max')
+).reset_index()
+```
+
+---
+
+## Chapter 11: Memory Optimization & Categorical Dtypes (Video 21)
+
+### 🧠 Concept: The `category` Dtype Mechanism
+In Python, string columns (`object` dtype) store an array of 8-byte pointers where each pointer references an independent Python string object on the heap.
+If a column with 10,000,000 transactions contains only 4 unique status values (`'SUCCESS'`, `'FAILED'`, `'PENDING'`, `'REVERSED'`), storing 10M separate string objects consumes hundreds of megabytes.
+
+Converting to `category` creates an integer lookup array (e.g. `uint8` consuming 1 byte per row) pointing to a small 4-element array of strings, reducing memory footprint by **up to 85%-90%**!
+
+### 💻 Memory Profiling & Optimization Code
+```python
+# Deep memory profiling (must pass memory_usage='deep' to measure string heaps)
+print(df.info(memory_usage='deep'))
+
+# Converting low-cardinality string columns to category
+df['status'] = df['status'].astype('category')
+df['channel'] = df['channel'].astype('category')
+
+# Ordered Categorical (Enables mathematical comparison > and < on categories!)
+risk_tiers = pd.CategoricalDtype(categories=['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'], ordered=True)
+df['risk_tier'] = df['risk_tier'].astype(risk_tiers)
+
+# Now you can filter using inequality operators!
+urgent_cases = df[df['risk_tier'] >= 'HIGH']
+```
+
+---
+
+## Chapter 12: Dates, Times & Time Series Analytics (Video 25)
+
+### 🧠 Concept: The `.dt` Datetime Accessor
+Parsing dates into native `datetime64[ns]` enables high-performance component extraction, timestamp math, and time series resampling without manual `strptime` loops.
+
+### 💻 Syntax & Examples
+```python
+# Parse string to datetime
+df['created_at'] = pd.to_datetime(df['created_at'])
+
+# Component extraction via .dt accessor
+df['hour'] = df['created_at'].dt.hour
+df['day_name'] = df['created_at'].dt.day_name()
+df['is_weekend'] = df['created_at'].dt.dayofweek.isin([5, 6])
+
+# Date filtering (String literals auto-convert)
+recent_txns = df[df['created_at'] >= '2026-01-01']
+
+# Time Difference / Latency Calculation
+# Time elapsed between authorization and settlement
+df['settlement_latency_sec'] = (df['settled_at'] - df['authorized_at']).dt.total_seconds()
+```
+
+---
+
+## Chapter 13: Deduplication & Feature Engineering (Videos 24, 26)
+
+### 🧠 Concept: Finding & Removing Duplicates & Dummy Variables
+- **`duplicated(subset=[...], keep='first'|'last'|False)`:** Identifies duplicate records. Passing `keep=False` flags **all instances of duplicates**, allowing fraud analysts to audit duplicate payment requests.
+- **`pd.get_dummies(df, drop_first=True)`:** Converts categorical variables into numeric binary indicators for statistical models and ML classifiers. `drop_first=True` avoids multicollinearity (the Dummy Variable Trap).
+
+### 💻 Syntax & Code Examples
+```python
+# 1. Audit Duplicate Payments (keep=False marks all copies)
+fraud_duplicates = df[df.duplicated(subset=['sender_acc', 'amount', 'vpa'], keep=False)]
+
+# 2. Safe Deduplication
+df.drop_duplicates(subset=['idempotency_key'], keep='first', inplace=True)
+
+# 3. One-Hot Encoding for Machine Learning Credit Scoring
+df_encoded = pd.get_dummies(df, columns=['account_type', 'employment_status'], drop_first=True)
+```
+
+---
+
+## Chapter 14: Function Application & DataFrame Constructors (Videos 29, 30)
+
+### 🧠 Concept: Function Application Matrix
+- **`Series.map()`:** Best for mapping values using a dictionary or simple 1-to-1 conversion.
+- **`Series.apply()`:** For custom complex transformation on each element of a Series.
+- **`DataFrame.apply(axis=0|1)`:** Applies function across rows or columns.
+- **`DataFrame.map()` (formerly `applymap`):** Applies function element-wise across every single cell in a DataFrame.
+
+### 💻 Function Application Examples
+```python
+# 1. Series.map with dictionary (Ultra-fast categorical mapping)
+tier_map = {'SAVINGS': 1, 'SALARY': 2, 'WEALTH': 3}
+df['tier_code'] = df['account_type'].map(tier_map)
+
+# 2. DataFrame.apply across rows (axis=1)
+def calculate_risk_score(row):
+    return (row['amount'] / 1000) * (2 if row['is_international'] else 1)
+
+df['risk_score'] = df.apply(calculate_risk_score, axis=1)
+
+# 3. DataFrame constructors from raw Python objects (Video 29)
+# Constructor 1: Dictionary of lists
+df1 = pd.DataFrame({'id': [1, 2], 'name': ['Aarav', 'Priya']})
+
+# Constructor 2: List of dictionaries (Standard API JSON response)
+api_payload = [{'id': 101, 'status': 'SUCCESS'}, {'id': 102, 'status': 'FAILED'}]
+df2 = pd.DataFrame(api_payload)
+```
+
+---
+
+## Chapter 15: MultiIndex, Merging & Top 46 Productivity Tricks (Videos 31–38)
+
+### 🧠 Concept: MultiIndex Reshaping & Relational Integrity Joins
+- **MultiIndex:** Hierarchical row and column labels. `unstack()` converts inner row levels into columns (pivoting), while `stack()` collapses columns into row levels.
+- **`pd.merge()`:** Relational join engine.
+  - `indicator=True`: Appends `_merge` column (`both`, `left_only`, `right_only`) to immediately audit missing ledger balances.
+  - `validate='one_to_many'`: Validates relational schema constraints at runtime.
+
+### 💻 MultiIndex & Merge Syntax
+```python
+# 1. MultiIndex via Groupby
+multi_grouped = df.groupby(['branch_id', 'channel'])['amount'].sum()
+
+# Reshaping: unstack() turns 'channel' index level into columns!
+pivoted_table = multi_grouped.unstack()
+
+# 2. Merging with Integrity Validation
+merged_ledger = pd.merge(
+    df_accounts, 
+    df_transactions, 
+    on='account_id', 
+    how='left', 
+    indicator=True,
+    validate='one_to_many'
+)
+# Identify accounts with ZERO transactions:
+inactive_accounts = merged_ledger[merged_ledger['_merge'] == 'left_only']
+```
+
+### 💻 Top 10 Power Tricks (Videos 33–38)
+```python
+# 1. Readable SQL-style querying
+df_filtered = df.query('amount > 50000 and status == "SUCCESS"')
+
+# 2. Exploding list-valued columns into individual rows
+df_exploded = df.explode('transaction_tags')
+
+# 3. Numerical Binning (Fixed Bins)
+df['bracket'] = pd.cut(df['amount'], bins=[0, 1000, 25000, 100000], labels=['Micro', 'Retail', 'HNI'])
+
+# 4. Quantile Binning (Equal Count Bins)
+df['quartile'] = pd.qcut(df['amount'], q=4, labels=['Q1', 'Q2', 'Q3', 'Q4'])
+
+# 5. Numerical Outlier Clipping
+df['clipped_amount'] = df['amount'].clip(lower=100, upper=100000)
+
+# 6. Read tabular data straight from operating system clipboard!
+# df_clipboard = pd.read_clipboard()
+```
+
+---
+
+## ⚡ Quick Revision: The 10 Golden pandas Rules for Interviews
+
+1. **`loc` vs `iloc`:** `loc` is label-based (inclusive boundary); `iloc` is integer position (exclusive boundary).
+2. **`axis` Parameter:** `axis=0` acts downwards across rows; `axis=1` acts horizontally across columns.
+3. **Compound Filtering:** Use `&` and `|` with mandatory parentheses: `df[(df.a > 0) & (df.b == 1)]`.
+4. **Prevent SettingWithCopyWarning:** Never chain assignments (`df[cond]['col'] = x`). Always use `df.loc[cond, 'col'] = x`.
+5. **Memory Optimization:** Convert low-cardinality string columns to `category` dtype for 80%+ RAM reduction.
+6. **Error Coercion:** Use `pd.to_numeric(df.col, errors='coerce')` to gracefully turn corrupt strings into `NaN`.
+7. **Datetime Power:** Convert via `pd.to_datetime()` and extract components via `.dt` accessor (`.dt.hour`, `.dt.day_name()`).
+8. **Deduplication Audits:** Use `df.duplicated(subset=[...], keep=False)` to view all conflicting transactions.
+9. **Index Alignment:** Series arithmetic aligns on **index labels**, not array order. Mismatched labels produce `NaN`.
+10. **Avoid `iterrows()`:** Vectorize calculations or use NumPy/`.groupby()`. Row-by-row iteration in Python is 50x-100x slower.
+"""
+
+LAST_MINUTE_MD = """# ⚡ pandas Last-Minute Revision: High-Yield Cram Sheets
+
+Designed for quick review before technical interviews at IDFC FIRST Bank.
+
+---
+
+## ⏱️ 5-Minute Emergency Review
+
+- **Selection Core:**
+  - `df.loc[rows, cols]` ⟹ **Label-based** (both start and stop labels are **INCLUSIVE**).
+  - `df.iloc[rows, cols]` ⟹ **0-indexed integer position** (start is inclusive, stop is **EXCLUSIVE**).
+- **Axis Invariant:**
+  - `axis=0` / `'index'` ⟹ Moves **downwards across rows** (collapses rows into 1 value per column).
+  - `axis=1` / `'columns'` ⟹ Moves **horizontally across columns** (collapses columns into 1 value per row).
+- **Multiple Boolean Filter:**
+  - `df[(df['amount'] > 1000) & (df['status'] == 'SUCCESS')]` (Brackets `(...)` are mandatory!).
+- **Prevent `SettingWithCopyWarning`:**
+  - Never use chained indexing: `df[df['a'] > 0]['b'] = 10` ❌
+  - Always use `.loc`: `df.loc[df['a'] > 0, 'b'] = 10` ✅
+- **Groupby Split-Apply-Combine:**
+  - `df.groupby('branch')['amount'].agg(['count', 'sum', 'mean'])`.
+
+---
+
+## ⏱️ 15-Minute Review
+
+- **Data Ingestion Subsetting:**
+  - `pd.read_csv('ledger.csv', usecols=['id', 'amount'], nrows=10000)` saves memory upfront.
+- **Vectorized String Accessor (`.str`):**
+  - `df['vpa'].str.split('@').str[1]` extracts PSP handle without Python loops.
+  - `df['narration'].str.contains('SALARY', case=False)`.
+- **Date Handling (`.dt`):**
+  - `df['ts'] = pd.to_datetime(df['ts'])`
+  - `df['ts'].dt.hour`, `df['ts'].dt.day_name()`, `df['ts'].dt.dayofweek`.
+- **Type Coercion:**
+  - `pd.to_numeric(df['dirty_col'], errors='coerce')` turns unparseable values into `NaN`.
+- **Deduplication:**
+  - `df.duplicated(keep=False)` marks ALL copies as True (crucial for fraud audits).
+  - `df.drop_duplicates(subset=['idempotency_key'], keep='first')`.
+- **Relational Merge:**
+  - `pd.merge(df1, df2, on='acc_id', how='left', indicator=True)` audits join drops via `_merge` column.
+
+---
+
+## ⏱️ 30-Minute Deep Revision
+
+- **Memory Optimization (`category` Dtype):**
+  - String columns store 8-byte pointers to individual Python heap objects.
+  - `df['channel'] = df['channel'].astype('category')` replaces strings with 1-byte integer codes and a category dictionary, reducing memory usage by up to 85%.
+  - Check true memory usage with: `df.info(memory_usage='deep')`.
+- **Index Alignment in Arithmetic:**
+  - When computing `s1 + s2`, pandas aligns on **index labels**, NOT on integer position!
+  - If a label exists in `s1` but not `s2`, the result is `NaN`.
+- **Function Application Matrix:**
+  - `Series.map()`: Element-wise using a dictionary or single-argument mapper.
+  - `Series.apply()`: Element-wise using complex lambda or custom function.
+  - `DataFrame.apply(axis=0|1)`: Runs function across each column or row.
+  - `DataFrame.map()` (formerly `applymap`): Runs function element-wise on every cell in a 2D table.
+- **MultiIndex Operations:**
+  - `unstack()`: Pivots innermost index level into column headers.
+  - `stack()`: Collapses column headers into innermost index level.
+  - `df.xs('MUMBAI', level='city')`: Selects cross-section from MultiIndex.
+
+---
+
+## ⏱️ 1-Hour Comprehensive Interview Drill
+
+### 10 Rapid-Fire Code Output Puzzles
+
+1. **Puzzle 1: `loc` slicing with integer index**
+   ```python
+   s = pd.Series([10, 20, 30, 40], index=[3, 2, 1, 0])
+   print(s.loc[2:0])
+   # Answer: Returns 20, 30, 40 (label-based slice starting from label 2 to label 0 inclusive!)
+   ```
+
+2. **Puzzle 2: Bitwise filtering without brackets**
+   ```python
+   # What error does df[df.amount > 1000 & df.status == 'A'] throw?
+   # Answer: TypeError / ValueError because & has higher operator precedence than > and ==.
+   ```
+
+3. **Puzzle 3: Series addition with mismatched indexes**
+   ```python
+   a = pd.Series([1, 2], index=['x', 'y'])
+   b = pd.Series([3, 4], index=['y', 'z'])
+   print((a + b)['x'])
+   # Answer: NaN (Index 'x' does not exist in Series b).
+   ```
+
+4. **Puzzle 4: Drop axis default**
+   ```python
+   # What does df.drop('col_name') do?
+   # Answer: Throws KeyError because axis defaults to 0 (rows), not columns!
+   ```
+
+5. **Puzzle 5: Creating columns with dot notation**
+   ```python
+   df.new_col = [1, 2, 3]
+   # Did this add a column to df?
+   # Answer: NO. It sets a monkey-patched Python attribute on the DataFrame object.
+   ```
+"""
+
+PANDAS_FLASHCARDS = [
+  {
+    "id": "pandas-01",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Fundamentals",
+    "dimension": "Concept",
+    "question": "What is the structural difference between a pandas Series and a DataFrame?",
+    "answerHinglish": "Series 1-dimensional labeled array hai jisme single column aur explicit row labels (index) hote hain. DataFrame ek 2-dimensional labeled tabular data structure hai jo multiple Series ko ek common index ke under share karti hai.",
+    "codeSnippet": "s = pd.Series([100, 200], index=['a', 'b'])\ndf = pd.DataFrame({'amt': s, 'tax': s * 0.18})",
+    "tag": "Pandas Architecture"
+  },
+  {
+    "id": "pandas-02",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Internals",
+    "dimension": "Rule",
+    "question": "Why do some pandas commands end with parentheses () while others do not?",
+    "answerHinglish": "Attributes (jaise `df.shape`, `df.dtypes`, `df.columns`) DataFrame ki already computed state/properties hoti hain, isliye parentheses nahi hote. Methods (jaise `df.head()`, `df.describe()`, `df.mean()`) action verbs hote hain jo computation ya transformation execute karte hain, isliye parentheses compulsory hote hain.",
+    "codeSnippet": "print(df.shape)    # Attribute (No parentheses)\nprint(df.describe()) # Method (Requires parentheses)",
+    "tag": "Pandas OOP"
+  },
+  {
+    "id": "pandas-03",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Indexing",
+    "dimension": "Comparison",
+    "question": "What is the crucial boundary difference between `.loc` and `.iloc`?",
+    "answerHinglish": "`.loc` label-based selection hai aur iska stop boundary hamesha INCLUSIVE hota hai (e.g. `'a':'c'` me `'c'` include hoga). `.iloc` 0-indexed integer position-based hai aur iska stop boundary hamesha EXCLUSIVE hota hai (e.g. `0:3` me index 0, 1, 2 include honge, 3 nahi).",
+    "codeSnippet": "df.loc['2026-01-01':'2026-01-05'] # Jan 5 is INCLUDED\ndf.iloc[0:5]                       # Row 5 is EXCLUDED",
+    "tag": "Indexing"
+  },
+  {
+    "id": "pandas-04",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Axis Mechanics",
+    "dimension": "Mental Model",
+    "question": "What is the exact behavioral difference between `axis=0` and `axis=1` in pandas operations?",
+    "answerHinglish": "`axis=0` (or `'index'`) vertically rows ke along move karta hai aur saari rows ko collapse karke har column ka single aggregate deta hai. `axis=1` (or `'columns'`) horizontally columns ke along move karta hai aur har individual row ke liye single aggregate compute karta hai.",
+    "codeSnippet": "df.mean(axis=0) # 1 mean per column (across all rows)\ndf.mean(axis=1) # 1 mean per row (across all columns)",
+    "tag": "Axis Invariant"
+  },
+  {
+    "id": "pandas-05",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Traps",
+    "dimension": "Debugging",
+    "question": "Why does `df[df.amount > 5000 and df.status == 'SUCCESS']` fail in Python, and how do you fix it?",
+    "answerHinglish": "Python ka `and` pure Series object ki single truth value evaluate karne ki koshish karta hai, jisse `ValueError: The truth value of a Series is ambiguous` crash hota hai. Fix: Hamesha bitwise `&` operator use karo aur har individual condition ko parentheses `(...)` me wrap karo.",
+    "codeSnippet": "# Fix:\ndf[(df['amount'] > 5000) & (df['status'] == 'SUCCESS')]",
+    "tag": "Boolean Filtering"
+  },
+  {
+    "id": "pandas-06",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Traps",
+    "dimension": "Trap",
+    "question": "What causes the `SettingWithCopyWarning` and what is the definitive production fix?",
+    "answerHinglish": "Ye warning tab aati hai jab aap Chained Indexing karte hain (`df[df.a > 0]['b'] = 10`). Pandas guarantee nahi karta ki pehla slice View tha ya Copy; agar copy thi toh modification silently lost ho jayegi. Fix: Hamesha single-step `.loc` assignment use karein: `df.loc[df.a > 0, 'b'] = 10`.",
+    "codeSnippet": "# Buggy:\ndf[df.amount > 10000]['flag'] = True\n# Fixed:\ndf.loc[df.amount > 10000, 'flag'] = True",
+    "tag": "SettingWithCopyWarning"
+  },
+  {
+    "id": "pandas-07",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Memory",
+    "dimension": "Optimization",
+    "question": "How does the `category` dtype reduce pandas DataFrame memory by 80%+ in large financial ledgers?",
+    "answerHinglish": "Standard `object` dtype me har string value ke liye 8-byte pointer aur heap object allocate hota hai. `category` dtype repetitive string values ko internally small integers (e.g. uint8, 1 byte) me encode karta hai jo ek single unique string lookup array ko point karte hain. High-repetition columns (like 'SUCCESS', 'FAILED') me RAM 80-90% drop ho jati hai.",
+    "codeSnippet": "df['status'] = df['status'].astype('category')\nprint(df.info(memory_usage='deep'))",
+    "tag": "Memory Optimization"
+  },
+  {
+    "id": "pandas-08",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Internals",
+    "dimension": "Concept",
+    "question": "What is automatic index alignment in pandas arithmetic operations?",
+    "answerHinglish": "Jab aap do Series add karte hain (`s1 + s2`), pandas integer position match nahi karta balki row INDEX LABELS ko match karta hai. Agar koi label dono me present hai, toh values add hongi; agar koi label ek me present hai aur dusre me missing hai, toh result NaN ho jayega.",
+    "codeSnippet": "s1 = pd.Series([10, 20], index=['A', 'B'])\ns2 = pd.Series([30, 40], index=['B', 'C'])\n# s1 + s2 -> A: NaN, B: 50.0, C: NaN",
+    "tag": "Index Alignment"
+  },
+  {
+    "id": "pandas-09",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Groupby",
+    "dimension": "Concept",
+    "question": "What is the Split-Apply-Combine pattern in pandas `groupby()`?",
+    "answerHinglish": "1) Split: DataFrame ko key column ke unique values ke basis par alag-alag groups me divide karta hai. 2) Apply: Har group par mathematical function (sum, mean, count) independently compute karta hai. 3) Combine: Saare group results ko ek single consolidated DataFrame me merge karke return karta hai.",
+    "codeSnippet": "df.groupby('branch')['amount'].agg(['count', 'sum', 'mean'])",
+    "tag": "Groupby"
+  },
+  {
+    "id": "pandas-10",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas String",
+    "dimension": "Syntax",
+    "question": "How do you extract domain handles from email VPAs using the `.str` accessor without loops?",
+    "answerHinglish": "`.str.split('@').str[1]` use karein. Pehla `.str.split('@')` har string ko list of tokens me todta hai, aur dusra `.str[1]` vectorized tareeqe se har list ka 1st index (domain handle) project karta hai.",
+    "codeSnippet": "df['psp'] = df['vpa'].str.split('@').str[1]\n# 'user@okhdfcbank' -> 'okhdfcbank'",
+    "tag": "Vectorized Strings"
+  },
+  {
+    "id": "pandas-11",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Joins",
+    "dimension": "FinTech Scenario",
+    "question": "How do you audit unreconciled transactions during a DataFrame merge using `indicator=True`?",
+    "answerHinglish": "`pd.merge(df1, df2, on='txn_id', how='outer', indicator=True)` merge me ek naya `_merge` column add karta hai jisme values hoti hain: 'both' (matched), 'left_only' (core bank me hai par gateway me nahi), aur 'right_only' (gateway me hai par core bank me nahi). Isse unmatched settlement breaks instant audit ho jate hain.",
+    "codeSnippet": "m = pd.merge(core_ledger, switch_feed, on='rrn', how='outer', indicator=True)\nunmatched = m[m['_merge'] != 'both']",
+    "tag": "Reconciliation"
+  },
+  {
+    "id": "pandas-12",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Duplication",
+    "dimension": "Syntax",
+    "question": "What does `df.duplicated(keep=False)` do, and why is it preferred in fraud audits?",
+    "answerHinglish": "Default `keep='first'` duplicate rows me se pehle occurrence ko False mark karta hai aur baaki ko True. Lekin `keep=False` saari conflicting duplicate rows (including first occurrence) ko True mark karta hai, taaki fraud investigator sabhi colliding transaction records ko ek sath inspect kar sake.",
+    "codeSnippet": "colliding_txns = df[df.duplicated(subset=['card_id', 'amount'], keep=False)]",
+    "tag": "Fraud Detection"
+  },
+  {
+    "id": "pandas-13",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Datetime",
+    "dimension": "Syntax",
+    "question": "How do you filter transactions executed between 11 PM and 4 AM using the `.dt` accessor?",
+    "answerHinglish": "`df['timestamp'] = pd.to_datetime(df['timestamp'])` karke `.dt.hour` property use karein: `df[(df['timestamp'].dt.hour >= 23) | (df['timestamp'].dt.hour < 4)]`.",
+    "codeSnippet": "df['hour'] = pd.to_datetime(df['timestamp']).dt.hour\nnight_txns = df[(df['hour'] >= 23) | (df['hour'] < 4)]",
+    "tag": "Datetime Analytics"
+  },
+  {
+    "id": "pandas-14",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas Function Application",
+    "dimension": "Comparison",
+    "question": "What is the difference between `Series.map()`, `Series.apply()`, and `DataFrame.map()`?",
+    "answerHinglish": "`Series.map()` element-wise substitution ke liye dictionary ya function use karta hai. `Series.apply()` complex lambdas aur functions ke liye use hota hai. `DataFrame.map()` (formerly `applymap`) pure 2D DataFrame ke har single cell par element-wise function execute karta hai.",
+    "codeSnippet": "df['status_code'] = df['status'].map({'SUCCESS': 1, 'FAILED': 0})\ndf = df.map(lambda x: str(x).strip()) # cleans every cell",
+    "tag": "Function Application"
+  },
+  {
+    "id": "pandas-15",
+    "domain": "Python & Data Ecosystem",
+    "topic": "Pandas MultiIndex",
+    "dimension": "Concept",
+    "question": "How do `unstack()` and `stack()` reshape hierarchical MultiIndex DataFrames?",
+    "answerHinglish": "`unstack()` innermost row index level ko pivot karke column headers me convert karta hai (table wide ho jati hai). `stack()` outermost column headers ko pivot karke innermost row index me convert karta hai (table tall/long ho jati hai).",
+    "codeSnippet": "# Groupby produces MultiIndex (Branch, Year):\ng = df.groupby(['branch', 'year'])['revenue'].sum()\nwide_table = g.unstack() # 'year' becomes columns!",
+    "tag": "MultiIndex Reshaping"
+  }
+]
+
+PANDAS_QUIZ_QUESTIONS = [
+  {
+    "id": "pandas-q1",
+    "category": "Python & Pandas",
+    "question": "In pandas, what is the key difference between `df.loc[1:3]` and `df.iloc[1:3]` on a DataFrame with default integer index?",
+    "options": [
+      "`df.loc` includes rows with index labels 1, 2, and 3; `df.iloc` includes rows at integer positions 1 and 2 only",
+      "`df.loc` excludes index 3, while `df.iloc` includes index 3",
+      "Both return identical row slices in all circumstances",
+      "`df.loc` only accepts string column names and crashes on integer row slices"
+    ],
+    "correct": 0,
+    "explanation": "`.loc` is label-based, so stop endpoints are INCLUSIVE (labels 1, 2, 3). `.iloc` is integer position-based, so stop endpoints are EXCLUSIVE (positions 1 and 2 only).",
+    "moduleRef": "01-PYTHON"
+  },
+  {
+    "id": "pandas-q2",
+    "category": "Python & Pandas",
+    "question": "What happens when you run `df.drop('amount')` without specifying the `axis` parameter?",
+    "options": [
+      "The 'amount' column is removed successfully",
+      "Pandas raises a KeyError because `axis` defaults to 0 (rows), and it looks for a row labeled 'amount'",
+      "Pandas automatically detects whether 'amount' is a row or column",
+      "The command executes asynchronously in the background"
+    ],
+    "correct": 1,
+    "explanation": "In `df.drop()`, `axis` defaults to 0 (`axis='index'`). To drop a column, you must explicitly pass `axis=1` or `columns='amount'`.",
+    "moduleRef": "01-PYTHON"
+  },
+  {
+    "id": "pandas-q3",
+    "category": "Python & Pandas",
+    "question": "Why does `df[(df.amount > 5000) & (df.status == 'SUCCESS')]` require parentheses around each condition?",
+    "options": [
+      "In Python, bitwise `&` has higher operator precedence than comparison operators (`>`, `==`)",
+      "Parentheses force pandas to execute the filter in parallel C threads",
+      "Parentheses are optional and purely for aesthetic formatting",
+      "Because Python's garbage collector requires grouped scopes"
+    ],
+    "correct": 0,
+    "explanation": "Because bitwise `&` has higher precedence than `>` and `==`, without parentheses Python evaluates `5000 & df.status`, causing an invalid operand TypeError.",
+    "moduleRef": "01-PYTHON"
+  },
+  {
+    "id": "pandas-q4",
+    "category": "Python & Pandas",
+    "question": "Which pandas method converts low-cardinality string columns (e.g. 'SUCCESS', 'FAILED') into integer-coded categories to save up to 85% memory?",
+    "options": [
+      "df['status'].astype('int32')",
+      "df['status'].astype('category')",
+      "df['status'].to_categorical()",
+      "df['status'].compress_memory()"
+    ],
+    "correct": 1,
+    "explanation": "Converting strings to `category` dtype stores 1-byte integer codes pointing to an immutable array of unique categories, eliminating repetitive Python string heap allocations.",
+    "moduleRef": "01-PYTHON"
+  },
+  {
+    "id": "pandas-q5",
+    "category": "Python & Pandas",
+    "question": "What is the primary cause of a `SettingWithCopyWarning` in pandas?",
+    "options": [
+      "Attempting to write data to a read-only CSV file",
+      "Chained assignment (`df[condition]['col'] = val`) where pandas cannot guarantee whether the slice is a memory view or copy",
+      "Using `.loc` with valid integer indexes",
+      "Allocating more memory than available physical RAM"
+    ],
+    "correct": 1,
+    "explanation": "Chained indexing causes ambiguous view-versus-copy assignment. The fix is always performing single-stage assignment via `df.loc[condition, 'col'] = val`.",
+    "moduleRef": "01-PYTHON"
+  }
+]
+
+def main():
+    repo_root = "/home/bipin/Desktop/BankInterview"
+    
+    # 1. Write 01-PYTHON/pandas.md
+    pandas_md_path = os.path.join(repo_root, "01-PYTHON", "pandas.md")
+    with open(pandas_md_path, "w", encoding="utf-8") as f:
+        f.write(CURRICULUM_MD.strip() + "\\n")
+    print(f"✓ Successfully wrote complete Pandas curriculum to {pandas_md_path} ({len(CURRICULUM_MD)} bytes)")
+    
+    # 2. Write 14-CHEATSHEETS/pandas-last-minute.md
+    last_minute_path = os.path.join(repo_root, "14-CHEATSHEETS", "pandas-last-minute.md")
+    with open(last_minute_path, "w", encoding="utf-8") as f:
+        f.write(LAST_MINUTE_MD.strip() + "\\n")
+    print(f"✓ Successfully wrote Last-Minute Pandas cram sheet to {last_minute_path}")
+    
+    # 3. Update frontend/src/data/flashcardsData.js
+    flashcards_file = os.path.join(repo_root, "frontend", "src", "data", "flashcardsData.js")
+    with open(flashcards_file, "r", encoding="utf-8") as f:
+        fc_text = f.read()
+    
+    # Check if pandas-01 already present
+    if "pandas-01" not in fc_text:
+        # Find FLASHCARDS_DATA = [
+        insert_idx = fc_text.find("export const FLASHCARDS_DATA = [")
+        if insert_idx != -1:
+            list_start = fc_text.find("[", insert_idx) + 1
+            new_cards_json = json.dumps(PANDAS_FLASHCARDS, indent=2)[1:-1].strip() + ","
+            updated_fc = fc_text[:list_start] + "\\n" + new_cards_json + fc_text[list_start:]
+            # update count
+            updated_fc = re.sub(r'export const FLASHCARDS_COUNT = \d+;', f'export const FLASHCARDS_COUNT = 240;', updated_fc)
+            with open(flashcards_file, "w", encoding="utf-8") as f:
+                f.write(updated_fc)
+            print(f"✓ Added {len(PANDAS_FLASHCARDS)} rich multi-dimensional Pandas flashcards to {flashcards_file}")
+
+    # 4. Update frontend/src/data/quizData.js
+    quiz_file = os.path.join(repo_root, "frontend", "src", "data", "quizData.js")
+    with open(quiz_file, "r", encoding="utf-8") as f:
+        quiz_text = f.read()
+        
+    if "pandas-q1" not in quiz_text:
+        insert_idx = quiz_text.find("export const DIAGNOSTIC_QUESTIONS = [")
+        if insert_idx != -1:
+            list_start = quiz_text.find("[", insert_idx) + 1
+            new_quiz_json = json.dumps(PANDAS_QUIZ_QUESTIONS, indent=2)[1:-1].strip() + ","
+            updated_quiz = quiz_text[:list_start] + "\\n" + new_quiz_json + quiz_text[list_start:]
+            with open(quiz_file, "w", encoding="utf-8") as f:
+                f.write(updated_quiz)
+            print(f"✓ Added {len(PANDAS_QUIZ_QUESTIONS)} dedicated Pandas diagnostic quiz questions to {quiz_file}")
+
+    print("\\n🎉 Pandas Playlist curriculum generation completed successfully!")
+
+if __name__ == "__main__":
+    main()

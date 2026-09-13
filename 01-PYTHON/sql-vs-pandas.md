@@ -271,11 +271,11 @@ df["risk_category"] = np.select(conditions, choices, default="LOW")
 ---
 
 ## 4. Quick Summary Checklist for Interviews
-- `SELECT col` $\implies$ `df['col']` or `df[['a', 'b']]`
-- `WHERE` $\implies$ `df[(df['col'] > x) & (df['col2'] == y)]`
-- `GROUP BY` $\implies$ `df.groupby('col').agg(...)`
-- `HAVING` $\implies$ filter the aggregated DataFrame output
-- `JOIN` $\implies$ `pd.merge(df1, df2, on='key', how='inner|left|outer')`
-- `UNION ALL` $\implies$ `pd.concat([df1, df2], axis=0)`
-- `SUM() OVER(PARTITION BY ...)` $\implies$ `df.groupby('col')['val'].cumsum()`
-- `CASE WHEN` $\implies$ `np.select(conditions, choices, default=...)`
+- `SELECT col` ⟹ `df['col']` or `df[['a', 'b']]`
+- `WHERE` ⟹ `df[(df['col'] > x) & (df['col2'] == y)]`
+- `GROUP BY` ⟹ `df.groupby('col').agg(...)`
+- `HAVING` ⟹ filter the aggregated DataFrame output
+- `JOIN` ⟹ `pd.merge(df1, df2, on='key', how='inner|left|outer')`
+- `UNION ALL` ⟹ `pd.concat([df1, df2], axis=0)`
+- `SUM() OVER(PARTITION BY ...)` ⟹ `df.groupby('col')['val'].cumsum()`
+- `CASE WHEN` ⟹ `np.select(conditions, choices, default=...)`

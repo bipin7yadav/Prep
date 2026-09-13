@@ -154,11 +154,11 @@ public class TransactionAnalytics {
 
 ## 7. How It Works Internally: HashMap Bucket Treeification (Java 8+)
 
-### The $O(N)$ Collision Defense
-1. In Java 7, a `HashMap` resolved collisions strictly via **separate chaining** using a singly linked list. If an attacker flooded a bucket with colliding keys, lookups degraded to $O(N)$.
+### The O(N) Collision Defense
+1. In Java 7, a `HashMap` resolved collisions strictly via **separate chaining** using a singly linked list. If an attacker flooded a bucket with colliding keys, lookups degraded to O(N).
 2. **Java 8 Treeification:**
    - When the number of elements in a single bucket reaches **`TREEIFY_THRESHOLD = 8`** AND the total table capacity is at least 64, the linked list is transformed into a balanced **Red-Black Tree (`TreeNode`)**!
-   - Lookup complexity improves from $O(N)$ to **$O(\log N)$**, mitigating algorithmic denial-of-service (HashDoS) attacks.
+   - Lookup complexity improves from O(N) to **O(log N)**, mitigating algorithmic denial-of-service (HashDoS) attacks.
    - If deletions reduce bucket size back to **`UNTREEIFY_THRESHOLD = 6`**, it converts back to a linked list.
 
 ---
@@ -174,15 +174,15 @@ public class TransactionAnalytics {
 
 | Collection | Underlying Data Structure | Access Time | Search Time | Insertion Time |
 | :--- | :--- | :---: | :---: | :---: |
-| **`ArrayList`** | Resizable Object Array | $O(1)$ | $O(N)$ | $O(1)$ amortized |
-| **`LinkedList`** | Doubly-Linked List | $O(N)$ | $O(N)$ | $O(1)$ at ends |
-| **`HashMap`** | Hash Table + Red-Black Tree | N/A | $O(1)$ avg / $O(\log N)$ worst | $O(1)$ avg |
-| **`ConcurrentHashMap`**| Synchronized Buckets + CAS | N/A | $O(1)$ avg | $O(1)$ lock-free CAS |
-| **`PriorityQueue`** | Min-Heap Array | $O(1)$ (peek) | $O(N)$ | $O(\log N)$ |
+| **`ArrayList`** | Resizable Object Array | O(1) | O(N) | O(1) amortized |
+| **`LinkedList`** | Doubly-Linked List | O(N) | O(N) | O(1) at ends |
+| **`HashMap`** | Hash Table + Red-Black Tree | N/A | O(1) avg / O(log N) worst | O(1) avg |
+| **`ConcurrentHashMap`**| Synchronized Buckets + CAS | N/A | O(1) avg | O(1) lock-free CAS |
+| **`PriorityQueue`** | Min-Heap Array | O(1) (peek) | O(N) | O(log N) |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between an Abstract Class and an Interface in Java 8+?
@@ -227,13 +227,13 @@ Review the code in Section 5 and notice how locking on a dedicated `private fina
 - JVM = ClassLoader + Heap (Objects) + Stack (Frames) + JIT Compiler + GC.
 - `==` checks reference identity; `.equals()` checks logical equality.
 - Overriding `.equals()` strictly requires overriding `.hashCode()`.
-- Java 8 HashMap treeifies buckets to Red-Black Trees when depth $\ge 8$.
+- Java 8 HashMap treeifies buckets to Red-Black Trees when depth ≥ 8.
 - `ConcurrentHashMap` uses volatile reads, CAS for empty buckets, and locks only the head node during collisions.
 
 ---
 
 ## 15. Interview Checklist
 - [ ] Articulates `.equals()` and `.hashCode()` contract.
-- [ ] Explains HashMap bucket treeification ($O(\log N)$ worst-case).
+- [ ] Explains HashMap bucket treeification (O(log N) worst-case).
 - [ ] Contrasts `ArrayList` vs `LinkedList` cache locality.
 - [ ] Explains `ConcurrentHashMap` lock-striping and CAS.

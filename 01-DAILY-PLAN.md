@@ -28,7 +28,7 @@
   - Verify tables: `customers`, `accounts`, `transactions`, `beneficiaries`, `cards`, `loans`, `payments`.
 * **Coding Problems:**
   1. Determine the exact time and auxiliary space complexity of 5 given code snippets in [00-FOUNDATION/complexity-analysis.md](file:///home/bipin/Desktop/BankInterview/00-FOUNDATION/complexity-analysis.md#practical-exercise).
-  2. Explain why dynamic array resizing (`list.append` in Python or `Array.push` in JS) is $O(1)$ amortized but $O(N)$ worst case.
+  2. Explain why dynamic array resizing (`list.append` in Python or `Array.push` in JS) is O(1) amortized but O(N) worst case.
 * **SQL Practice:**
   1. Write a query to list all active `SAVINGS` accounts with balances exceeding ₹50,000, joined with customer name and phone number.
   2. Calculate total deposit volume vs withdrawal volume across the entire bank for the last 30 days.
@@ -49,9 +49,9 @@
   - [01-PYTHON/python-fundamentals.md](file:///home/bipin/Desktop/BankInterview/01-PYTHON/python-fundamentals.md)
   - [02-DSA/arrays.md](file:///home/bipin/Desktop/BankInterview/02-DSA/arrays.md) & [02-DSA/hashing.md](file:///home/bipin/Desktop/BankInterview/02-DSA/hashing.md)
 * **Coding Problems (Implement in clean Python):**
-  1. **Two Sum:** Given transaction amounts, find two that sum to a target settlement amount ($O(N)$ time, $O(N)$ space).
+  1. **Two Sum:** Given transaction amounts, find two that sum to a target settlement amount (O(N) time, O(N) space).
   2. **Group Anagrams / Account Beneficiary Deduplication:** Group accounts by normalized name tokens using hash maps.
-  3. **Longest Consecutive Sequence:** Find the longest consecutive sequence in an unsorted array in $O(N)$ time using a hash set.
+  3. **Longest Consecutive Sequence:** Find the longest consecutive sequence in an unsorted array in O(N) time using a hash set.
 * **SQL Practice:**
   1. Find customers who have more than one account in the same branch.
   2. Detect potential duplicate transactions: same `from_account_id`, `to_account_id`, and `amount` within a 5-minute window.
@@ -76,7 +76,7 @@
   2. **High-Value Spenders:** Find customers whose average transaction amount is strictly greater than the overall bank-wide average transaction amount (Correlated Subquery).
   3. **Self-Join Beneficiary Audit:** Query all transactions where the sender and receiver belong to the same parent customer.
 * **Coding Problem:**
-  - **Subarray Sum Equals K:** Find total number of continuous subarrays whose sum equals $K$ using prefix sum + hash map.
+  - **Subarray Sum Equals K:** Find total number of continuous subarrays whose sum equals K using prefix sum + hash map.
 * **Interview Question of the Day:**
   - *"Why is `SELECT ... WHERE EXISTS (SELECT 1 ...)` typically faster than `IN` when dealing with nullable foreign key columns?"*
 * **Expected Outcome:** You can explain join execution algorithms (Hash Join, Merge Join, Nested Loop Join) and optimize subqueries effortlessly.
@@ -94,14 +94,14 @@
   - [02-DSA/two-pointers.md](file:///home/bipin/Desktop/BankInterview/02-DSA/two-pointers.md)
   - [02-DSA/sliding-window.md](file:///home/bipin/Desktop/BankInterview/02-DSA/sliding-window.md)
 * **Coding Problems:**
-  1. **Three Sum:** Find all unique triplets that sum to 0 without duplicates ($O(N^2)$ time, $O(1)$ extra space).
+  1. **Three Sum:** Find all unique triplets that sum to 0 without duplicates (O(N²) time, O(1) extra space).
   2. **Container With Most Water:** Two pointers moving inwards greedily.
   3. **Longest Substring Without Repeating Characters:** Dynamic sliding window with hash map.
-  4. **Minimum Size Subarray Sum:** Dynamic window finding minimal length $\ge$ target sum.
+  4. **Minimum Size Subarray Sum:** Dynamic window finding minimal length ≥ target sum.
 * **SQL Practice:**
   1. Identify accounts that had transactions on 3 consecutive days.
 * **Interview Question of the Day:**
-  - *"When does a sliding window require a shrink phase, and how do you guarantee $O(N)$ amortized time even with a nested `while` loop?"*
+  - *"When does a sliding window require a shrink phase, and how do you guarantee O(N) amortized time even with a nested `while` loop?"*
 * **Expected Outcome:** Instinctive recognition of when to apply two pointers (sorted input, palindromes, shrinking windows).
 
 ---
@@ -140,7 +140,7 @@
   1. **Running Account Balance:** Calculate cumulative running balance for each account ordered by transaction timestamp.
   2. **Top 3 Transactions per Customer:** Using `DENSE_RANK() OVER (PARTITION BY customer_id ORDER BY amount DESC)`.
   3. **Month-over-Month Transaction Growth:** Using `LAG()` to calculate percentage volume change per account.
-  4. **Fraud Velocity Detection:** Find all accounts that performed $\ge 3$ transactions of $\ge$ ₹10,000 within any 1-hour window.
+  4. **Fraud Velocity Detection:** Find all accounts that performed ≥ 3 transactions of ≥ ₹10,000 within any 1-hour window.
 * **Coding Problem:**
   - **Trapping Rain Water:** Hard two-pointer / monotonic stack problem with banking liquidity analogy.
 * **Expected Outcome:** Fluent mastery of window frames (`ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`) and CTE organization.

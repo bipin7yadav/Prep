@@ -175,7 +175,7 @@ function foo() {
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between a microtask and a macrotask in JavaScript? Give two examples of each.

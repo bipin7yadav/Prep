@@ -117,15 +117,15 @@ In an enterprise banking VPC:
 
 | GCP Service | Compute / Storage Model | High Availability SLA | Best Used For |
 | :--- | :--- | :---: | :--- |
-| **GKE Private Cluster** | Kubernetes Container Orchestration | $99.95\%$ (Zonal) / $99.99\%$ (Regional) | Core transactional microservices |
-| **Cloud Run** | Serverless Container | $99.95\%$ | Event-driven APIs & Webhook receivers |
-| **Cloud SQL** | Managed PostgreSQL Multi-AZ | $99.95\%$ | Transaction ledger & relational source of truth |
-| **Cloud Storage (GCS)** | Object Storage (Regional) | $99.99\%$ | PDF statements & raw settlement file archive |
-| **Cloud Pub/Sub** | At-least-once Distributed Queue | $99.95\%$ | Transactional events & notification triggers |
+| **GKE Private Cluster** | Kubernetes Container Orchestration | 99.95% (Zonal) / 99.99% (Regional) | Core transactional microservices |
+| **Cloud Run** | Serverless Container | 99.95% | Event-driven APIs & Webhook receivers |
+| **Cloud SQL** | Managed PostgreSQL Multi-AZ | 99.95% | Transaction ledger & relational source of truth |
+| **Cloud Storage (GCS)** | Object Storage (Regional) | 99.99% | PDF statements & raw settlement file archive |
+| **Cloud Pub/Sub** | At-least-once Distributed Queue | 99.95% | Transactional events & notification triggers |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between a regional and zonal resource in Google Cloud?

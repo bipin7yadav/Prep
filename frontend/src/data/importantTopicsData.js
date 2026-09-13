@@ -5,6 +5,74 @@ export const IMPORTANT_TOPICS = [
   // TIER 1: MUST KNOW (100% Probability in IDFC Interview)
   // -------------------------------------------------------------
   {
+  "id": "top-tricky-sql",
+  "title": "Advanced SQL: Concurrency Locks, 3VL, Recursive CTEs & Window Frames",
+  "tier": "Must Know",
+  "tierColor": "rose",
+  "category": "SQL & Advanced DBMS",
+  "studyTimeMinutes": 50,
+  "interviewFrequency": "Every Senior Backend Round",
+  "lessonDocId": "05-sql-dbms-tricky-sql",
+  "summary": "Mastering Three-Valued Logic (NOT IN with NULL disaster), atomic balance decrements vs SELECT FOR UPDATE, deterministic lock ordering for deadlock prevention, ROWS vs RANGE window frames for passbook running totals, and Recursive CTEs for tracing fraud mule accounts.",
+  "keyQuestions": [
+    "Why does WHERE id NOT IN (SELECT id FROM t) return ZERO rows if table t contains even a single NULL value?",
+    "How do you mathematically guarantee zero deadlocks when transferring funds between two arbitrary bank accounts simultaneously?",
+    "What is the critical behavioral difference between default RANGE and explicit ROWS in window function running balances?"
+  ],
+  "bankingRelevance": "Absolute prerequisite for core ledger balance integrity, transaction ACID guarantees, and AML fraud detection."
+},
+    {
+  "id": "top-tricky-python",
+  "title": "Python Internals: GIL, Memory Caching, MRO & Bytecode Gotchas",
+  "tier": "Must Know",
+  "tierColor": "rose",
+  "category": "Python & Data Ecosystem",
+  "studyTimeMinutes": 45,
+  "interviewFrequency": "Every Python / Data Round",
+  "lessonDocId": "01-python-tricky-python",
+  "summary": "Mastering CPython internals: Small integer caching (-5 to 256), mutable default argument evaluation time, late-binding closures in lambdas, the tuple mutation mystery (STORE_SUBSCR vs INPLACE_ADD), C3 MRO in diamond inheritance, and __slots__ RAM optimization.",
+  "keyQuestions": [
+    "Why does t[0] += [4, 5] raise a TypeError AND mutate the list inside the tuple?",
+    "Why does def func(val, acc=[]) accumulate data across independent function calls, and what is the bytecode root cause?",
+    "Does NumPy release the Python GIL during heavy array and matrix mathematical operations?"
+  ],
+  "bankingRelevance": "Prevents memory leaks in high-frequency batch ledger engines and ensures thread-safe data pipelines."
+},
+    {
+  "id": "top-tricky-javascript",
+  "title": "JavaScript Core Internals: Event Loop, Closures, this & Coercion Traps",
+  "tier": "Must Know",
+  "tierColor": "rose",
+  "category": "JavaScript & V8 Internals",
+  "studyTimeMinutes": 45,
+  "interviewFrequency": "Every Full-Stack / Node.js Round",
+  "lessonDocId": "03-javascript-tricky-js",
+  "summary": "Deep dive into microtask vs macrotask execution order (process.nextTick, Promise.then, queueMicrotask), var loop closure traps, this binding rules, IEEE 754 floating point currency bugs (0.1 + 0.2), and V8 Hidden Class de-optimizations.",
+  "keyQuestions": [
+    "What is the exact console execution order between process.nextTick, Promise.resolve, setTimeout(0), and queueMicrotask?",
+    "Why does 0.1 + 0.2 !== 0.3, and how MUST currency amounts be computed in production banking APIs?",
+    "How do inconsistent property insertion orders de-optimize V8 engine Hidden Classes into slow dictionary mode?"
+  ],
+  "bankingRelevance": "Critical for writing non-blocking payment webhook handlers, race-condition-free event listeners, and accurate financial calculations."
+},
+    {
+  "id": "top-pandas-reconciliation-joins",
+  "title": "Pandas Financial Ledger Reconciliation, Joins & Groupby Aggregations",
+  "tier": "Must Know",
+  "tierColor": "rose",
+  "category": "Data & Analytics",
+  "studyTimeMinutes": 50,
+  "interviewFrequency": "Every FinTech & Data Architecture Round",
+  "lessonDocId": "01-python-programming",
+  "summary": "Automating 3-way banking reconciliation: Core Banking System (CBS) vs Payment Switch (NPCI) vs Third-Party Aggregator using pd.merge(), indicator=True, MultiIndex reshaping (unstack), and Split-Apply-Combine aggregations.",
+  "keyQuestions": [
+    "How do you detect broken settlements and missing credit legs across two 5-million-row DataFrames using pd.merge(..., indicator=True)?",
+    "How does automatic index alignment work during Series arithmetic, and why does s1 + s2 return NaN for mismatched index labels?",
+    "How do you compute grouped customer transaction metrics (total volume, average ticket size, failure rate) in a single pass using .agg()?"
+  ],
+  "bankingRelevance": "Critical for end-of-day (EOD) batch clearance, RBI settlement compliance, and fraud audit trails."
+},
+    {
     id: "top-node-event-loop",
     title: "Node.js Event Loop & Asynchronous Architecture",
     tier: "Must Know",

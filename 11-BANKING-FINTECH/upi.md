@@ -69,7 +69,7 @@ sequenceDiagram
 ## 5. Real-World Banking Example: The Dreaded "Debit Success, Credit Timeout"
 What happens when:
 - **Remitter Bank (IDFC FIRST):** Successfully debits ₹5,000 from customer's account.
-- **NPCI $\to$ Beneficiary Bank:** Network cable cut or Beneficiary Bank CBS hangs.
+- **NPCI → Beneficiary Bank:** Network cable cut or Beneficiary Bank CBS hangs.
 - **Result:** Payer's money is debited, but Payee does not receive credit.
 
 ### The Resolution Protocol (RBI T+1 Auto-Reversal Mandate):
@@ -147,13 +147,13 @@ flowchart LR
 
 | Metric | UPI | IMPS | NEFT | RTGS |
 | :--- | :---: | :---: | :---: | :---: |
-| **Switch Latency (SLA)** | $< 2$ seconds | $< 5$ seconds | 30–60 minutes | $< 30$ seconds |
-| **System Throughput** | $> 15,000$ TPS nationwide | $\approx 2,000$ TPS | Batch files | Continuous gross |
+| **Switch Latency (SLA)** | < 2 seconds | < 5 seconds | 30–60 minutes | < 30 seconds |
+| **System Throughput** | > 15,000 TPS nationwide | ≈ 2,000 TPS | Batch files | Continuous gross |
 | **Idempotency Lifetime** | 48 hours | 24 hours | N/A (Batch ref) | N/A |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is a VPA in UPI and what role does NPCI play during a UPI transaction?

@@ -75,9 +75,9 @@ WHERE account_id = 101 AND version = :read_version;
 
 ## 🏎️ B+ Tree Indexing Rules
 1. **Leftmost Prefix Rule:** If composite index is on `(A, B, C)`:
-   - `WHERE A = 1` $\to$ **Index Scan (Yes)**
-   - `WHERE A = 1 AND B = 2` $\to$ **Index Scan (Yes)**
-   - `WHERE B = 2 AND C = 3` $\to$ **Sequential Scan (No index used!)**
+   - `WHERE A = 1` → **Index Scan (Yes)**
+   - `WHERE A = 1 AND B = 2` → **Index Scan (Yes)**
+   - `WHERE B = 2 AND C = 3` → **Sequential Scan (No index used!)**
 2. **Range Breaks Indexing:** If query has `WHERE A = 1 AND B > 5 AND C = 10`:
    - Column `A` uses index seek.
    - Column `B` uses index range scan.

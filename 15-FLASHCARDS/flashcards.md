@@ -7,7 +7,7 @@
 ### Flashcard B1
 * **Q:** What is the core rule of double-entry bookkeeping?
 * **A:** Every transaction must record at least one Debit and one Credit such that:
-  $$\sum \text{Debits} = \sum \text{Credits}$$
+  Σ Debits = Σ Credits
   The net financial sum of any balanced transaction entry is strictly zero.
 
 ---
@@ -49,8 +49,8 @@
 ### Flashcard S2
 * **Q:** What is the difference between `RANK()` and `DENSE_RANK()`?
 * **A:** In ties:
-  - `RANK()` assigns identical ranks and skips subsequent values ($1, 2, 2, 4$).
-  - `DENSE_RANK()` assigns identical ranks and does NOT skip subsequent values ($1, 2, 2, 3$).
+  - `RANK()` assigns identical ranks and skips subsequent values (1, 2, 2, 4).
+  - `DENSE_RANK()` assigns identical ranks and does NOT skip subsequent values (1, 2, 2, 3).
 
 ---
 
@@ -120,7 +120,7 @@
 
 ### Flashcard P3 (Python: Generators)
 * **Q:** What is a Generator and why use `yield`?
-* **A:** Generator lazy evaluation use karke stream produce karta hai. Ek time par sirf 1 item memory mein rehta hai, reducing memory from $O(N)$ to $O(1)$.
+* **A:** Generator lazy evaluation use karke stream produce karta hai. Ek time par sirf 1 item memory mein rehta hai, reducing memory from O(N) to O(1).
 
 ---
 

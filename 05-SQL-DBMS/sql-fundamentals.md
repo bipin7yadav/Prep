@@ -75,7 +75,7 @@ WHERE account_id = 101;
 
 ## 5. Real-World Banking Example: Atomic Fund Transfer Invariant
 When ₹1,000 is transferred from Account A to Account B:
-1. Account A balance must be $\ge 1000$ (enforced by application check + DB constraint `CHECK (balance >= 0.00)`).
+1. Account A balance must be ≥ 1000 (enforced by application check + DB constraint `CHECK (balance >= 0.00)`).
 2. The debit and credit must occur in a single atomic transaction.
 3. If Account A tries to go negative, the database aborts with a constraint violation error, rolling back the debit and ensuring money cannot be created or destroyed.
 
@@ -133,7 +133,7 @@ flowchart TD
 
 ## 8. Common Mistakes
 1. **Using `WHERE` Instead of `HAVING` for Aggregates:** `WHERE SUM(amount) > 1000` throws a syntax error. Aggregated expressions must be filtered in `HAVING`.
-2. **Float/Double for Currency:** Never use `FLOAT` or `DOUBLE` for monetary balances. Floating-point binary representation produces IEEE 754 precision errors (e.g., $0.1 + 0.2 = 0.30000000000000004$). Always use `DECIMAL(15, 2)` or `NUMERIC`, or store balances as integer paise/cents.
+2. **Float/Double for Currency:** Never use `FLOAT` or `DOUBLE` for monetary balances. Floating-point binary representation produces IEEE 754 precision errors (e.g., 0.1 + 0.2 = 0.30000000000000004). Always use `DECIMAL(15, 2)` or `NUMERIC`, or store balances as integer paise/cents.
 3. **Missing Foreign Key Indexes:** Relational engines do NOT automatically index foreign key columns in child tables. Without an index on `transactions(from_account_id)`, every join or cascade operation forces a full sequential table scan!
 
 ---
@@ -142,15 +142,15 @@ flowchart TD
 
 | Clause / Operation | Complexity Without Index | Complexity With B-Tree Index |
 | :--- | :---: | :---: |
-| **Lookup by Primary Key** | $O(\log N)$ (Clustered) | $O(\log N)$ |
-| **Filter by Indexed Column (`WHERE status = 'ACTIVE'`)** | $O(N)$ (Sequential Scan) | $O(\log N + K)$ (Index Range Scan) |
-| **Join on Foreign Key (`JOIN accounts ON ...`)** | $O(N \times M)$ (Nested Loop) | $O(N \log M)$ (Index Scan) or $O(N+M)$ (Hash Join) |
-| **GROUP BY without Index** | $O(N \log N)$ (Sort-based) or $O(N)$ (Hash-based aggregation) | $O(N)$ (Index ordered traversal) |
-| **ORDER BY on Indexed Column** | $O(N \log N)$ (Sort in TempDB/Memory) | $O(1)$ (Direct B-Tree index scan) |
+| **Lookup by Primary Key** | O(log N) (Clustered) | O(log N) |
+| **Filter by Indexed Column (`WHERE status = 'ACTIVE'`)** | O(N) (Sequential Scan) | O(log N + K) (Index Range Scan) |
+| **Join on Foreign Key (`JOIN accounts ON ...`)** | O(N * M) (Nested Loop) | O(N log M) (Index Scan) or O(N+M) (Hash Join) |
+| **GROUP BY without Index** | O(N log N) (Sort-based) or O(N) (Hash-based aggregation) | O(N) (Index ordered traversal) |
+| **ORDER BY on Indexed Column** | O(N log N) (Sort in TempDB/Memory) | O(1) (Direct B-Tree index scan) |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between `WHERE` and `HAVING` clauses? Give an example where one works and the other fails.
@@ -181,7 +181,7 @@ flowchart TD
 > To resolve this:
 > 1. I create a B+ Tree index on `transactions(customer_id)`.
 > 2. If the query frequently fetches the most recent transactions for a customer (`ORDER BY created_at DESC LIMIT 10`), a single-column index still requires a post-fetch sort. I would replace it with a **composite index** on `(customer_id, created_at DESC)`.
-> 3. By following the **leftmost prefix rule**, the B+ tree seeks directly to `customer_id = 101` and traverses the index in already-sorted chronological order, executing in sub-millisecond $O(\log N + K)$ time without any in-memory sort or full table scan."
+> 3. By following the **leftmost prefix rule**, the B+ tree seeks directly to `customer_id = 101` and traverses the index in already-sorted chronological order, executing in sub-millisecond O(log N + K) time without any in-memory sort or full table scan."
 
 ---
 
@@ -214,7 +214,7 @@ LIMIT 1;
 ## 14. Quick Revision
 - Primary Key = `UNIQUE` + `NOT NULL`.
 - Foreign Keys require explicit indexes in child tables for join performance.
-- Logical Execution Order: `FROM` $\to$ `WHERE` $\to$ `GROUP BY` $\to$ `HAVING` $\to$ `SELECT` $\to$ `ORDER BY` $\to$ `LIMIT`.
+- Logical Execution Order: `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY` → `LIMIT`.
 - Always store monetary amounts in `DECIMAL(p, s)` or integer smallest currency units (paise/cents).
 - `CHECK (balance >= 0.00)` guards against race-condition overdrafts.
 

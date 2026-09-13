@@ -181,8 +181,8 @@ IDFC-FIRST-DEVELOPER-PREP/
 
 ## ⚡ Active Commands You Can Trigger Anytime
 
-* **`Start mock interview`** $\implies$ I conduct a live technical/behavioral interview, asking one question at a time and drilling deep.
-* **`Start coding interview`** $\implies$ I provide a problem with constraints and evaluate your approach, code, and complexity.
-* **`Start system design interview`** $\implies$ You drive an end-to-end banking architecture while I probe scale and failures.
-* **`Daily quiz`** $\implies$ Triggers today's 10-question rapid assessment.
-* **`My interview is in X days`** $\implies$ Automatically switches to and compresses the optimal timeline track.
+* **`Start mock interview`** ⟹ I conduct a live technical/behavioral interview, asking one question at a time and drilling deep.
+* **`Start coding interview`** ⟹ I provide a problem with constraints and evaluate your approach, code, and complexity.
+* **`Start system design interview`** ⟹ You drive an end-to-end banking architecture while I probe scale and failures.
+* **`Daily quiz`** ⟹ Triggers today's 10-question rapid assessment.
+* **`My interview is in X days`** ⟹ Automatically switches to and compresses the optimal timeline track.

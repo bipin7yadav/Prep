@@ -47,4 +47,4 @@ Round Trip (Mumbai to US-East):  ~150 ms
 - **Partition:** Ordered, append-only log of immutable messages. The unit of parallelism.
 - **Partition Key:** Messages with the same key (e.g., `account_id`) **always go to the same partition**, guaranteeing chronological ordering per account.
 - **Consumer Group:** Multiple workers reading a topic. Each partition is consumed by strictly **one** consumer within a group.
-- **Replication Factor:** $N$ copies across brokers (typical in banking: 3 replicas with `min.insync.replicas = 2` and `acks = all` for zero message loss).
+- **Replication Factor:** N copies across brokers (typical in banking: 3 replicas with `min.insync.replicas = 2` and `acks = all` for zero message loss).

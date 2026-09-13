@@ -8,19 +8,19 @@
 * **Immutable (Cannot change in-place):** `int`, `float`, `str`, `tuple`, `frozenset`, `bytes`.
 * **Mutable (In-place changes):** `list`, `dict`, `set`, `bytearray`.
 * **List vs Tuple:** List mutable hai (`[1, 2]`); Tuple immutable hai (`(1, 2)` - faster, hashable, can be dict keys).
-* **Dict vs Set:** Dict key-value map hai; Set unique keys only hai (both $O(1)$ avg lookups).
+* **Dict vs Set:** Dict key-value map hai; Set unique keys only hai (both O(1) avg lookups).
 
 ### 2. Copying & References
-* `b = a` $\implies$ Same pointer (mutating `b` mutates `a`).
-* `shallow = a.copy()` $\implies$ New outer container, shared nested objects.
-* `deep = copy.deepcopy(a)` $\implies$ Completely independent recursive clone.
+* `b = a` ⟹ Same pointer (mutating `b` mutates `a`).
+* `shallow = a.copy()` ⟹ New outer container, shared nested objects.
+* `deep = copy.deepcopy(a)` ⟹ Completely independent recursive clone.
 
 ### 3. Comprehensions & Packing
 * `[x*2 for x in arr if x > 0]` (List) | `{k: v for k, v in pairs}` (Dict)
 * `def f(*args, **kwargs)`: `*args` captures tuple, `**kwargs` captures dictionary.
 
 ### 4. Generators, Decorators & Context Managers
-* **Generator (`yield`):** Lazy evaluation, produces 1 item at a time in $O(1)$ memory.
+* **Generator (`yield`):** Lazy evaluation, produces 1 item at a time in O(1) memory.
 * **Decorator (`@func`):** Wraps another function to add logging/auth without altering code.
 * **Context Manager (`with`):** Guarantees `__exit__()` cleanup on DB connections/files.
 

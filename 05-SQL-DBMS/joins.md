@@ -18,7 +18,7 @@ At IDFC FIRST Bank, database normalization splits customer PII, account ledgers,
 - **LEFT (OUTER) JOIN:** Returns *all* rows from the left table and matched rows from the right table. Unmatched right columns evaluate to `NULL`.
 - **RIGHT (OUTER) JOIN:** Returns all rows from the right table and matched rows from the left.
 - **FULL OUTER JOIN:** Returns rows when there is a match in either left or right table.
-- **CROSS JOIN:** Produces the Cartesian product ($N \times M$ rows).
+- **CROSS JOIN:** Produces the Cartesian product (N * M rows).
 - **SELF JOIN:** Joins a table to itself (used for hierarchical data, manager-employee structures, or transaction matching).
 
 ```mermaid
@@ -97,18 +97,18 @@ ORDER BY t.created_at DESC;
 
 ### 1. Nested Loop Join
 - The engine loops over the outer table row by row, and for each row looks up matching keys in the inner table.
-- If the inner table join column has a B-Tree index, complexity is $O(N \log M)$. If unindexed, it degrades to quadratic $O(N \times M)$ Cartesian scans.
+- If the inner table join column has a B-Tree index, complexity is O(N log M). If unindexed, it degrades to quadratic O(N * M) Cartesian scans.
 
 ### 2. Hash Join
 - The query planner picks the smaller table (build input) and builds an in-memory hash table on the join key.
 - It then scans the larger table (probe input) once, hashing each key and probing the in-memory hash table for matches.
-- **Complexity:** $O(N + M)$ time.
+- **Complexity:** O(N + M) time.
 - **Memory footprint:** If the build table exceeds database working memory (`work_mem` in PostgreSQL), the engine spills hash partitions to disk (Grace Hash Join), causing dramatic I/O slowdowns.
 
 ### 3. Sort-Merge Join
 - Both tables are sorted by the join key (or scanned in order via existing B-Tree indexes).
 - Two pointers walk both streams simultaneously, merging matches in a single pass.
-- **Complexity:** $O(N \log N + M \log M)$ if unsorted, but $O(N + M)$ if pre-indexed.
+- **Complexity:** O(N log N + M log M) if unsorted, but O(N + M) if pre-indexed.
 
 ---
 
@@ -135,14 +135,14 @@ ORDER BY t.created_at DESC;
 
 | Join Type / Algorithm | Best Scenario | Time Complexity | Memory Requirements |
 | :--- | :--- | :---: | :---: |
-| **Nested Loop (Indexed)** | Small outer table, indexed inner key | $O(N \log M)$ | $O(1)$ |
-| **Nested Loop (Unindexed)** | Very small tables only | $O(N \times M)$ | $O(1)$ |
-| **Hash Join** | Large unindexed tables, equality joins | $O(N + M)$ | $O(M)$ (`work_mem`) |
-| **Sort-Merge Join** | Both inputs already sorted on join key | $O(N + M)$ | $O(1)$ |
+| **Nested Loop (Indexed)** | Small outer table, indexed inner key | O(N log M) | O(1) |
+| **Nested Loop (Unindexed)** | Very small tables only | O(N * M) | O(1) |
+| **Hash Join** | Large unindexed tables, equality joins | O(N + M) | O(M) (`work_mem`) |
+| **Sort-Merge Join** | Both inputs already sorted on join key | O(N + M) | O(1) |
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is the difference between an `INNER JOIN` and a `LEFT JOIN`?

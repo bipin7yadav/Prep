@@ -14,9 +14,9 @@ In banking applications, isolation level configuration is the difference between
 ## 3. Concept
 
 ### The 3 Classical Read Phenomena
-1. **Dirty Read:** Transaction $T_1$ modifies a row. Transaction $T_2$ reads the uncommitted row. If $T_1$ subsequently aborts (`ROLLBACK`), $T_2$ has read data that technically never existed in the database.
-2. **Non-Repeatable Read (Fuzzy Read):** Transaction $T_1$ reads a row. Transaction $T_2$ modifies or deletes that row and commits. If $T_1$ re-reads the row, it sees a *different value* or finds the row gone.
-3. **Phantom Read:** Transaction $T_1$ executes a range query (e.g., `WHERE balance > 50000`). Transaction $T_2$ inserts a *new row* matching that predicate and commits. When $T_1$ executes the exact same query again, a "phantom" new row appears.
+1. **Dirty Read:** Transaction T₁ modifies a row. Transaction T₂ reads the uncommitted row. If T₁ subsequently aborts (`ROLLBACK`), T₂ has read data that technically never existed in the database.
+2. **Non-Repeatable Read (Fuzzy Read):** Transaction T₁ reads a row. Transaction T₂ modifies or deletes that row and commits. If T₁ re-reads the row, it sees a *different value* or finds the row gone.
+3. **Phantom Read:** Transaction T₁ executes a range query (e.g., `WHERE balance > 50000`). Transaction T₂ inserts a *new row* matching that predicate and commits. When T₁ executes the exact same query again, a "phantom" new row appears.
 
 ```mermaid
 flowchart TD
@@ -111,8 +111,8 @@ Modern relational engines avoid locking tables for read queries by maintaining m
 
 ### PostgreSQL Row Tuple Headers: `xmin` and `xmax`
 Every physical row tuple contains hidden system attributes:
-- `xmin`: The transaction ID ($XID$) that inserted this row version.
-- `xmax`: The transaction ID ($XID$) that deleted or updated (superseded) this row version (0 if active).
+- `xmin`: The transaction ID (XID) that inserted this row version.
+- `xmax`: The transaction ID (XID) that deleted or updated (superseded) this row version (0 if active).
 
 ```mermaid
 flowchart LR
@@ -124,7 +124,7 @@ flowchart LR
 ```
 
 ### Snapshot Isolation
-- When Transaction $T$ runs a query, the engine captures a **Read Snapshot** containing:
+- When Transaction T runs a query, the engine captures a **Read Snapshot** containing:
   - Active transaction IDs that have not yet committed.
   - The highest committed transaction ID.
 - **Rule:** Readers never block writers, and writers never block readers! When a write occurs, a new row version is appended, and the old version remains visible to concurrent snapshots.
@@ -150,7 +150,7 @@ flowchart LR
 
 ---
 
-## 10. Interview Questions (Easy $\to$ Medium $\to$ Hard)
+## 10. Interview Questions (Easy → Medium → Hard)
 
 ### Easy
 - **Q:** What is a Dirty Read and which isolation level is the minimum required to prevent it?
@@ -178,9 +178,9 @@ flowchart LR
 > "The **Write Skew** anomaly occurs when two concurrent transactions read overlapping data sets, make decisions based on what they read, and write to *disjoint* rows, violating a global business constraint.
 > 
 > **Banking Example: Combined Minimum Balance Constraint:**
-> - Rule: A customer can hold Account A and Account B, provided their *combined* balance remains $\ge ₹1,000$.
+> - Rule: A customer can hold Account A and Account B, provided their *combined* balance remains ≥ ₹1,000.
 > - Currently: Account A has ₹800, Account B has ₹800 (Total = ₹1,600).
-> - Transaction 1 attempts to withdraw ₹700 from Account A. It reads both accounts (sum = ₹1,600 $\ge 1,000$), approves the debit, and updates Account A to ₹100.
+> - Transaction 1 attempts to withdraw ₹700 from Account A. It reads both accounts (sum = ₹1,600 ≥ 1,000), approves the debit, and updates Account A to ₹100.
 > - Concurrently, Transaction 2 attempts to withdraw ₹700 from Account B. Under `REPEATABLE READ`, its snapshot sees Account A = ₹800 and Account B = ₹800 (sum = ₹1,600), approves the debit, and updates Account B to ₹100.
 > - Both transactions commit because they modified *different* rows (no row-level lock conflict!).
 > - Final state: Account A = ₹100, Account B = ₹100 (Total = ₹200). The global invariant is violated!
@@ -207,7 +207,7 @@ PRAGMA read_uncommitted = 0; -- Default: Full Serializable transaction isolation
 - Dirty Read: Reading uncommitted data.
 - Non-Repeatable Read: Row value changes between two reads in the same transaction.
 - Phantom Read: New rows appear matching a range predicate.
-- ANSI levels: Read Uncommitted $\to$ Read Committed $\to$ Repeatable Read $\to$ Serializable.
+- ANSI levels: Read Uncommitted → Read Committed → Repeatable Read → Serializable.
 - MVCC ensures readers never block writers and writers never block readers.
 - Write Skew is possible in Repeatable Read; requires Serializable or explicit locking.
 
